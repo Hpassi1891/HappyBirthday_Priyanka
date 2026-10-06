@@ -35,6 +35,34 @@ await page.waitForSelector('.door-scene', { state: 'detached', timeout: 5000 }).
 await page.waitForTimeout(300);
 check('rakshas: moves past the door', !(await page.locator('.door-scene').count()));
 
+// Room: lights + banner
+await page.goto(BASE + '/?scene=room');
+await page.click('#switch');
+check('room: lights on', await page.locator('.room.lit').count() === 1);
+// drag the first tile onto the banner
+const first = page.locator('.tile').first();
+const ch = await first.getAttribute('data-ch');
+const tb = await first.boundingBox();
+const target = page.locator(`.slot[data-ch="${ch}"]`).first();
+const sb = await target.boundingBox();
+await page.mouse.move(tb.x + tb.width / 2, tb.y + tb.height / 2);
+await page.mouse.down();
+await page.mouse.move(sb.x + sb.width / 2, sb.y + sb.height / 2, { steps: 8 });
+await page.mouse.up();
+await page.waitForTimeout(700);
+check('room: drag places letter', (await page.locator('.slot.filled').count()) === 1);
+// tap the rest
+while (await page.locator('.tile:not(.spacer)').count()) {
+  const before = await page.locator('.tile:not(.spacer)').count();
+  await page.locator('.tile:not(.spacer)').first().click();
+  await page.waitForFunction((n) => document.querySelectorAll('.tile:not(.spacer)').length < n, before, { timeout: 5000 });
+}
+check('room: banner complete', (await page.locator('.slot:not(.filled)').count()) === 0);
+check('room: continue appears', await page.locator('#go').isVisible());
+await page.click('#go');
+await page.waitForTimeout(400);
+check('room: advances to next scene', !(await page.locator('.room').count()));
+
 check('no JS errors', errors.length === 0);
 if (errors.length) console.log(errors);
 await browser.close();
