@@ -2,15 +2,16 @@ import { audio } from './lib/audio.js';
 import * as fx from './lib/confetti.js';
 import door from './scenes/door.js';
 import room from './scenes/room.js';
+import favwall from './scenes/favwall.js';
 
 // Register new scenes here as they are built.
-const SCENES = { door, room };
+const SCENES = { door, room, favwall };
 
 export const ORDER = ['door', 'room', 'favwall', 'photos', 'gifts', 'cake', 'blow', 'cut', 'finale'];
 
 const stage = document.getElementById('stage');
 const params = new URLSearchParams(location.search);
-const ctx = { stage, audio, fx, params, preview: !!window.__PREVIEW__ || params.has('preview') || params.has('scene'), copy: null, name: null };
+const ctx = { stage, audio, fx, params, preview: !!window.__PREVIEW__ || params.has('preview') || params.has('scene'), copy: null, favs: null, name: null };
 let current = null;
 
 async function loadJson(path) {
@@ -50,6 +51,7 @@ addEventListener('pointerdown', () => audio.unlock(), { once: true });
 
 async function boot() {
   ctx.copy = window.__COPY__ ?? await loadJson('content/copy.json');
+  ctx.favs = window.__FAVS__ ?? await loadJson('content/favs.json');
   const start = params.get('scene');
   go(ORDER.includes(start) ? start : 'door');
 }

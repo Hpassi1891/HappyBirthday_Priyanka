@@ -63,6 +63,23 @@ await page.click('#go');
 await page.waitForTimeout(400);
 check('room: advances to next scene', !(await page.locator('.room').count()));
 
+// Fav wall
+await page.goto(BASE + '/?scene=favwall');
+check('favwall: 12 frames', (await page.locator('.frame').count()) === 12);
+check('favwall: continue hidden at start', !(await page.locator('#go').isVisible()));
+for (let i = 0; i < 4; i++) {
+  await page.locator('.frame').nth(i).click({ force: true });
+  await page.waitForSelector('.zoom', { timeout: 3000 });
+  if (i === 0) check('favwall: zoom shows title', (await page.textContent('.zoom-title')) === 'Movie #1');
+  await page.click('.zoom .btn');
+  await page.waitForSelector('.zoom', { state: 'detached', timeout: 3000 });
+}
+check('favwall: counter 4/12', (await page.textContent('.fav-count')).includes('4 / 12'));
+check('favwall: continue appears after 4', await page.locator('#go').isVisible());
+await page.click('#go');
+await page.waitForTimeout(300);
+check('favwall: advances', !(await page.locator('.fav-scene').count()));
+
 check('no JS errors', errors.length === 0);
 if (errors.length) console.log(errors);
 await browser.close();

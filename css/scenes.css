@@ -98,3 +98,34 @@
 .tile.drag { cursor: grabbing; box-shadow: 0 10px 0 var(--outline), 0 16px 18px #6b235855; transform: scale(1.15) rotate(-4deg); }
 .go { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 30; white-space: nowrap; }
 .room:has(.go:not(.hidden)) .tray { display: none; }
+
+/* ---------- Fav wall ---------- */
+.fav-scene { justify-content: flex-start; overflow-y: auto; overflow-x: hidden; gap: 0; padding: 16px 14px 24px; background:
+  radial-gradient(circle at 50% 50%, #ffffff66 0 4px, transparent 5px) 0 0/44px 44px,
+  repeating-linear-gradient(90deg, #ffcfe3 0 30px, #ffbcd8 30px 60px); -webkit-overflow-scrolling: touch; }
+.fav-head { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 44px; }
+.fav-title { font-size: clamp(28px, 7.6vw, 48px); }
+.fav-sub { font-size: 22px; margin: 0; color: var(--pink-700); }
+.fav-count { margin: 4px 0 6px; padding: 2px 14px; background: #fff; border: 3px solid var(--outline); border-radius: 999px; font: 400 15px var(--font-title); color: var(--pink-700); box-shadow: 0 3px 0 var(--outline); }
+.fav-wall { width: min(100%, 620px); display: flex; flex-direction: column; gap: 16px; padding-block: 6px; }
+.fav-cat { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.ribbon { margin: 0; position: relative; padding: 3px 26px; font: 400 21px var(--font-title); color: #fff; text-shadow: 0 2px 0 #8a2760; background: linear-gradient(#ff8fbf, #f0568e); border: 3px solid var(--outline); box-shadow: 0 4px 0 var(--outline); }
+.ribbon::before, .ribbon::after { content: ''; position: absolute; top: 8px; width: 20px; height: 100%; background: #d63a78; border: 3px solid var(--outline); z-index: -1; }
+.ribbon::before { left: -16px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 30% 50%); } .ribbon::after { right: -16px; clip-path: polygon(0 0, 100% 0, 70% 50%, 100% 100%, 0 100%); }
+.fav-grid { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 12px; justify-items: center; }
+.frame { width: 100%; max-width: 170px; display: flex; flex-direction: column; align-items: center; background: none; border: 0; padding: 0; cursor: pointer; transform-origin: 50% 0; animation: sway 4.5s ease-in-out infinite; font-family: var(--font-ui); }
+@keyframes sway { 50% { transform: rotate(2.2deg); } 0%, 100% { transform: rotate(-2.2deg); } }
+.frame:hover { animation-play-state: paused; }
+.nail { width: 52%; height: 18px; margin-bottom: -2px; }
+.frame-box { width: 100%; padding: 5px; background: linear-gradient(135deg, #ffe08a, #f2b84b); border: 3px solid var(--outline); border-radius: 10px; box-shadow: 0 5px 0 var(--outline), 0 10px 14px #6b235833; }
+.pic { aspect-ratio: 4/5; width: 100%; border: 3px solid #fff; border-radius: 6px; background: radial-gradient(circle at 30% 25%, #fff8, #fff0 45%), var(--c); display: grid; place-items: center; overflow: hidden; }
+.pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pic-emoji { font-size: clamp(32px, 11vw, 64px); filter: drop-shadow(0 3px 0 #6b235833); }
+.plaque { margin-top: 10px; padding: 1px 8px; background: #fff; border: 2px solid var(--outline); border-radius: 8px; font: 400 13px var(--font-title); color: var(--pink-700); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fav-go { position: sticky; bottom: 4px; align-self: center; flex-shrink: 0; margin-top: 16px; z-index: 5; white-space: nowrap; }
+.zoom { position: absolute; inset: 0; z-index: 40; display: grid; place-items: center; background: #3a1d5acc; padding: 16px; }
+.zoom-card { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; max-width: 340px; }
+.frame-box.big { width: min(64vw, 280px); padding: 8px; }
+.frame-box.big .pic-emoji { font-size: clamp(64px, 24vw, 120px); }
+.zoom-title { margin: 6px 0 0; font: 400 28px var(--font-title); color: #fff; -webkit-text-stroke: 5px var(--outline); paint-order: stroke fill; }
+.zoom-cap { margin: 0 0 6px; font-size: 24px; line-height: 1.05; color: #fff; }
