@@ -1,0 +1,56 @@
+import { audio } from './lib/audio.js';
+import * as fx from './lib/confetti.js';
+
+export const ORDER = ['door', 'room', 'favwall', 'photos', 'gifts', 'cake', 'blow', 'cut', 'finale'];
+
+const stage = document.getElementById('stage');
+const params = new URLSearchParams(location.search);
+const ctx = { stage, audio, fx, params, preview: params.has('preview') || params.has('scene'), copy: null, name: null };
+let current = null;
+
+async function loadJson(path) {
+  try { return await (await fetch(path)).json(); } catch { return {}; }
+}
+
+async function go(name) {
+  if (current?.unmount) current.unmount();
+  stage.replaceChildren();
+  ctx.name = name;
+  let mod;
+  try {
+    mod = await import(`./scenes/${name}.js`);
+  } catch (e) {
+    mod = placeholder(name);
+  }
+  current = mod.default;
+  current.mount(stage, ctx);
+}
+
+ctx.go = go;
+ctx.next = () => {
+  const i = ORDER.indexOf(ctx.name);
+  if (i >= 0 && i < ORDER.length - 1) go(ORDER[i + 1]);
+};
+
+// Shown for scenes that aren't built yet.
+function placeholder(name) {
+  return {
+    default: {
+      mount(el) {
+        el.innerHTML = `<section class="scene"><h2>🚧 ${name}</h2><p>This scene is coming soon.</p><button class="btn" id="skip">Continue</button></section>`;
+        el.querySelector('#skip').onclick = () => ctx.next();
+      },
+    },
+  };
+}
+
+const muteBtn = document.getElementById('mute');
+muteBtn.onclick = () => {
+  audio.setMuted(!audio.muted);
+  muteBtn.textContent = audio.muted ? '🔇' : '🔊';
+};
+addEventListener('pointerdown', () => audio.unlock(), { once: true });
+
+ctx.copy = await loadJson('content/copy.json');
+const start = params.get('scene');
+go(ORDER.includes(start) ? start : 'door');

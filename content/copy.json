@@ -1,0 +1,19 @@
+{
+  "door": {
+    "title": "Priyanka's Party Room 💖",
+    "lockedHint": "The door opens on 11 November… sabr karo, chudail! ⏳",
+    "question": "Who is your Priya Mitar? 🔑",
+    "placeholder": "type the secret answer…",
+    "button": "Open the door",
+    "wrong": [
+      "Hurrr! Galat jawab, nasharam! 😾",
+      "Bhodam! Phir se try karo 🙄",
+      "Nope! Even a chudail can do better 🧹",
+      "Door says: 'main nahi kholunga' 🚪"
+    ],
+    "himanshu": [
+      "Himanshu? Who's that? Main kisi Himanshu ko nahi jaanti 🙅‍♀️ Wo naam nahi, jo tu gussa hone pe bulati hai!",
+      "Himanshu?! Itna formal? 😂 The door is offended. Try the name you actually call him!"
+    ]
+  }
+}
