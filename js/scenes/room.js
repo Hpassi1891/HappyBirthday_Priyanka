@@ -14,8 +14,11 @@ export default {
       <section class="room">
         <div class="wall"></div>
         <div class="floor"></div>
+        <div class="rug" aria-hidden="true"></div>
+        <div class="curtain l" aria-hidden="true"></div><div class="curtain r" aria-hidden="true"></div>
+        <div class="twinkles" aria-hidden="true">${[[14, 200], [84, 190], [24, 300], [76, 330], [50, 80], [12, 380], [88, 400]].map(([x, y], i) => `<b style="left:${x}%;top:${y}px;animation-delay:${i * .5}s">✦</b>`).join('')}</div>
         <svg class="fairy" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0 8 Q100 54 200 14 T400 10" fill="none" stroke="#b3225f66" stroke-width="2"/>
+          <path d="M0 8 Q100 54 200 14 T400 10" fill="none" stroke="#6b2358" stroke-width="3"/>
         </svg>
         <div class="bulbs" id="bulbs"></div>
         <div class="disco" id="disco" aria-hidden="true"><i></i></div>

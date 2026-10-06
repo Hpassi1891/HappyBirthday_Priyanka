@@ -8,17 +8,45 @@ export default {
   mount(stage, ctx) {
     const c = ctx.copy.door;
     const unlocked = isUnlocked(new Date(), { preview: ctx.preview });
+    const stars = Array.from({ length: 34 }, () =>
+      `<i style="left:${(Math.random() * 100).toFixed(1)}%;top:${(Math.random() * 62).toFixed(1)}%;animation-delay:${(Math.random() * 3).toFixed(2)}s;transform:scale(${(.5 + Math.random()).toFixed(2)})"></i>`).join('');
     stage.innerHTML = `
       <section class="scene door-scene">
-        <h1 class="hand door-title">${c.title}</h1>
-        <div class="door" id="door">
-          <div class="door-panel"><span class="knob"></span><span class="door-heart">💖</span></div>
+        <div class="sky" aria-hidden="true">
+          <div class="stars">${stars}</div>
+          <span class="moon"></span>
+          <span class="cloud c1"></span><span class="cloud c2"></span>
+          <svg class="castle" viewBox="0 0 240 190" aria-hidden="true">
+            <g stroke="#6b2358" stroke-width="4" stroke-linejoin="round">
+              <rect x="20" y="96" width="34" height="94" fill="#ffe3f1"/><path d="M12 98 L37 40 L62 98 Z" fill="#ff7eb3"/>
+              <rect x="186" y="96" width="34" height="94" fill="#ffe3f1"/><path d="M178 98 L203 40 L228 98 Z" fill="#ff7eb3"/>
+              <rect x="86" y="70" width="68" height="120" fill="#fff3fa"/><path d="M76 72 L120 4 L164 72 Z" fill="#f0568e"/>
+              <rect x="54" y="126" width="132" height="64" fill="#ffe3f1"/>
+              <path d="M104 190 V156 a16 16 0 0 1 32 0 V190 Z" fill="#c9a7ff"/>
+              <circle cx="120" cy="52" r="8" fill="#8fd3ff"/><circle cx="37" cy="76" r="6" fill="#8fd3ff"/><circle cx="203" cy="76" r="6" fill="#8fd3ff"/>
+              <path d="M120 4 V-10 M120 -10 l16 6 l-16 6" fill="#f7c86a" stroke-width="3"/>
+            </g>
+          </svg>
+          <span class="hill h1"></span><span class="hill h2"></span>
+          <b class="spark s1">✦</b><b class="spark s2">✦</b><b class="spark s3">✧</b><b class="spark s4">✦</b>
         </div>
-        <div id="locked" class="${unlocked ? 'hidden' : ''}">
+        <h1 class="title door-title">${c.title}</h1>
+        <div class="arch">
+          <div class="door" id="door">
+            <div class="door-panel">
+              <span class="plank"></span><span class="plank p2"></span>
+              <span class="porthole">💖</span>
+              <span class="hinge hg1"></span><span class="hinge hg2"></span>
+              <span class="knob"></span>
+              <div class="note" id="note"><span class="pin"></span>${c.note.map((l) => `<p>${l}</p>`).join('')}</div>
+            </div>
+          </div>
+        </div>
+        <div id="locked" class="card ${unlocked ? 'hidden' : ''}">
           <p class="hand hint">${c.lockedHint}</p>
           <div class="count" id="count"></div>
         </div>
-        <form id="form" class="${unlocked ? '' : 'hidden'}" autocomplete="off">
+        <form id="form" class="card ${unlocked ? '' : 'hidden'}" autocomplete="off">
           <p class="question">${c.question}</p>
           <input id="answer" class="answer" type="text" placeholder="${c.placeholder}" enterkeyhint="go" autocapitalize="off">
           <button class="btn" type="submit">${c.button}</button>
@@ -28,6 +56,8 @@ export default {
 
     const door = stage.querySelector('#door');
     const msg = stage.querySelector('#msg');
+    const note = stage.querySelector('#note');
+    note.onclick = (e) => { e.stopPropagation(); ctx.audio.click(); gsap.fromTo(note, { rotation: -9 }, { rotation: -3, duration: .7, ease: 'elastic.out(2,.3)' }); };
 
     if (!unlocked) {
       const countEl = stage.querySelector('#count');
