@@ -63,6 +63,22 @@ export const audio = {
     g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + 3.4);
     o.connect(g).connect(a.destination); o.start(); o.stop(a.currentTime + 3.5);
   },
+  // "ba-dum-tss" for the joke punchline
+  badum() {
+    tone(150, 0, 0.12, { type: 'triangle', gain: 0.2 });
+    tone(110, 0.16, 0.14, { type: 'triangle', gain: 0.2 });
+    const a = ac();
+    if (!a || muted) return;
+    const len = Math.floor(a.sampleRate * 0.5);
+    const buf = a.createBuffer(1, len, a.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
+    const src = a.createBufferSource(); src.buffer = buf;
+    const f = a.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 5000;
+    const g = a.createGain(); g.gain.value = 0.2;
+    src.connect(f).connect(g).connect(a.destination);
+    src.start(a.currentTime + 0.34);
+  },
   click() { tone(700, 0, 0.05, { type: 'triangle', gain: 0.08 }); },
   // Happy Birthday in C major; returns total duration in seconds.
   birthday() {

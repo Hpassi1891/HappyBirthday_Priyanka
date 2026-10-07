@@ -17,6 +17,7 @@ const check = (name, ok) => { console.log((ok ? 'PASS ' : 'FAIL ') + name); if (
 // Locked before the birthday (page clock is real: Oct 2026 in this env, so force it)
 await page.clock.install({ time: new Date(2026, 9, 6) });
 await page.goto(BASE + '/');
+await page.waitForSelector('#count');
 check('locked: countdown visible', await page.locator('#count').isVisible());
 check('locked: no input', !(await page.locator('#answer').isVisible()));
 
@@ -98,6 +99,28 @@ check('photos: flips back', (await page.locator('.polaroid.flipped').count()) ==
 await page.click('#go');
 await page.waitForSelector('.photo-scene', { state: 'detached', timeout: 9000 });
 check('photos: advances', !(await page.locator('.photo-scene').count()));
+
+// Gift table
+await page.goto(BASE + '/?scene=gifts');
+await page.waitForSelector('.gift');
+await page.waitForSelector('#stage:not(.busy)');
+await page.waitForTimeout(1600); // let the gifts drop in
+check('gifts: 4 presents', (await page.locator('.gift').count()) === 4);
+check('gifts: continue hidden at start', !(await page.locator('#go').isVisible()));
+for (let i = 0; i < 3; i++) {
+  await page.locator('.gift').nth(i).click({ force: true });
+  await page.waitForSelector('.gift-card', { timeout: 5000 });
+  if (i === 2) { await page.click('.reveal'); check('gifts: joke punchline reveals', await page.locator('.punch').isVisible()); }
+  if (i === 0) check('gifts: poem card shows its title', (await page.textContent('.gift-title')) === 'A little poem');
+  await page.click('.zoom .btn:last-child');
+  await page.waitForSelector('.zoom', { state: 'detached', timeout: 3000 });
+}
+check('gifts: counter 3/4', (await page.textContent('.fav-count')).includes('3 / 4'));
+check('gifts: continue appears after 3', await page.locator('#go').isVisible());
+check('gifts: opened presents are ticked', (await page.locator('.gift.seen').count()) === 3);
+await page.click('#go');
+await page.waitForSelector('.gift-scene', { state: 'detached', timeout: 9000 });
+check('gifts: advances', !(await page.locator('.gift-scene').count()));
 
 check('no JS errors', errors.length === 0);
 if (errors.length) console.log(errors);
