@@ -26,7 +26,7 @@ check('finale: the cartoon screen is taped up with a play button', await page.lo
 check('finale: next button hidden until the story ends', !(await page.locator('#toEnd').isVisible()));
 const before = await page.$eval('#view', (e) => e.innerHTML);
 await page.click('#play');
-await page.waitForFunction(() => document.querySelector('#cap').textContent.includes('alarm'), null, { timeout: 8000 });
+await page.waitForFunction(() => document.querySelector('#cap').textContent.includes('laptop'), null, { timeout: 8000 });
 check('finale: first caption appears when the cartoon starts', true);
 await page.waitForTimeout(300);
 check('finale: the picture is actually animating (it changes over time)', (await page.$eval('#view', (e) => e.innerHTML)) !== before);

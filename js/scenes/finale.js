@@ -58,20 +58,25 @@ export default {
     const fired = new Set();
     cleanup.push(() => cancelAnimationFrame(raf));
 
+    // Draw at the screen's own refresh rate. If the device can't keep up we quietly drop to ~30 fps.
+    let minGap = 0, slow = 0, frames = 0;
     const draw = () => {
-      const { si, k } = locate(t);
+      const { si, t: local } = locate(t);
       if (si !== lastShot) {
         lastShot = si;
         setCap(SHOTS[si].caption);
-        gsap.fromTo(view, { opacity: 0.15 }, { opacity: 1, duration: .25 });   // a quick cut between scenes
       }
-      // sound effects fire once as each cue frame is reached
+      // sound effects fire once as each cue time is reached
       const sfx = SHOTS[si].sfx;
       for (const key of Object.keys(sfx)) {
         const id = `${si}:${key}`;
-        if (k >= +key && !fired.has(id)) { fired.add(id); ctx.audio.sfx(sfx[key]); }
+        if (local >= +key && !fired.has(id)) { fired.add(id); ctx.audio.sfx(sfx[key]); }
       }
-      view.innerHTML = renderShot(si, k);
+      view.innerHTML = renderShot(si, local);
+      // each scene fades in and out of the next, so there is never a hard cut
+      const dur = SHOTS[si].dur;
+      const edge = Math.min(si === 0 ? 1 : local / 0.3, si === SHOTS.length - 1 ? 1 : (dur - local) / 0.3, 1);
+      view.style.opacity = edge < 1 ? 0.15 + 0.85 * Math.max(0, edge) : 1;
       prog.style.width = `${Math.min(100, (t / TOTAL_SECONDS) * 100)}%`;
     };
 
@@ -81,7 +86,13 @@ export default {
       lastNow = now;
       t += dt * SPEED;
       if (t >= TOTAL_SECONDS) { running = false; t = TOTAL_SECONDS; draw(); finish(); return; }
-      if (now - lastDraw >= 32) { lastDraw = now; draw(); }   // about 30 frames a second
+      if (now - lastDraw >= minGap) {
+        const t0 = performance.now();
+        lastDraw = now;
+        draw();
+        // if drawing alone takes too long to hold 60 fps, settle for 30
+        if (++frames > 20 && minGap === 0 && performance.now() - t0 > 9 && ++slow > 12) minGap = 30;
+      }
       raf = requestAnimationFrame(loop);
     };
     const resume = () => { running = true; lastNow = performance.now(); $('#paused').hidden = true; raf = requestAnimationFrame(loop); };

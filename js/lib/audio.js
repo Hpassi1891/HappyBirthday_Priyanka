@@ -245,6 +245,21 @@ export const audio = {
       case 'hurr': sweep('sawtooth', 160, 62, 0.55, 0.22, 0, 0.15, 11); noise(0.5, 'lowpass', 700, 250, 0.12, 0, 1, 0.1); break;
       case 'cheer': this.cheer(); break;
       case 'sparkle': this.sparkle(); break;
+      // the love-story cartoon
+      case 'tap': sweep('sine', 900, 600, 0.05, 0.45, 0, 0.05); noise(0.02, 'bandpass', 3000, 2000, 0.16, 0, 1, 0, 'hit'); break;
+      case 'type': [0, 0.09, 0.19, 0.27].forEach((d) => noise(0.025, 'bandpass', 2400 + d * 3000, 1800, 0.3, d, 1.2, 0.02, 'hit')); break;
+      case 'buzz': [0, 0.14, 0.28].forEach((d) => sweep('square', 118, 112, 0.1, 0.14, d, 0.02)); break;
+      case 'notify': bell(1318, 0, 0.7, 0.9); bell(1760, 0.11, 0.7, 1.1); break;
+      case 'whoosh': this.whoosh(); break;
+      case 'vroom': sweep('sawtooth', 70, 190, 0.9, 0.16, 0, 0.1, 22); noise(0.9, 'lowpass', 300, 900, 0.1, 0, 0.8, 0.1); break;
+      case 'bump': sweep('sine', 160, 60, 0.2, 0.4, 0, 0.05); noise(0.07, 'lowpass', 500, 200, 0.12, 0, 1, 0, 'hit'); break;
+      case 'munch': [0, 0.13, 0.27].forEach((d) => noise(0.05, 'bandpass', 1100, 700, 0.45, d, 1.4, 0.05, 'hit')); break;
+      case 'slurp': noise(0.5, 'bandpass', 700, 2200, 0.4, 0, 3, 0.1); break;
+      case 'yuck': sweep('sawtooth', 380, 110, 0.6, 0.28, 0, 0.12, 14); break;
+      case 'gasp': noise(0.28, 'bandpass', 900, 2400, 0.34, 0, 1.2, 0.1); break;
+      case 'plop': sweep('sine', 520, 180, 0.12, 0.3, 0, 0.1); break;
+      case 'ding': this.ding(); break;
+      case 'heart': this.thump(); break;
       default: break;
     }
   },

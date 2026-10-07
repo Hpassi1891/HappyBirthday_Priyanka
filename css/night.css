@@ -139,3 +139,4 @@
 [data-look="night"] .scr-prog { border: 1px solid #ffffff55; background: #ffffff14; }
 [data-look="night"] .scr-prog i { background: linear-gradient(90deg, #b9a6ff, #f2b5a7); }
 [data-look="night"] .fb-cap { font: italic 600 28px/1.05 var(--font-title); color: #ffd9c9; }
+[data-look="night"] .scr-wrap { width: min(calc(100vw - 32px), 460px); }

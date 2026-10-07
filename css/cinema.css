@@ -128,3 +128,4 @@
 [data-look="cinema"] .scr-prog { border: 1px solid #ffffff55; background: #ffffff14; }
 [data-look="cinema"] .scr-prog i { background: linear-gradient(90deg, #ffc58f, #f4a259); }
 [data-look="cinema"] .fb-cap { font: italic 600 28px/1.05 var(--font-title); color: #ffe9d2; }
+[data-look="cinema"] .scr-wrap { width: min(calc(100vw - 32px), 460px); }

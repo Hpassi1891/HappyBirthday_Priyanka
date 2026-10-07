@@ -3,8 +3,8 @@
 // Each frame passes a jitter function `j` seeded by the frame number, which makes every line shake a little
 // from page to page, the way hand-drawn flip-book lines "boil".
 export const W = 300, H = 360, GROUND = 296;
-const INK = '#3c4a85';
-const SW = 3.2;
+export const INK = '#3c4a85';
+export const SW = 3.2;
 
 function mulberry(a) {
   return function () {
@@ -16,12 +16,12 @@ function mulberry(a) {
 }
 export const jitter = (k) => { const r = mulberry((k + 1) * 2654435761); return (a = 1) => (r() - 0.5) * 2 * a; };
 
-const n = (v) => Math.round(v * 10) / 10;
+export const n = (v) => Math.round(v * 10) / 10;
 const rad = (d) => (d * Math.PI) / 180;
 const end = (x, y, deg, len) => [x + Math.sin(rad(deg)) * len, y + Math.cos(rad(deg)) * len];
-const line = (x1, y1, x2, y2, stroke = INK, w = SW) => `<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round"/>`;
-const limb = (x1, y1, x2, y2, color, w) => line(x1, y1, x2, y2, INK, w + 4.5) + line(x1, y1, x2, y2, color, w);
-const circ = (x, y, r, fill = '#fff', stroke = INK, w = SW) => `<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${fill}" stroke="${stroke}" stroke-width="${w}"/>`;
+export const line = (x1, y1, x2, y2, stroke = INK, w = SW) => `<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round"/>`;
+export const limb = (x1, y1, x2, y2, color, w) => line(x1, y1, x2, y2, INK, w + 4.5) + line(x1, y1, x2, y2, color, w);
+export const circ = (x, y, r, fill = '#fff', stroke = INK, w = SW) => `<circle cx="${n(x)}" cy="${n(y)}" r="${n(r)}" fill="${fill}" stroke="${stroke}" stroke-width="${w}"/>`;
 const heartPath = (s = 1) => `M0 ${6 * s} C${-12 * s} ${-2 * s} ${-7 * s} ${-12 * s} 0 ${-5 * s} C${7 * s} ${-12 * s} ${12 * s} ${-2 * s} 0 ${6 * s}Z`;
 export const heart = (x, y, s = 1, fill = '#e8416f', rot = 0) => `<path transform="translate(${n(x)} ${n(y)}) rotate(${n(rot)})" d="${heartPath(s)}" fill="${fill}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`;
 export const star = (x, y, s = 6, fill = '#ffd166') => `<path transform="translate(${n(x)} ${n(y)})" d="M0 ${-s} L${s * 0.3} ${-s * 0.3} L${s} 0 L${s * 0.3} ${s * 0.3} L0 ${s} L${-s * 0.3} ${s * 0.3} L${-s} 0 L${-s * 0.3} ${-s * 0.3}Z" fill="${fill}" stroke="${INK}" stroke-width="1.6" stroke-linejoin="round"/>`;
@@ -31,8 +31,8 @@ const LOOKS = {
   her: { skin: '#ffd9b8', top: '#ff9ac2', bottom: '#c9a7ff', shoes: '#ffffff' },
 };
 
-function face(expr, who) {
-  const eye = (x, y, r = 2.4) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${INK}"/>`;
+function face(expr, who, blink = false) {
+  const eye = (x, y, r = 2.4) => (blink ? `<path d="M${x - 3.4} ${y} h6.8" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/>` : `<circle cx="${x}" cy="${y}" r="${r}" fill="${INK}"/>`);
   const blush = `<ellipse cx="-14" cy="6" rx="5" ry="3" fill="#ff8fb8" opacity=".6"/><ellipse cx="14" cy="6" rx="5" ry="3" fill="#ff8fb8" opacity=".6"/>`;
   const brow = (x1, y1, x2, y2) => line(x1, y1, x2, y2, INK, 2.6);
   switch (expr) {
@@ -44,6 +44,10 @@ function face(expr, who) {
     case 'love': return `<path transform="translate(-8 -1) scale(.55)" d="${heartPath()}" fill="#e8416f"/><path transform="translate(8 -1) scale(.55)" d="${heartPath()}" fill="#e8416f"/><path d="M-6 8 Q0 17 6 8" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/>${blush}`;
     case 'blush': return `${eye(-8, 0)}${eye(8, 0)}<path d="M-5 10 q5 4 10 0" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/><ellipse cx="-14" cy="6" rx="6" ry="3.6" fill="#ff6f9c" opacity=".75"/><ellipse cx="14" cy="6" rx="6" ry="3.6" fill="#ff6f9c" opacity=".75"/>`;
     case 'think': return `${eye(-8, -1)}${eye(8, -1)}${brow(-14, -9, -4, -7)}${brow(4, -7, 14, -10)}<path d="M-4 11 h8" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>`;
+    case 'stare': return `${circ(-8, -1, 6.4, '#fff', INK, 2.2)}<circle cx="-8" cy="-1" r="3.4" fill="${INK}"/><circle cx="-9.2" cy="-2.4" r="1.2" fill="#fff"/>${circ(8, -1, 6.4, '#fff', INK, 2.2)}<circle cx="8" cy="-1" r="3.4" fill="${INK}"/><circle cx="6.8" cy="-2.4" r="1.2" fill="#fff"/><path d="M-5 11 q5 4 10 0" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/>${blush}`;
+    case 'yuck': return `<path d="M-13 -3 l8 3 l-8 3 M13 -3 l-8 3 l8 3" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M-9 12 q3 -4 6 0 t6 0 t6 0" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M4 13 q5 3 4 9 q-5 1 -6 -5Z" fill="#ff7aa6" stroke="${INK}" stroke-width="1.8"/><ellipse cx="0" cy="3" rx="19" ry="12" fill="#9be3b0" opacity=".35"/>`;
+    case 'smirk': return `${eye(-8, 0)}${eye(8, 0)}${brow(-14, -9, -4, -7)}${brow(4, -10, 14, -7)}<path d="M-6 10 Q2 12 9 6" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/>${blush}`;
+    case 'cry': return `${eye(-8, 0)}${eye(8, 0)}${brow(-14, -6, -4, -9)}${brow(4, -9, 14, -6)}<path d="M-6 13 q6 -6 12 0" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M-9 4 q-3 8 0 10 q3 -2 0 -10Z M9 4 q3 8 0 10 q-3 -2 0 -10Z" fill="#8fd3ff" stroke="${INK}" stroke-width="1.6"/>`;
     default: return `${eye(-8, 0)}${eye(8, 0)}<path d="M-8 8 Q0 16 8 8" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/>${blush}`;
   }
 }
@@ -55,13 +59,17 @@ export const envelope = (x, y, rot = 0, s = 1) => `<g transform="translate(${n(x
 
 export function person(o) {
   const { who = 'him', x = 150, y = GROUND, s = 1, flip = false, bob = 0, rot = 0, legL = 0, legR = 0, armL = 0, armR = 0, tilt = 0,
-    expr = 'smile', hold = null, hat = false, j = () => 0 } = o;
+    expr = 'smile', hold = null, hat = false, blink = false, sit = false, red = 0, shadow = true, j = () => 0 } = o;
   const L = LOOKS[who];
-  const fl = end(-6, -40, legL, 38), fr = end(6, -40, legR, 38);
+  const fl = sit ? [20 + legL * 0.2, -4] : end(-6, -40, legL, 38), fr = sit ? [22 + legR * 0.2, -4] : end(6, -40, legR, 38);
   const shL = [-13, -70], shR = [13, -70];
   const hl = end(shL[0], shL[1], armL, 30), hr = end(shR[0], shR[1], armR, 30);
-  let g = `<ellipse cx="0" cy="2" rx="24" ry="5" fill="#3c4a8522"/>`;
-  g += limb(-6 + j(.6), -40, fl[0] + j(.8), fl[1], L.bottom, 8) + limb(6 + j(.6), -40, fr[0] + j(.8), fr[1], L.bottom, 8);
+  let g = shadow ? `<ellipse cx="0" cy="2" rx="24" ry="5" fill="#3c4a8522"/>` : '';
+  if (sit) {
+    // seated on a bike: thigh forward, shin down
+    g += limb(-6, -40, 22, -40, L.bottom, 8) + limb(22, -40, fl[0], fl[1], L.bottom, 8);
+    g += limb(4, -40, 26, -38, L.bottom, 8) + limb(26, -38, fr[0], fr[1], L.bottom, 8);
+  } else g += limb(-6 + j(.6), -40, fl[0] + j(.8), fl[1], L.bottom, 8) + limb(6 + j(.6), -40, fr[0] + j(.8), fr[1], L.bottom, 8);
   g += `<ellipse cx="${n(fl[0] + 3)}" cy="${n(fl[1] + 1)}" rx="9" ry="5" fill="${L.shoes}" stroke="${INK}" stroke-width="2.6"/><ellipse cx="${n(fr[0] + 3)}" cy="${n(fr[1] + 1)}" rx="9" ry="5" fill="${L.shoes}" stroke="${INK}" stroke-width="2.6"/>`;
   g += who === 'her'
     ? `<path d="M-14 -76 Q-17 -50 -24 -30 L24 -30 Q17 -50 14 -76 Q0 -82 -14 -76Z" fill="${L.top}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M-12 -44 q12 6 24 0" stroke="#fff" stroke-opacity=".7" stroke-width="3" fill="none" stroke-linecap="round"/>`
@@ -75,15 +83,17 @@ export function person(o) {
   if (who === 'him') {
     g += `<path d="M-17 -14 L-24 -38 L-5 -22Z" fill="#ff6b8b" stroke="${INK}" stroke-width="2.6" stroke-linejoin="round"/><path d="M17 -14 L24 -38 L5 -22Z" fill="#ff6b8b" stroke="${INK}" stroke-width="2.6" stroke-linejoin="round"/>`;
     g += circ(0, 0, 23, L.skin);
+    if (red) g += `<circle r="22" fill="#ff3b5c" opacity="${n(red * 0.5)}"/>`;
     g += `<path d="M-20 -8 Q-12 -26 0 -22 Q12 -26 20 -8 Q10 -17 0 -14 Q-10 -17 -20 -8Z" fill="#3a2a3a" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"/><path d="M-2 -22 L2 -31 L6 -21" fill="#3a2a3a" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/>`;
   } else {
     g += circ(0, -26, 9, '#2e2233', INK, 2.8);
     g += `<path d="M-6 -29 L9 -41" stroke="#ffd166" stroke-width="3.4" stroke-linecap="round"/><path d="M-6 -29 L-8 -27" stroke="#ff7aa6" stroke-width="3.4" stroke-linecap="round"/>`;
     g += circ(0, 0, 23, L.skin);
+    if (red) g += `<circle r="22" fill="#ff3b5c" opacity="${n(red * 0.5)}"/>`;
     g += `<path d="M-22 -2 Q-22 -26 0 -24 Q22 -26 22 -2 Q16 -15 4 -15 Q-12 -13 -22 -2Z" fill="#2e2233" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"/>`;
     g += `<circle cx="-8" cy="0" r="7.4" fill="#ffffff55" stroke="${INK}" stroke-width="2"/><circle cx="8" cy="0" r="7.4" fill="#ffffff55" stroke="${INK}" stroke-width="2"/><path d="M-0.6 0 h1.2" stroke="${INK}" stroke-width="2"/>`;
   }
-  g += face(expr, who);
+  g += face(expr, who, blink && expr !== 'stare');
   if (hat) g += `<path d="M-14 -20 L0 -52 L14 -20Z" fill="#ffd166" stroke="${INK}" stroke-width="2.6" stroke-linejoin="round"/><path d="M-9 -29 l14 -3 M-5 -39 l9 -2" stroke="#ff7aa6" stroke-width="3"/>${circ(0, -53, 4, '#ff7aa6', INK, 2)}`;
   g += `</g>`;
   const fx = flip ? -s : s;

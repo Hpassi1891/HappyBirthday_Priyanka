@@ -11,7 +11,8 @@ const errors = [];
 page.on('pageerror', (e) => errors.push(e.message));
 await page.goto(BASE + '/tools/storyboard.html');   // any page on the site will do; we only need module imports
 const CUES = ['click', 'pop', 'sparkle', 'wrong', 'creak', 'cheer', 'flip', 'glow', 'puff', 'slice', 'badum', 'whoosh', 'swell', 'thump', 'twang', 'arrow', 'bloom', 'chime', 'ding', 'birthday',
-  'sfx:alarm', 'sfx:toss', 'sfx:slip', 'sfx:thud', 'sfx:bark', 'sfx:rain', 'sfx:knock', 'sfx:hurr'];
+  'sfx:alarm', 'sfx:toss', 'sfx:slip', 'sfx:thud', 'sfx:bark', 'sfx:rain', 'sfx:knock', 'sfx:hurr',
+  'sfx:tap', 'sfx:type', 'sfx:buzz', 'sfx:notify', 'sfx:whoosh', 'sfx:vroom', 'sfx:bump', 'sfx:munch', 'sfx:slurp', 'sfx:yuck', 'sfx:gasp', 'sfx:plop', 'sfx:heart'];
 const results = await page.evaluate(async (cues) => {
   const { audio } = await import('/js/lib/audio.js');
   const out = [];
