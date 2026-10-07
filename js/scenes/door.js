@@ -20,6 +20,25 @@ const DOOR_SVG = `
   <path d="M0 186 L150 186" stroke="#3c4a85" stroke-width="3.5"/>
 </svg>`;
 
+// Night look: a portal in the sky. Same class names as the diary door, so the open animation is shared.
+const NIGHT_DOOR_SVG = `
+<svg class="door-svg night-door" viewBox="0 0 150 190" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <defs>
+    <radialGradient id="portalG" cx="50%" cy="70%" r="75%"><stop offset="0" stop-color="#fff3d6"/><stop offset=".45" stop-color="#f2b5a7"/><stop offset="1" stop-color="#b9a6ff"/></radialGradient>
+    <linearGradient id="panelG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2d3278"/><stop offset="1" stop-color="#171a4a"/></linearGradient>
+  </defs>
+  <path d="M10 186 V62 Q10 8 75 8 Q140 8 140 62 V186 Z" fill="url(#portalG)" stroke="#f2b5a7" stroke-width="3.5"/>
+  <g class="inside"><path d="M75 28 L75 12 M75 28 L58 18 M75 28 L92 18 M40 70 L24 66 M110 70 L126 66" stroke="#fff3d6" stroke-width="3"/></g>
+  <g class="dpanel">
+    <path d="M20 186 V64 Q20 20 75 20 Q130 20 130 64 V186 Z" fill="url(#panelG)" stroke="#f2b5a7" stroke-width="3.5"/>
+    <path d="M32 180 V68 Q32 34 75 34 Q118 34 118 68 V180" stroke="#f2b5a766" stroke-width="2"/>
+    <g class="heart"><path d="M84 62 A15 15 0 1 1 69 47 A12 12 0 0 0 84 62Z" fill="#fff3d6" stroke="#f2b5a7" stroke-width="2.5"/></g>
+    <path d="M52 100 l2.5 6 l6 .5 l-4.6 4 l1.5 6 l-5.4 -3.3 l-5.4 3.3 l1.5 -6 l-4.6 -4 l6 -.5Z M96 124 l2 5 l5 .4 l-3.8 3.3 l1.2 5 l-4.4 -2.7 l-4.4 2.7 l1.2 -5 l-3.8 -3.3 l5 -.4Z M60 150 l1.6 4 l4 .3 l-3 2.6 l1 4 l-3.6 -2.2 l-3.6 2.2 l1 -4 l-3 -2.6 l4 -.3Z" fill="#f2b5a7" stroke="none" opacity=".85"/>
+    <circle class="knob" cx="110" cy="124" r="6" fill="#ffe27a" stroke="#f2b5a7" stroke-width="2.5"/>
+  </g>
+  <path d="M0 186 L150 186" stroke="#f2b5a7" stroke-width="3"/>
+</svg>`;
+
 const SUN_SVG = `
 <svg class="doodle sun" viewBox="0 0 80 80" fill="none" stroke-linecap="round" aria-hidden="true">
   <g class="rays" stroke="#f0a81a" stroke-width="3.5">
@@ -36,12 +55,14 @@ const CLOUD_SVG = `
 
 export default {
   mount(stage, ctx) {
-    const c = ctx.copy.door;
+    const night = ctx.look === 'night';
+    const c = night ? { ...ctx.copy.door, ...ctx.copy.door.night } : ctx.copy.door;
     const unlocked = isUnlocked(new Date(), { preview: ctx.preview });
     stage.innerHTML = `
       <section class="page door-scene">
         <div class="sky" aria-hidden="true">
-          ${SUN_SVG}${CLOUD_SVG}${CLOUD_SVG.replace('class="doodle cloud"', 'class="doodle cloud c2"')}
+          ${night ? '' : SUN_SVG + CLOUD_SVG + CLOUD_SVG.replace('class="doodle cloud"', 'class="doodle cloud c2"')}
+          ${night ? ['8%:30%', '84%:24%', '20%:60%', '76%:56%', '50%:12%'].map((p, i) => `<i class="fly" style="left:${p.split(':')[0]};top:${p.split(':')[1]};animation-delay:${-i * 1.3}s"></i>`).join('') : ''}
           <b class="fl f1">✦</b><b class="fl f2">♡</b><b class="fl f3">✧</b><b class="fl f4">♡</b><b class="fl f5">✦</b>
         </div>
         <i class="tape" style="left:50%;top:-4px;--r:-3deg"></i>
@@ -49,10 +70,10 @@ export default {
         <p class="dateline">${c.dateLine}</p>
         <div class="door-wrap">
           <div class="door" id="door">
-            ${DOOR_SVG}
+            ${night ? NIGHT_DOOR_SVG : DOOR_SVG}
             <div class="note" id="note"><i class="tape" style="left:50%;margin-left:-22px;top:-9px;width:44px;--r:3deg"></i>${c.note.map((l) => `<p>${l}</p>`).join('')}</div>
           </div>
-          <span class="stk s1">⭐</span><span class="stk s2">💖</span><span class="stk s3">🌷</span><span class="stk s4">✨</span>
+          ${night ? '<span class="stk s1">✦</span><span class="stk s2">☾</span><span class="stk s3">✧</span><span class="stk s4">✦</span>' : '<span class="stk s1">⭐</span><span class="stk s2">💖</span><span class="stk s3">🌷</span><span class="stk s4">✨</span>'}
         </div>
         <div id="locked" class="${unlocked ? 'hidden' : ''}">
           <p class="hint">${c.lockedHint}</p>

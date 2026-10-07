@@ -20,6 +20,13 @@
       "Only my Priya Mitar may enter.",
       "Hint: she calls me something scary 👹"
     ],
-    "dateLine": "11 november ♡ page 1"
+    "dateLine": "11 november ♡ page 1",
+    "night": {
+      "title": "Priyanka's Night of Wishes",
+      "dateLine": "opens on 11 november ✦",
+      "placeholder": "whisper the secret answer…",
+      "button": "step through ✦",
+      "lockedHint": "The stars open this door on 11 November… sabr karo, chudail! ⏳"
+    }
   }
 }
