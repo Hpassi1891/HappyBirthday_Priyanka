@@ -1,0 +1,13 @@
+{
+  "title": "Our Memories",
+  "subtitle": "Tap a photo to flip it 💌",
+  "unlockAfter": 3,
+  "photos": [
+    { "caption": "Photo #1", "emoji": "📸", "color": "#ffb3d4", "note": "Yahan hamari kisi yaad ke baare mein likhna 💖 (replace me)" },
+    { "caption": "Photo #2", "emoji": "🥰", "color": "#d9c2ff", "note": "Chudail, tu hamesha mere saath rehna! (replace me)" },
+    { "caption": "Photo #3", "emoji": "🍕", "color": "#ffd9a8", "note": "Wo din jab hum bina matlab hasse the 😂 (replace me)" },
+    { "caption": "Photo #4", "emoji": "🌸", "color": "#ffc2dd", "note": "Nasharam, tune ye photo kab li?! (replace me)" },
+    { "caption": "Photo #5", "emoji": "🎂", "color": "#bfe9ff", "note": "Bhodam bolke gussa hone ke baad ki best hasi 💕 (replace me)" },
+    { "caption": "Photo #6", "emoji": "✨", "color": "#fff0b8", "note": "Rakshas ki taraf se sabse pyaari yaad (replace me)" }
+  ]
+}

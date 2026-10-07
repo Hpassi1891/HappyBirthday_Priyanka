@@ -37,6 +37,7 @@ check('rakshas: moves past the door', !(await page.locator('.door-scene').count(
 
 // Room: lights + banner
 await page.goto(BASE + '/?scene=room');
+await page.waitForSelector('#switch');
 await page.click('#switch');
 check('room: lights on', await page.locator('.room.lit').count() === 1);
 // drag the first tile onto the banner
@@ -65,6 +66,7 @@ check('room: advances to next scene', !(await page.locator('.room').count()));
 
 // Fav wall
 await page.goto(BASE + '/?scene=favwall');
+await page.waitForSelector('.frame');
 check('favwall: 12 frames', (await page.locator('.frame').count()) === 12);
 check('favwall: continue hidden at start', !(await page.locator('#go').isVisible()));
 for (let i = 0; i < 4; i++) {
@@ -79,6 +81,24 @@ check('favwall: continue appears after 4', await page.locator('#go').isVisible()
 await page.click('#go');
 await page.waitForTimeout(300);
 check('favwall: advances', !(await page.locator('.fav-scene').count()));
+
+// Photo wall
+await page.goto(BASE + '/?scene=photos');
+await page.waitForSelector('.polaroid');
+check('photos: 6 polaroids', (await page.locator('.polaroid').count()) === 6);
+check('photos: continue hidden at start', !(await page.locator('#go').isVisible()));
+for (let i = 0; i < 3; i++) {
+  await page.locator('.polaroid').nth(i).click({ force: true });
+  await page.waitForTimeout(150);
+}
+check('photos: flipped state set', (await page.locator('.polaroid.flipped').count()) === 3);
+check('photos: counter 3/6', (await page.textContent('.fav-count')).includes('3 / 6'));
+check('photos: continue appears after 3', await page.locator('#go').isVisible());
+await page.locator('.polaroid').first().click({ force: true }); // flip back
+check('photos: flips back', (await page.locator('.polaroid.flipped').count()) === 2);
+await page.click('#go');
+await page.waitForTimeout(300);
+check('photos: advances', !(await page.locator('.photo-scene').count()));
 
 check('no JS errors', errors.length === 0);
 if (errors.length) console.log(errors);

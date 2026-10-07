@@ -1,26 +1,7 @@
+import { el, picture } from '../lib/dom.js';
+
 // Fav wall: framed favourites grouped by category. Content lives in content/favs.json.
 // An item may set `image` (path) to show a real picture; otherwise its emoji is shown.
-
-function el(tag, cls, text) {
-  const e = document.createElement(tag);
-  if (cls) e.className = cls;
-  if (text != null) e.textContent = text;
-  return e;
-}
-
-function picture(item) {
-  const pic = el('div', 'pic');
-  pic.style.setProperty('--c', item.color || '#ffc2dd');
-  const emoji = el('span', 'pic-emoji', item.emoji || '💖');
-  if (item.image) {
-    const img = new Image();
-    img.alt = item.title;
-    img.onload = () => { emoji.remove(); pic.appendChild(img); };
-    img.src = item.image; // on error the emoji stays
-  }
-  pic.appendChild(emoji);
-  return pic;
-}
 
 function frame(item, i) {
   const btn = el('button', 'frame');
