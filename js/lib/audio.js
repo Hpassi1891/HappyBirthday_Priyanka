@@ -50,6 +50,19 @@ export const audio = {
     const g = a.createGain(); g.gain.value = 0.18;
     src.connect(f).connect(g).connect(a.destination); src.start();
   },
+  // a warm rising hum for when the lights come on
+  glow() {
+    const a = ac();
+    if (!a || muted) return;
+    const o = a.createOscillator(), g = a.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(180, a.currentTime);
+    o.frequency.exponentialRampToValueAtTime(720, a.currentTime + 3);
+    g.gain.setValueAtTime(0.0001, a.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.06, a.currentTime + 1.2);
+    g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + 3.4);
+    o.connect(g).connect(a.destination); o.start(); o.stop(a.currentTime + 3.5);
+  },
   click() { tone(700, 0, 0.05, { type: 'triangle', gain: 0.08 }); },
   // Happy Birthday in C major; returns total duration in seconds.
   birthday() {

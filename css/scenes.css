@@ -43,56 +43,55 @@
 .msg { min-height: 2.5em; margin: 8px auto 0; font: 700 22px/1.05 var(--font-hand); color: var(--red); rotate: -1deg; }
 @media (max-height: 640px) { .door { width: min(140px, 40vw, 24vh); } .dateline { display: none; } }
 
-/* ============ Room: a doodled party page ============ */
-.room { overflow: hidden; }
-.room .wall { position: absolute; inset: 0 0 26% 0; pointer-events: none; }
-.room .wall::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 40px; background: repeating-linear-gradient(45deg, #f7a1bf88 0 9px, #ffd6e499 9px 18px); border-top: 3px dashed var(--ink); }
-.room .floor { position: absolute; inset: auto 0 0 0; height: 26%; background: repeating-linear-gradient(90deg, #e2b98f 0 54px, #d6a97c 54px 57px); border-top: 3px solid var(--ink); }
-.room .rug { position: absolute; left: 9%; right: 6%; bottom: 8px; height: calc(26% - 20px); border-radius: 50%; border: 3px dashed var(--ink); background: repeating-radial-gradient(circle at 50% 50%, #ffc2d9 0 14px, #ffd6e4 14px 28px); animation: sway 6s ease-in-out infinite; --r: 0deg; }
-.room .curtain { position: absolute; top: 0; width: clamp(20px, 7vw, 34px); height: 52%; z-index: 1; background: repeating-linear-gradient(90deg, #f7a1bf 0 7px, #ffc2d9 7px 14px); border: 2.5px solid var(--ink); border-top: 0; transform-origin: 50% 0; animation: sway 5s ease-in-out infinite; }
-.room .curtain.l { left: 44px; border-radius: 0 0 24px 4px; --r: 0deg; }
-.room .curtain.r { right: 8px; border-radius: 0 0 4px 24px; animation-delay: -2s; }
-.room .twinkles b { position: absolute; color: #f0a81a; font-size: 18px; animation: twinkle 2.6s ease-in-out infinite; z-index: 1; }
+/* ============ Room: a mural painted on the wall ============ */
+.room { touch-action: none; background: #ffd9e4; }
+.room::before { display: none; }
+.room .wallbg { position: absolute; inset: 0 0 22% 0; background:
+  radial-gradient(#ffffff77 1px, #0000 1.6px) 0 0/13px 13px,
+  radial-gradient(#e8a2b844 1px, #0000 1.6px) 6px 6px/17px 17px,
+  radial-gradient(circle at 32% 18%, #fff3f6, #ffd6e2 78%); }
+.room .wallbg::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 12px; background: #fff7f0; border-top: 3px solid var(--ink); }
+.room .mural { position: absolute; left: 0; top: 34px; width: 100%; height: calc(78% - 34px); overflow: visible; filter: brightness(.82) saturate(.5); }
+.room .floor { position: absolute; inset: auto 0 0 0; height: 22%; background: repeating-linear-gradient(90deg, #e2b98f 0 54px, #d6a97c 54px 57px); border-top: 3px solid var(--ink); }
+.room .rug { position: absolute; left: 14%; right: 10%; bottom: 14px; height: calc(22% - 30px); border-radius: 50%; border: 3px dashed var(--ink); background: repeating-radial-gradient(circle at 50% 50%, #ffc2d9 0 14px, #ffd6e4 14px 28px); }
 .room .fairy { position: absolute; left: 0; top: 0; width: 100%; height: 60px; z-index: 2; }
-.room .fairy path { stroke: var(--ink); stroke-width: 2.5; stroke-dasharray: 5 4; }
+.room .fairy path { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-dasharray: 5 4; }
 .room .bulbs { position: absolute; inset: 0 0 auto 0; height: 60px; z-index: 2; }
-.room .bulbs i { position: absolute; width: 12px; height: 16px; border-radius: 50% 50% 55% 55%; border: 2px solid var(--ink); filter: grayscale(1) brightness(.9); opacity: .85; translate: -50% 0; transform-origin: 50% 0; }
-.room.lit .bulbs i { filter: none; opacity: 1; box-shadow: 0 0 12px 4px currentColor; animation: twinkle 1.5s ease-in-out infinite; }
-.room .disco { position: absolute; left: 54%; top: 0; width: 54px; translate: -50% 0; z-index: 3; transform-origin: 50% 0; animation: sway 4s ease-in-out infinite; --r: 0deg; }
-.room .disco::before { content: ''; display: block; width: 2.5px; height: 46px; margin: 0 auto; background: var(--ink); }
-.room .disco i { display: block; width: 50px; height: 50px; margin: 0 auto; border-radius: 50%; border: 3px solid var(--ink); background: repeating-conic-gradient(#e6e9f5 0 12deg, #ffffff 12deg 24deg); }
-.room.lit .disco i { animation: spin 3s linear infinite; box-shadow: 0 0 26px 10px #fff9, -36px 18px 50px 8px #f7a1bf66, 36px 18px 50px 8px #8fd3ff66; }
-.room .banner { position: absolute; top: 112px; left: 44px; right: 0; display: flex; flex-direction: column; gap: 6px; align-items: center; z-index: 2; }
-.room .bunting { display: flex; gap: 3px; filter: drop-shadow(0 2px 0 var(--ink)) drop-shadow(0 -1px 0 var(--ink)); }
-.room .slot { width: clamp(22px, 7.6vw, 36px); height: clamp(28px, 9.6vw, 44px); clip-path: polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%); background: #ffffffcc; display: grid; place-items: center; font: 700 clamp(18px, 6vw, 26px) var(--font-hand); color: #fff; transform-origin: 50% 0; animation: sway 3s ease-in-out infinite; --r: 0deg; }
-.room .slot:nth-child(2n) { animation-delay: -.7s; } .room .slot:nth-child(3n) { animation-delay: -1.4s; }
-.room .slot.filled { background: linear-gradient(#f7a1bf, var(--pink)); text-shadow: 1px 1px 0 #8a2760; }
-.room .slot.pop { animation: popin .45s var(--bounce); }
-@keyframes popin { 50% { scale: 1.35; rotate: 8deg; } }
-.room .shelf { position: absolute; left: 54%; bottom: calc(26% + 8px); translate: -50% 0; display: flex; align-items: center; gap: 10px; background: #fffdf2; border: 2.5px solid var(--ink); padding: 3px 18px; border-radius: 4px; font-size: 26px; white-space: nowrap; z-index: 1; box-shadow: 2px 4px 0 #0002; }
-.room .shelf .c1, .room .shelf .c2 { display: inline-block; animation: bob 1.8s ease-in-out infinite; }
-.room .shelf .c2 { animation-delay: -.9s; }
-.room .baker { font: 700 22px var(--font-hand); color: var(--pink); }
-.room .balloon { position: absolute; width: clamp(40px, 11vw, 58px); height: clamp(54px, 14vw, 76px); border: 0; background: none; padding: 0; cursor: pointer; z-index: 4; animation: bob 3.2s ease-in-out infinite; }
-.room .balloon i { position: absolute; inset: 0 0 12px 0; border-radius: 50% 50% 48% 48%; border: 2.5px solid var(--ink); background: radial-gradient(ellipse at 32% 24%, #fff 0 8%, #fff0 9%), repeating-linear-gradient(135deg, #ffffff44 0 3px, #0000 3px 9px), var(--c); }
-.room .balloon::before { content: ''; position: absolute; left: 50%; bottom: 8px; margin-left: -5px; border: 5px solid transparent; border-bottom-color: var(--ink); border-top: 0; }
-.room .balloon::after { content: ''; position: absolute; left: 50%; bottom: -12px; width: 2px; height: 22px; background: var(--ink); transform-origin: 50% 0; animation: sway 2.4s ease-in-out infinite; --r: 0deg; }
-.room .dim { position: absolute; inset: 0; background: #1b2152; opacity: .52; pointer-events: none; transition: opacity .9s; z-index: 5; }
-.room.lit .dim { opacity: 0; }
+.room .bulbs i { position: absolute; width: 12px; height: 16px; border-radius: 50% 50% 55% 55%; border: 2px solid var(--ink); filter: grayscale(1) brightness(.8); opacity: .8; translate: -50% 0; }
+.room .bulbs i.on { filter: none; opacity: 1; box-shadow: 0 0 12px 4px currentColor; animation: twinkle 1.6s ease-in-out infinite; animation-delay: calc(var(--i) * -.2s); }
+.room .disco { position: absolute; left: 50%; top: 0; width: 54px; translate: -50% 0; z-index: 3; transform-origin: 50% 0; animation: sway 4s ease-in-out infinite; --r: 0deg; }
+.room .disco::before { content: ''; display: block; width: 2.5px; height: 42px; margin: 0 auto; background: var(--ink); }
+.room .disco i { display: block; width: 46px; height: 46px; margin: 0 auto; border-radius: 50%; border: 3px solid var(--ink); background: repeating-conic-gradient(#e6e9f5 0 12deg, #ffffff 12deg 24deg); }
+.room.lit .disco i { animation: spin 3s linear infinite; box-shadow: 0 0 26px 10px #fff9, -36px 18px 50px 8px #f7a1bf88, 36px 18px 50px 8px #8fd3ff88; }
+
+/* the painted decorations come alive once the lights are on */
+.room .flag { transform-origin: 0 0; }
+.room.lit .flag { animation: flagwave 3.2s ease-in-out infinite; animation-delay: calc(var(--i) * -.3s); }
+@keyframes flagwave { 0%, 100% { rotate: -5deg; } 50% { rotate: 5deg; } }
+.room .bal { transform-origin: 0 0; cursor: pointer; }
+.room.lit .bal { animation: balsway 4.2s ease-in-out infinite; animation-delay: calc(var(--i) * -.6s); }
+@keyframes balsway { 0%, 100% { rotate: -3deg; } 50% { rotate: 3deg; } }
+.room .cf, .room .sp4 { transform-box: fill-box; transform-origin: center; }
+.room.lit .cf { animation: twinkle 2.6s ease-in-out infinite; animation-delay: calc(var(--i) * -.17s); }
+.room.lit .sp4 { animation: twinkle 1.8s ease-in-out infinite; animation-delay: calc(var(--i) * -.3s); }
+.room .fw { transform-origin: 0 0; }
+.room.lit .fw { animation: sway 3.6s ease-in-out infinite; animation-delay: calc(var(--i) * -.25s); --r: 0deg; }
+
+/* darkness with a torch, and the warm glow that replaces it */
+.room .dim { position: absolute; inset: 0; z-index: 5; pointer-events: none; background: radial-gradient(circle at var(--x, 60%) var(--y, 25%), #0000 0, #0000 calc(var(--r, 120px) * .35), rgba(12, 14, 46, .82) var(--r, 120px)); }
+.room .warm { position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: 0; background: radial-gradient(circle at 50% 12%, #ffe3a066, #ffb3c933 55%, #0000 80%); mix-blend-mode: soft-light; }
 .room .switch, .room .popper { position: absolute; z-index: 20; cursor: pointer; font-family: var(--font-hand); background: #fffdf2; border: 2.5px solid var(--ink); box-shadow: 2px 4px 0 #0002; }
-.room .switch { left: 52px; top: 78px; width: 44px; height: 70px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 6px 0 1px; rotate: -3deg; }
+.room .switch { left: 50px; top: 54px; width: 46px; height: 72px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 6px 0 1px; rotate: -3deg; box-shadow: 2px 4px 0 #0002, 0 0 18px 4px #ffe98a99; }
+.room.lit .switch { box-shadow: 2px 4px 0 #0002; }
 .room .switch small, .room .popper small { font: 700 15px var(--font-hand); color: var(--pink); line-height: 1; }
-.room .knob-sw { width: 20px; height: 34px; border-radius: 6px; border: 2.5px solid var(--ink); background: var(--washi); box-shadow: inset 0 -12px 0 var(--pink); transition: transform .25s var(--bounce); transform: translateY(2px); }
+.room .knob-sw { width: 20px; height: 34px; border-radius: 6px; border: 2.5px solid var(--ink); background: var(--washi); box-shadow: inset 0 -12px 0 var(--pink); transition: transform .3s var(--bounce); transform: translateY(2px); }
 .room.lit .knob-sw { background: var(--sticky); box-shadow: inset 0 12px 0 #f0b93a; transform: translateY(-2px); }
-.room .popper { right: 14px; top: 78px; font-size: 30px; border-radius: 8px; padding: 4px 8px; display: flex; flex-direction: column; align-items: center; rotate: 3deg; animation: wiggle 3s ease-in-out infinite; }
-.room .room-hint { position: absolute; left: 44px; right: 0; bottom: calc(26% + 54px); margin: 0; z-index: 20; font: 700 24px/1 var(--font-hand); color: var(--ink); }
-.room .tray { position: absolute; left: 50px; right: 8px; bottom: 10px; height: calc(26% - 20px); display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; align-content: center; z-index: 20; }
-.room .tile { width: 30px; height: 36px; display: grid; place-items: center; border-radius: 5px; background: #fff; border: 2.5px dashed var(--washi); color: var(--ink); font: 700 25px var(--font-hand); box-shadow: 2px 3px 0 #0002; cursor: grab; touch-action: none; user-select: none; animation: bob 2.8s ease-in-out infinite; animation-delay: calc(var(--i, 0) * -.23s); rotate: calc((var(--i, 0) - 10) * .5deg); }
-.room .tile.spacer { visibility: hidden; animation: none; }
-.room .tile.drag, .room .tile[style*="fixed"] { animation: none; }
-.room .tile.drag { cursor: grabbing; box-shadow: 0 10px 0 #0002; scale: 1.15; }
-.room .go { position: absolute; left: 50%; bottom: 14px; translate: -42% 0; z-index: 30; white-space: nowrap; }
-.room:has(.go:not(.hidden)) .tray { display: none; }
+.room .flipme { position: absolute; z-index: 20; left: 102px; top: 76px; font: 700 26px/1 var(--font-hand); color: #fff3d6; -webkit-text-stroke: 4px #1b2152; paint-order: stroke fill; animation: bob 1.4s ease-in-out infinite; pointer-events: none; }
+.room .popper { right: 14px; top: 120px; font-size: 30px; border-radius: 8px; padding: 4px 8px; display: flex; flex-direction: column; align-items: center; rotate: 3deg; opacity: 0; pointer-events: none; transition: opacity 1s 3.6s; }
+.room.lit .popper { opacity: 1; pointer-events: auto; animation: wiggle 3s ease-in-out infinite; }
+.room .room-hint { position: absolute; left: 50px; right: 12px; bottom: 18px; margin: 0; z-index: 20; font: 700 25px/1.02 var(--font-hand); color: #fff8e6; -webkit-text-stroke: 5px #1b2152; paint-order: stroke fill; text-align: center; }
+.room.lit .room-hint { bottom: 74px; }
+.room .go { position: absolute; left: 50px; right: 12px; bottom: 16px; margin-inline: auto; width: fit-content; z-index: 30; white-space: nowrap; }
 
 /* ============ Fav wall + Photo wall: taped photos on a page ============ */
 .fav-head { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%; padding-right: 40px; }

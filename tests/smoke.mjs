@@ -6,7 +6,7 @@ const { chromium } = require(execSync('npm root -g').toString().trim() + '/playw
 
 const BASE = process.env.BASE || 'http://localhost:8000';
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
-const page = await browser.newPage({ viewport: { width: 375, height: 700 }, hasTouch: true });
+let page = await browser.newPage({ viewport: { width: 375, height: 700 }, hasTouch: true });
 const errors = [];
 page.on('pageerror', (e) => errors.push(e.message));
 page.on('console', (m) => m.type() === 'error' && !/fonts|ERR_|Failed to load resource/.test(m.text()) && errors.push(m.text()));
@@ -36,32 +36,27 @@ await page.waitForSelector('.room', { timeout: 9000 });
 await page.waitForSelector('.door-scene', { state: 'detached', timeout: 9000 });
 check('rakshas: moves past the door', !(await page.locator('.door-scene').count()));
 
-// Room: lights + banner
+// Room: dark mural, torch, light switch
+await page.close();
+page = await browser.newPage({ viewport: { width: 375, height: 700 }, hasTouch: true });
+page.on('pageerror', (e) => errors.push(e.message));
 await page.goto(BASE + '/?scene=room');
 await page.waitForSelector('#switch');
 await page.waitForSelector('#stage:not(.busy)');
+check('room: starts dark', (await page.locator('.room.lit').count()) === 0);
+check('room: mural painted on the wall', (await page.locator('.mural .flag').count()) >= 19);
+await page.mouse.move(120, 300);
+await page.waitForTimeout(500);
+const tx = await page.$eval('#dim', (e) => parseFloat(e.style.getPropertyValue('--x')));
+check('room: torch follows the pointer', tx > 90 && tx < 130);
 await page.click('#switch');
-check('room: lights on', await page.locator('.room.lit').count() === 1);
-// drag the first tile onto the banner
-const first = page.locator('.tile').first();
-const ch = await first.getAttribute('data-ch');
-const tb = await first.boundingBox();
-const target = page.locator(`.slot[data-ch="${ch}"]`).first();
-const sb = await target.boundingBox();
-await page.mouse.move(tb.x + tb.width / 2, tb.y + tb.height / 2);
-await page.mouse.down();
-await page.mouse.move(sb.x + sb.width / 2, sb.y + sb.height / 2, { steps: 8 });
-await page.mouse.up();
-await page.waitForTimeout(700);
-check('room: drag places letter', (await page.locator('.slot.filled').count()) === 1);
-// tap the rest
-while (await page.locator('.tile:not(.spacer)').count()) {
-  const before = await page.locator('.tile:not(.spacer)').count();
-  await page.locator('.tile:not(.spacer)').first().click({ force: true });
-  await page.waitForFunction((n) => document.querySelectorAll('.tile:not(.spacer)').length < n, before, { timeout: 5000 });
-}
-check('room: banner complete', (await page.locator('.slot:not(.filled)').count()) === 0);
-check('room: continue appears', await page.locator('#go').isVisible());
+await page.waitForSelector('.room.lit', { timeout: 3000 });
+check('room: lights on', true);
+check('room: continue is not shown straight away', !(await page.locator('#go').isVisible()));
+await page.waitForSelector('#go', { state: 'visible', timeout: 9000 });
+check('room: continue appears once the wall is lit', true);
+await page.locator('.bal').first().click({ force: true });
+check('room: balloon pops', (await page.locator('.bal[data-popped]').count()) === 1);
 await page.click('#go');
 await page.waitForSelector('.room', { state: 'detached', timeout: 9000 });
 check('room: advances to next scene', !(await page.locator('.room').count()));
