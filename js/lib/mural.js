@@ -16,7 +16,7 @@ const bezDeriv = (p0, p1, p2, t) => [
 ];
 
 // A string of pennant flags hung along a sagging curve. Letters make a banner.
-function garland({ x0, y0, x1, y1, sag, n, letters, offset = 0, w = 20, h = 26 }) {
+export function garland({ x0, y0, x1, y1, sag, n, letters, offset = 0, w = 20, h = 26 }) {
   const p0 = [x0, y0], p2 = [x1, y1];
   const p1 = [(x0 + x1) / 2, (y0 + y1) / 2 + sag * 2];
   let out = `<path class="rope" d="M${x0} ${y0} Q${p1[0]} ${p1[1]} ${x1} ${y1}" fill="none" stroke="${INK}" stroke-width="1.6"/>`;
@@ -110,7 +110,7 @@ export function muralSVG() {
     <circle cx="150" cy="352" r="46" fill="#fffaf2" stroke="${INK}" stroke-width="2.4"/>
     <circle cx="150" cy="352" r="40" fill="none" stroke="#f7a1bf" stroke-width="1.6" stroke-dasharray="3 4"/>
     <text x="150" y="354" text-anchor="middle" font-family="Caveat, cursive" font-weight="700" font-size="25" fill="#d6457f">Priyanka</text>
-    <text x="150" y="370" text-anchor="middle" font-family="Caveat, cursive" font-weight="700" font-size="11" fill="${INK}">future master baker</text>
+    <text x="150" y="370" text-anchor="middle" font-family="Caveat, cursive" font-weight="700" font-size="11" fill="${INK}">future bank officer</text>
     <text x="150" y="338" text-anchor="middle" font-family="Caveat, cursive" font-weight="700" font-size="11" fill="${INK}">11 · 11</text>
   </g>
   <g class="g-balloons">

@@ -122,6 +122,41 @@ await page.click('#go');
 await page.waitForSelector('.gift-scene', { state: 'detached', timeout: 9000 });
 check('gifts: advances', !(await page.locator('.gift-scene').count()));
 
+// Cake: light, blow out (mic is unavailable in headless, so the swipe/tap fallback), trick candle, cut
+await page.goto(BASE + '/?scene=cake');
+await page.waitForSelector('.candle');
+await page.waitForSelector('#stage:not(.busy)');
+await page.waitForTimeout(1500);
+const hit = (i) => page.locator('.candle .hit').nth(i);
+check('cake: starts in the dark with 5 unlit candles', (await page.locator('.candle').count()) === 5 && (await page.locator('.candle[data-lit]').count()) === 0 && (await page.locator('.cake-scene.night').count()) === 1);
+for (let i = 0; i < 5; i++) { await hit(i).click({ force: true }); await page.waitForTimeout(160); }
+check('cake: all 5 candles lit', (await page.locator('.candle[data-lit]').count()) === 5);
+await page.waitForSelector('#blowBtn', { state: 'visible', timeout: 4000 });
+await page.click('#blowBtn');
+await page.waitForFunction(() => document.querySelector('#hint').textContent.includes('swipe'), null, { timeout: 4000 });
+check('cake: no mic falls back to swipe/tap', true);
+for (let i = 0; i < 5; i++) { await hit(i).click({ force: true }); await page.waitForTimeout(160); }
+await page.waitForFunction(() => document.querySelector('#hint').textContent.includes('Trick'), null, { timeout: 6000 });
+check('cake: trick candle relights', (await page.locator('.candle[data-lit]').count()) === 1);
+await page.waitForTimeout(600);
+await hit(2).click({ force: true });
+await page.waitForFunction(() => document.querySelector('#hint').textContent.includes('cut the cake'), null, { timeout: 9000 });
+check('cake: wish made, lights come on', true);
+await page.waitForSelector('#knife:not([hidden])');
+await page.waitForTimeout(2600);
+const kb = await page.locator('#knife').boundingBox();
+const cb = await page.locator('.cake-svg').boundingBox();
+const kx = kb.x + kb.width / 2, ky = kb.y + 20;
+await page.mouse.move(kx, ky);
+await page.mouse.down();
+for (let k = 1; k <= 14; k++) await page.mouse.move(kx, ky + (cb.y + cb.height * 0.62 - ky) * k / 14);
+await page.mouse.up();
+await page.waitForSelector('#go', { state: 'visible', timeout: 6000 });
+check('cake: cut works and continue appears', true);
+await page.click('#go');
+await page.waitForSelector('.cake-scene', { state: 'detached', timeout: 9000 });
+check('cake: advances', !(await page.locator('.cake-scene').count()));
+
 check('no JS errors', errors.length === 0);
 if (errors.length) console.log(errors);
 await browser.close();

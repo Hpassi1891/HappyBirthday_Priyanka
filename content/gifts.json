@@ -4,7 +4,11 @@
   "unlockAfter": 3,
   "gifts": [
     {
-      "kind": "poem", "title": "A little poem", "emoji": "📜", "color": "#ffc2dd", "ribbon": "#d6457f",
+      "kind": "poem",
+      "title": "A little poem",
+      "emoji": "📜",
+      "color": "#ffc2dd",
+      "ribbon": "#d6457f",
       "lines": [
         "Chudail ki tarah tu mujhe daraati hai,",
         "Phir bhi dil mein bas jaati hai,",
@@ -14,17 +18,29 @@
       ]
     },
     {
-      "kind": "coupon", "title": "A coupon", "emoji": "🎟️", "color": "#ffe98a", "ribbon": "#f0568e",
+      "kind": "coupon",
+      "title": "A coupon",
+      "emoji": "🎟️",
+      "color": "#ffe98a",
+      "ribbon": "#f0568e",
       "headline": "One dinner on me 🍽️",
       "fine": "valid forever · no returns, nasharam (replace me)"
     },
     {
-      "kind": "joke", "title": "A baker's joke", "emoji": "😂", "color": "#bfe3ff", "ribbon": "#3c4a85",
-      "setup": "Why did Priyanka bring a ladder to the bakery?",
-      "punchline": "Because she heard the cakes were on the next level! 🎂 (replace me)"
+      "kind": "joke",
+      "title": "A banker's joke",
+      "emoji": "😂",
+      "color": "#bfe3ff",
+      "ribbon": "#3c4a85",
+      "setup": "Why did Priyanka bring a ladder to the bank?",
+      "punchline": "Because she heard the interest rates were going up! 📈 (replace me)"
     },
     {
-      "kind": "voice", "title": "A voice note", "emoji": "🎙️", "color": "#d9c8ff", "ribbon": "#e8416f",
+      "kind": "voice",
+      "title": "A voice note",
+      "emoji": "🎙️",
+      "color": "#d9c8ff",
+      "ribbon": "#e8416f",
       "audio": "",
       "note": "A voice note from your Rakshas is coming soon… he is still practising his best 'happy birthday' voice 🎤 (replace me)"
     }

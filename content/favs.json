@@ -4,35 +4,103 @@
   "unlockAfter": 4,
   "categories": [
     {
-      "id": "movies", "label": "Fav Movies", "emoji": "🎬",
+      "id": "movies",
+      "label": "Fav Movies",
+      "emoji": "🎬",
       "items": [
-        { "title": "Movie #1", "emoji": "🍿", "color": "#ffb3d4", "caption": "Yahan Priyanka ki asli favourite movie aayegi 💖" },
-        { "title": "Movie #2", "emoji": "🎞️", "color": "#d9c2ff", "caption": "Is movie pe wo 100 baar ro chuki hai 😭 (replace me)" },
-        { "title": "Movie #3", "emoji": "🎭", "color": "#ffd9a8", "caption": "Chudail ka movie night pick! (replace me)" }
+        {
+          "title": "Movie #1",
+          "emoji": "🍿",
+          "color": "#ffb3d4",
+          "caption": "Yahan Priyanka ki asli favourite movie aayegi 💖"
+        },
+        {
+          "title": "Movie #2",
+          "emoji": "🎞️",
+          "color": "#d9c2ff",
+          "caption": "Is movie pe wo 100 baar ro chuki hai 😭 (replace me)"
+        },
+        {
+          "title": "Movie #3",
+          "emoji": "🎭",
+          "color": "#ffd9a8",
+          "caption": "Chudail ka movie night pick! (replace me)"
+        }
       ]
     },
     {
-      "id": "food", "label": "Fav Food", "emoji": "🍕",
+      "id": "food",
+      "label": "Fav Food",
+      "emoji": "🍕",
       "items": [
-        { "title": "Food #1", "emoji": "🍕", "color": "#ffd9a8", "caption": "Isko dekhte hi bhookh lag jaati hai 🤤 (replace me)" },
-        { "title": "Food #2", "emoji": "🍜", "color": "#ffb3d4", "caption": "Nasharam ki fav dish! (replace me)" },
-        { "title": "Food #3", "emoji": "🍟", "color": "#bfe9ff", "caption": "Yahan asli favourite likhna 💖" }
+        {
+          "title": "Food #1",
+          "emoji": "🍕",
+          "color": "#ffd9a8",
+          "caption": "Isko dekhte hi bhookh lag jaati hai 🤤 (replace me)"
+        },
+        {
+          "title": "Food #2",
+          "emoji": "🍜",
+          "color": "#ffb3d4",
+          "caption": "Nasharam ki fav dish! (replace me)"
+        },
+        {
+          "title": "Food #3",
+          "emoji": "🍟",
+          "color": "#bfe9ff",
+          "caption": "Yahan asli favourite likhna 💖"
+        }
       ]
     },
     {
-      "id": "sweets", "label": "Sweet Treats", "emoji": "🧁",
+      "id": "snacks",
+      "label": "Study Snacks",
+      "emoji": "📚",
       "items": [
-        { "title": "Treat #1", "emoji": "🧁", "color": "#ffc2dd", "caption": "Future master baker ki pehli pasand 👩‍🍳 (replace me)" },
-        { "title": "Treat #2", "emoji": "🍰", "color": "#fff0b8", "caption": "Exam ke baad ye treat pakki! (replace me)" },
-        { "title": "Treat #3", "emoji": "🍩", "color": "#d9c2ff", "caption": "Yahan asli favourite likhna 💖" }
+        {
+          "title": "Snack #1",
+          "emoji": "🧁",
+          "color": "#ffc2dd",
+          "caption": "Future bank officer ki pehli pasand 🏦 (replace me)"
+        },
+        {
+          "title": "Snack #2",
+          "emoji": "🍰",
+          "color": "#fff0b8",
+          "caption": "Mock test ke baad ye treat pakki! (replace me)"
+        },
+        {
+          "title": "Snack #3",
+          "emoji": "🍩",
+          "color": "#d9c2ff",
+          "caption": "Yahan asli favourite likhna 💖"
+        }
       ]
     },
     {
-      "id": "songs", "label": "Fav Songs", "emoji": "🎵",
+      "id": "songs",
+      "label": "Fav Songs",
+      "emoji": "🎵",
       "items": [
-        { "title": "Song #1", "emoji": "🎵", "color": "#bfe9ff", "caption": "Is gaane pe wo apne aap naachne lagti hai 💃 (replace me)" },
-        { "title": "Song #2", "emoji": "🎧", "color": "#ffb3d4", "caption": "Bhodam bolke sunti hai repeat pe (replace me)" },
-        { "title": "Song #3", "emoji": "🎤", "color": "#ffd9a8", "caption": "Yahan asli favourite likhna 💖" }
+        {
+          "title": "Song #1",
+          "emoji": "🎵",
+          "color": "#bfe9ff",
+          "caption": "Is gaane pe wo apne aap naachne lagti hai 💃 (replace me)"
+        },
+        {
+          "title": "Song #2",
+          "emoji": "🎧",
+          "color": "#ffb3d4",
+          "caption": "Bhodam bolke sunti hai repeat pe (replace me)"
+        },
+        {
+          "title": "Song #3",
+          "emoji": "🎤",
+          "color": "#ffd9a8",
+          "caption": "Yahan asli favourite likhna 💖"
+        }
       ]
     }
   ]

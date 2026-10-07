@@ -28,14 +28,14 @@ Mute toggle always visible.
    - Answers stored hashed, not plain text.
 2. **Decorated room** — tappable balloons that pop, drag-to-place banner letters
    ("HAPPY BIRTHDAY CHUDAIL"), light switch (fairy lights + disco ball), party popper,
-   baking-themed decor (cupcakes, "future master baker" banner).
+   banking-exam themed touches ("future bank officer" plaque, study snacks).
 3. **Fav wall** — a wall in the room with framed/pinned image decorations for her favourites:
    movies, food, and more categories. Tap an item to zoom it with a short caption.
    Content driven by a `content/favs.json` file (category, title, image path, caption),
    placeholder images for now.
 4. **Photo wall** — polaroids on strings; tap to flip and read a note. Placeholders for now,
    data in `content/photos.json`.
-5. **Gift table** — tap-to-unwrap gifts: voice note (added later), poem, coupon, baking joke.
+5. **Gift table** — tap-to-unwrap gifts: voice note (added later), poem, coupon, banker joke.
 6. **Cake** — tap to light candles one by one; Happy Birthday tune plays.
 7. **Blow candles** — mic blow detection extinguishes flames with smoke; fallback to swipe
    if mic denied/unavailable. Trick-candle relight gag with "hurrr".
@@ -44,7 +44,7 @@ Mute toggle always visible.
 
 ## Content / voice
 Hinglish. In-jokes: chudail, rakshas, hurrr, bhodam, nasharam (cute besharam). She is
-preparing for baking exams -> baking decor + good-luck note. All copy lives in
+preparing for banking exams (SBI, IBPS) -> bank-officer plaque, banker joke + good-luck note. All copy lives in
 `content/*.json` so it can be edited without touching code.
 
 ## Out of scope (v1)

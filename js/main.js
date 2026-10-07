@@ -5,11 +5,13 @@ import room from './scenes/room.js';
 import favwall from './scenes/favwall.js';
 import photos from './scenes/photos.js';
 import gifts from './scenes/gifts.js';
+import cake from './scenes/cake.js';
 
 // Register new scenes here as they are built.
-const SCENES = { door, room, favwall, photos, gifts };
+const SCENES = { door, room, favwall, photos, gifts, cake };
 
-export const ORDER = ['door', 'room', 'favwall', 'photos', 'gifts', 'cake', 'blow', 'cut', 'finale'];
+// The cake scene covers lighting, blowing out and cutting in one continuous page.
+export const ORDER = ['door', 'room', 'favwall', 'photos', 'gifts', 'cake', 'finale'];
 
 const stage = document.getElementById('stage');
 const params = new URLSearchParams(location.search);

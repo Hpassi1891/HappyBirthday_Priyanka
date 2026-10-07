@@ -182,3 +182,28 @@
 .voice.missing .wave i { background: #b9bfdc; animation: eq 1.6s ease-in-out infinite alternate; animation-delay: calc(var(--i) * -.14s); height: 8px; }
 @keyframes eq { to { height: 36px; } }
 .voice .vnote { margin: 0; font: 700 20px/1.1 var(--font-hand); }
+
+/* ============ Cake: candles, wish, blow, cut ============ */
+.cake-scene { background-image: repeating-linear-gradient(#0000 0 27px, var(--rule) 27px 28px); touch-action: none; }
+.cake-scene .mini-garland { position: absolute; left: 0; top: 0; width: 100%; height: 70px; z-index: 1; overflow: visible; }
+.waves .flag { transform-origin: 0 0; animation: flagwave 3.2s ease-in-out infinite; animation-delay: calc(var(--i) * -.3s); }
+.waves .rope { stroke-dasharray: 5 4; }
+.cake-dim { position: absolute; inset: 0; z-index: 2; pointer-events: none; --g: 0;
+  background: radial-gradient(circle at 50% 50%, #0000 calc(30px + var(--g) * 36px), rgba(12, 14, 46, .86) calc(110px + var(--g) * 56px)); }
+.cake-wrap { position: absolute; left: 50%; top: 50%; width: min(86%, 330px); translate: -50% -52%; z-index: 3; }
+.cake-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.cake-scene .candle { cursor: pointer; }
+.cake-scene .flame { transform-origin: 0 0; animation: flicker .5s ease-in-out infinite alternate; rotate: calc(var(--bend, 0) * 1deg); }
+@keyframes flicker { from { scale: 1 1; } to { scale: .9 1.12; } }
+.cake-scene .glow { pointer-events: none; }
+.knife { position: absolute; left: 0; top: 0; z-index: 6; cursor: grab; touch-action: none; filter: drop-shadow(2px 4px 0 #0003); }
+.knife:active { cursor: grabbing; }
+.knife-svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.cs { position: absolute; z-index: 3; font-size: 22px; color: #ffe98a; text-shadow: 0 0 8px #fff8; animation: twinkle 2.4s ease-in-out infinite; pointer-events: none; }
+.cs.c1 { left: 20%; top: 17%; } .cs.c2 { right: 12%; top: 22%; color: #ffb3d1; animation-delay: -.8s; } .cs.c3 { left: 14%; bottom: 26%; animation-delay: -1.6s; } .cs.c4 { right: 16%; bottom: 22%; color: #ffb3d1; animation-delay: -.4s; }
+.cake-hint { position: absolute; left: 50px; right: 12px; top: 84px; margin: 0; z-index: 7; font: 700 25px/1.02 var(--font-hand); color: #fff8e6; -webkit-text-stroke: 5px #1b2152; paint-order: stroke fill; text-align: center; }
+.cake-scene:not(.night) .cake-hint { color: var(--pink); -webkit-text-stroke: 5px #fffaf2; }
+.cake-scene .mic { position: absolute; left: 50px; right: 12px; bottom: 18px; margin-inline: auto; width: fit-content; z-index: 7; }
+.cake-scene .mic.live { background: var(--pink); animation: pulse 1.2s ease-in-out infinite; }
+.cake-scene .mic[hidden], .cake-scene .knife[hidden] { display: none; }
+.cake-scene .go { position: absolute; left: 50px; right: 12px; bottom: 18px; margin-inline: auto; width: fit-content; z-index: 7; white-space: nowrap; }

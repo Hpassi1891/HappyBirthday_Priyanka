@@ -83,7 +83,7 @@ export function checkAnswer(raw) {
 
 ### Task 6: Room scene
 **Files:** `js/scenes/room.js`
-- [ ] SVG room; balloons (tap -> pop sfx + particles), draggable banner letters snapping to slots, light switch toggles fairy lights + disco ball, party popper. Baking decor. "Continue" button appears once banner complete + lights on.
+- [ ] SVG room; balloons (tap -> pop sfx + particles), draggable banner letters snapping to slots, light switch toggles fairy lights + disco ball, party popper. Banking-exam touches. "Continue" button appears once banner complete + lights on.
 
 ### Task 7: Fav wall
 **Files:** `js/scenes/favwall.js`, `content/favs.json`, `assets/placeholders/*.svg`
@@ -95,7 +95,7 @@ export function checkAnswer(raw) {
 
 ### Task 9: Gift table
 **Files:** `js/scenes/gifts.js`
-- [ ] Tap-to-unwrap gifts (poem, coupon, baking joke, voice note slot disabled until audio file exists).
+- [ ] Tap-to-unwrap gifts (poem, coupon, banker joke, voice note slot disabled until audio file exists).
 
 ### Task 10: Cake + blow logic (TDD)
 **Files:** `js/scenes/cake.js`, `js/lib/blow.js`, `js/scenes/blow.js`, `tests/blow.test.mjs`

@@ -79,6 +79,21 @@ export const audio = {
     src.connect(f).connect(g).connect(a.destination);
     src.start(a.currentTime + 0.34);
   },
+  // a soft puff when a candle goes out
+  puff() {
+    const a = ac();
+    if (!a || muted) return;
+    const len = Math.floor(a.sampleRate * 0.25);
+    const buf = a.createBuffer(1, len, a.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
+    const src = a.createBufferSource(); src.buffer = buf;
+    const f = a.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 900;
+    const g = a.createGain(); g.gain.value = 0.25;
+    src.connect(f).connect(g).connect(a.destination); src.start();
+  },
+  // a quick slice for the knife
+  slice() { tone(900, 0, 0.12, { type: 'sawtooth', gain: 0.05 }); tone(400, 0.06, 0.18, { type: 'triangle', gain: 0.08 }); },
   click() { tone(700, 0, 0.05, { type: 'triangle', gain: 0.08 }); },
   // Happy Birthday in C major; returns total duration in seconds.
   birthday() {
