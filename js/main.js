@@ -6,16 +6,17 @@ import favwall from './scenes/favwall.js';
 import photos from './scenes/photos.js';
 import gifts from './scenes/gifts.js';
 import cake from './scenes/cake.js';
+import finale from './scenes/finale.js';
 
 // Register new scenes here as they are built.
-const SCENES = { door, room, favwall, photos, gifts, cake };
+const SCENES = { door, room, favwall, photos, gifts, cake, finale };
 
 // The cake scene covers lighting, blowing out and cutting in one continuous page.
 export const ORDER = ['door', 'room', 'favwall', 'photos', 'gifts', 'cake', 'finale'];
 
 const stage = document.getElementById('stage');
 const params = new URLSearchParams(location.search);
-const ctx = { stage, audio, fx, params, preview: !!window.__PREVIEW__ || params.has('preview') || params.has('scene'), copy: null, favs: null, photos: null, gifts: null, name: null };
+const ctx = { stage, audio, fx, params, preview: !!window.__PREVIEW__ || params.has('preview') || params.has('scene'), copy: null, favs: null, photos: null, gifts: null, letter: null, name: null };
 let current = null; // { scene, layer, name }
 
 async function loadJson(path) {
@@ -93,6 +94,7 @@ async function boot() {
   ctx.favs = window.__FAVS__ ?? await loadJson('content/favs.json');
   ctx.photos = window.__PHOTOS__ ?? await loadJson('content/photos.json');
   ctx.gifts = window.__GIFTS__ ?? await loadJson('content/gifts.json');
+  ctx.letter = window.__LETTER__ ?? await loadJson('content/letter.json');
   const start = params.get('scene');
   go(ORDER.includes(start) ? start : 'door');
 }

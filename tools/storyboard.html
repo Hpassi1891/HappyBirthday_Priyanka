@@ -1,0 +1,29 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Flip-book storyboard (dev tool)</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 12px; font: 14px system-ui; background: #f4efe8; }
+  h3 { margin: 18px 0 6px; } .row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .f { width: 230px; background: #fff; border: 1px solid #ccc; } .f svg { width: 100%; display: block; } .f small { display: block; text-align: center; color: #888; }
+</style>
+<!-- Open http://localhost:8000/tools/storyboard.html?per=6 to see a few frames from every shot while editing js/lib/story.js -->
+<div id="out"></div>
+<script type="module">
+  import { SHOTS, FRAMES, renderFrame } from '../js/lib/story.js';
+  const per = +(new URLSearchParams(location.search).get('per') || 6);
+  const only = new URLSearchParams(location.search).get('shot');
+  let html = '';
+  SHOTS.forEach((s, si) => {
+    if (only && s.id !== only) return;
+    html += `<h3>${si + 1}. ${s.id} · ${s.n} frames @ ${s.fps} fps</h3><div class="row">`;
+    const picks = new Set();
+    for (let i = 0; i < Math.min(per, s.n); i++) picks.add(Math.round((i / Math.max(1, Math.min(per, s.n) - 1)) * (s.n - 1)));
+    for (const k of picks) {
+      const idx = FRAMES.findIndex((f) => f.shot === si && f.k === k);
+      html += `<div class="f">${renderFrame(idx)}<small>frame ${k}</small></div>`;
+    }
+    html += '</div>';
+  });
+  document.getElementById('out').innerHTML = html;
+</script>

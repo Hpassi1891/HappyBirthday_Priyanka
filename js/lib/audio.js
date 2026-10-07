@@ -94,6 +94,43 @@ export const audio = {
   },
   // a quick slice for the knife
   slice() { tone(900, 0, 0.12, { type: 'sawtooth', gain: 0.05 }); tone(400, 0.06, 0.18, { type: 'triangle', gain: 0.08 }); },
+  // Short sound effects for the flip-book story. Unknown names are ignored.
+  sfx(name) {
+    const a = ac();
+    if (!a || muted) return;
+    const noise = (dur, type, freq, gain, at = 0) => {
+      const len = Math.floor(a.sampleRate * dur);
+      const buf = a.createBuffer(1, len, a.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
+      const src = a.createBufferSource(); src.buffer = buf;
+      const f = a.createBiquadFilter(); f.type = type; f.frequency.value = freq;
+      const g = a.createGain(); g.gain.value = gain;
+      src.connect(f).connect(g).connect(a.destination); src.start(a.currentTime + at);
+    };
+    const sweep = (f0, f1, dur, type, gain) => {
+      const o = a.createOscillator(), g = a.createGain();
+      o.type = type; o.frequency.setValueAtTime(f0, a.currentTime); o.frequency.exponentialRampToValueAtTime(f1, a.currentTime + dur);
+      g.gain.setValueAtTime(gain, a.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + dur);
+      o.connect(g).connect(a.destination); o.start(); o.stop(a.currentTime + dur + 0.02);
+    };
+    switch (name) {
+      case 'thwip': noise(0.05, 'highpass', 4500, 0.05); break;
+      case 'alarm': tone(1100, 0, 0.07, { type: 'square', gain: 0.06 }); tone(1100, 0.1, 0.07, { type: 'square', gain: 0.06 }); break;
+      case 'pop': this.pop(); break;
+      case 'toss': noise(0.3, 'bandpass', 1800, 0.12); break;
+      case 'slip': sweep(1000, 180, 0.55, 'sine', 0.12); break;
+      case 'thud': sweep(140, 50, 0.25, 'sine', 0.3); break;
+      case 'bark': tone(330, 0, 0.1, { type: 'sawtooth', gain: 0.1 }); tone(280, 0.16, 0.12, { type: 'sawtooth', gain: 0.1 }); break;
+      case 'rain': noise(0.9, 'highpass', 2500, 0.07); break;
+      case 'knock': tone(170, 0, 0.07, { type: 'triangle', gain: 0.22 }); tone(160, 0.14, 0.08, { type: 'triangle', gain: 0.22 }); break;
+      case 'creak': this.creak(); break;
+      case 'hurr': sweep(200, 70, 0.5, 'sawtooth', 0.12); break;
+      case 'cheer': this.cheer(); break;
+      case 'sparkle': this.sparkle(); break;
+      default: break;
+    }
+  },
   click() { tone(700, 0, 0.05, { type: 'triangle', gain: 0.08 }); },
   // Happy Birthday in C major; returns total duration in seconds.
   birthday() {
