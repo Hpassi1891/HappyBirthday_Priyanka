@@ -37,6 +37,19 @@ export const audio = {
   wrong() { tone(220, 0, 0.15, { type: 'sawtooth', gain: 0.08 }); tone(165, 0.15, 0.25, { type: 'sawtooth', gain: 0.08 }); },
   creak() { tone(110, 0, 0.5, { type: 'sawtooth', gain: 0.05 }); tone(140, 0.2, 0.5, { type: 'sawtooth', gain: 0.05 }); },
   cheer() { [523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.09, 0.4, { gain: 0.1 })); },
+  // soft paper swish for page turns
+  flip() {
+    const a = ac();
+    if (!a || muted) return;
+    const len = Math.floor(a.sampleRate * 0.7);
+    const buf = a.createBuffer(1, len, a.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.sin((i / len) * Math.PI);
+    const src = a.createBufferSource(); src.buffer = buf;
+    const f = a.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(900, a.currentTime); f.frequency.exponentialRampToValueAtTime(3200, a.currentTime + 0.6); f.Q.value = 0.8;
+    const g = a.createGain(); g.gain.value = 0.18;
+    src.connect(f).connect(g).connect(a.destination); src.start();
+  },
   click() { tone(700, 0, 0.05, { type: 'triangle', gain: 0.08 }); },
   // Happy Birthday in C major; returns total duration in seconds.
   birthday() {

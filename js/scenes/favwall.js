@@ -8,7 +8,7 @@ function frame(item, i) {
   btn.type = 'button';
   btn.setAttribute('aria-label', item.title);
   btn.style.animationDelay = `${(i % 5) * -.7}s`;
-  btn.innerHTML = '<svg class="nail" viewBox="0 0 60 18" aria-hidden="true"><polyline points="4,18 30,3 56,18" fill="none" stroke="#6b2358" stroke-width="2.5" stroke-linejoin="round"/><circle cx="30" cy="3" r="3.5" fill="#f7c86a" stroke="#6b2358" stroke-width="2"/></svg>';
+  btn.innerHTML = '<i class="tape"></i>';
   const box = el('div', 'frame-box');
   box.appendChild(picture(item));
   btn.appendChild(box);
@@ -22,15 +22,15 @@ export default {
     const total = data.categories.reduce((n, c) => n + c.items.length, 0);
     const opened = new Set();
 
-    const root = el('section', 'scene fav-scene');
-    root.innerHTML = `
+    const root = el('section', 'page fav-scene');
+    root.innerHTML = `<div class="scroller">
       <div class="fav-head">
         <h1 class="title fav-title"></h1>
         <p class="hand fav-sub"></p>
         <p class="fav-count" aria-live="polite"></p>
       </div>
       <div class="fav-wall" id="wall"></div>
-      <button class="btn fav-go hidden" id="go" type="button">On to our memories ➜</button>`;
+      <button class="btn fav-go hidden" id="go" type="button">on to our memories ➜</button></div>`;
     root.querySelector('.fav-title').textContent = data.title;
     root.querySelector('.fav-sub').textContent = data.subtitle;
     const countEl = root.querySelector('.fav-count');
@@ -43,6 +43,7 @@ export default {
     for (const cat of data.categories) {
       const sec = el('div', 'fav-cat');
       const ribbon = el('h2', 'ribbon', `${cat.emoji} ${cat.label}`);
+      ribbon.style.setProperty('--d', `${.5 + n * .08}s`);
       const grid = el('div', 'fav-grid');
       for (const item of cat.items) {
         const f = frame(item, n++);
@@ -54,7 +55,7 @@ export default {
     }
     stage.appendChild(root);
     // Frames settle in gently once the scene has faded up.
-    gsap.from(root.querySelectorAll('.ribbon, .frame-box'), { opacity: 0, y: 26, duration: .7, stagger: .045, delay: .5, ease: 'power2.out', clearProps: 'opacity,transform' });
+    gsap.from(root.querySelectorAll('.frame-box'), { opacity: 0, y: 30, rotation: -6, duration: .7, stagger: .05, delay: .5, ease: 'back.out(1.6)', clearProps: 'opacity,transform' });
 
     function openZoom(item, from) {
       ctx.audio.sparkle();
@@ -91,10 +92,7 @@ export default {
       overlay.onclick = (e) => { if (e.target === overlay) done(); };
     }
 
-    // Frames clear away first so only the wallpaper carries over to the next scene.
-    goBtn.onclick = () => {
-      goBtn.disabled = true;
-      gsap.to(root.querySelectorAll('.fav-head, .fav-wall, .fav-go'), { opacity: 0, y: -16, duration: .6, ease: 'power1.inOut', onComplete: () => ctx.next() });
-    };
+    // The page turn carries her on to the next page.
+    goBtn.onclick = () => { goBtn.disabled = true; ctx.next(); };
   },
 };

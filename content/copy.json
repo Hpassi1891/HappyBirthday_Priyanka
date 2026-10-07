@@ -1,10 +1,10 @@
 {
   "door": {
-    "title": "Priyanka's Party Room",
+    "title": "Priyanka's Birthday Diary",
     "lockedHint": "The door opens on 11 November… sabr karo, chudail! ⏳",
     "question": "Who is your Priya Mitar? 🔑",
-    "placeholder": "type the secret answer…",
-    "button": "Open the door",
+    "placeholder": "write the secret answer…",
+    "button": "open ✎",
     "wrong": [
       "Hurrr! Galat jawab, nasharam! 😾",
       "Bhodam! Phir se try karo 🙄",
@@ -19,6 +19,7 @@
       "Knock knock! 🤫",
       "Only my Priya Mitar may enter.",
       "Hint: she calls me something scary 👹"
-    ]
+    ],
+    "dateLine": "11 november ♡ page 1"
   }
 }

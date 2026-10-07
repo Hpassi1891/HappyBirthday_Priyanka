@@ -19,21 +19,10 @@ async function loadJson(path) {
   try { return await (await fetch(path)).json(); } catch { return {}; }
 }
 
-// ---- Scene transitions -------------------------------------------------
-// Each scene lives in its own full-screen "layer". The incoming layer is mounted on top of the
-// outgoing one and the two are animated together, so there is never a hard cut.
-// Key is "from>to"; anything not listed uses the default soft crossfade.
+// ---- Page turns ---------------------------------------------------------
+// Each scene is one diary page in its own layer. The next page is mounted underneath and the
+// current page turns over, hinged on its left edge, so there is never a hard cut.
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const DEFAULT = { dur: 1, ease: 'sine.inOut', out: {}, in: { opacity: 0, scale: 1.03 } };
-const TRANSITIONS = {
-  // The door scene zooms into the open door and floods with light itself; the room fades up out of it.
-  'door>room': { dur: 1.4, ease: 'sine.inOut', out: {}, in: { opacity: 0, scale: 1.08 } },
-  // Walk toward the wall: the room pushes in while the fav wall appears over the same wallpaper.
-  'room>favwall': { dur: 1.2, ease: 'sine.inOut', out: { scale: 1.2, transformOrigin: '50% 35%' }, in: { opacity: 0, scale: .96 } },
-  // Slide along the wall to the next one.
-  'favwall>photos': { dur: 1.3, ease: 'power2.inOut', out: { xPercent: -14 }, in: { opacity: 0, xPercent: 14 } },
-};
-
 let busy = false;
 
 async function go(name) {
@@ -42,18 +31,27 @@ async function go(name) {
   const from = current;
   const layer = document.createElement('div');
   layer.className = 'layer';
-  stage.appendChild(layer);
+  if (from) stage.insertBefore(layer, from.layer); else stage.appendChild(layer);
   ctx.name = name;
   const scene = SCENES[name] ?? placeholder(name);
   scene.mount(layer, ctx);
-
-  const t = TRANSITIONS[`${from?.name}>${name}`] ?? DEFAULT;
-  const dur = reduceMotion ? .2 : (from ? t.dur : .9);
   stage.classList.add('busy');
-  if (from) gsap.to(from.layer, { ...t.out, duration: dur, ease: t.ease });
-  await new Promise((done) => {
-    gsap.fromTo(layer, t.in, { opacity: 1, scale: 1, xPercent: 0, duration: dur, ease: t.ease, onComplete: done });
-  });
+
+  if (!from) {
+    await new Promise((done) => gsap.fromTo(layer, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: reduceMotion ? .2 : .9, ease: 'power1.out', onComplete: done }));
+  } else {
+    audio.flip();
+    const spine = from.layer.querySelector('.page')?.offsetLeft ?? 10;
+    const shade = document.createElement('div');
+    shade.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:99;background:linear-gradient(90deg,#0006,#0001 40%,#0000)';
+    layer.appendChild(shade);
+    const dur = reduceMotion ? .2 : 1.35;
+    gsap.fromTo(shade, { opacity: 1 }, { opacity: 0, duration: dur, ease: 'power1.in' });
+    await new Promise((done) => {
+      gsap.fromTo(from.layer, { rotationY: 0 }, { rotationY: -120, transformOrigin: `${spine}px 50%`, duration: dur, ease: 'power2.inOut', onComplete: done });
+    });
+    shade.remove();
+  }
   gsap.set(layer, { clearProps: 'all' });
   if (from) {
     from.scene.unmount?.();

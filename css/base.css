@@ -1,32 +1,68 @@
+/* Scrapbook diary: a paper desk, lined pages, washi tape, stickers and pencil doodles. */
 :root {
-  --pink-50: #fff5f9;
-  --pink-100: #ffe3ef;
-  --pink-200: #ffc9de;
-  --pink-300: #ff9fc4;
-  --pink-500: #f0568e;
-  --pink-700: #b3225f;
-  --cream: #fff8ec;
-  --gold: #f7c86a;
-  --ink: #5a2a43;
-  --outline: #6b2358;
-  --font-title: 'Lilita One', 'Baloo 2', system-ui, sans-serif;
-  --font-ui: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
+  --paper: #fffaf2;
+  --kraft: #e2b98f;
+  --ink: #3c4a85;
+  --pink: #d6457f;
+  --washi: #f7a1bf;
+  --washi-2: #ffd6e4;
+  --sticky: #ffe98a;
+  --rule: #9fc3e688;
+  --red: #e8416f;
   --font-hand: 'Caveat', 'Comic Sans MS', cursive;
+  --font-body: 'Gaegu', 'Comic Sans MS', cursive;
   --bounce: cubic-bezier(.34, 1.56, .64, 1);
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { margin: 0; height: 100%; overflow: hidden; background: var(--pink-100); color: var(--ink); font-family: var(--font-ui); touch-action: manipulation; }
-#stage { position: fixed; inset: 0; overflow: hidden; background: linear-gradient(#ffd9ec, #ffc2dd); }
+html, body { margin: 0; height: 100%; overflow: hidden; background: var(--kraft); color: var(--ink); font-family: var(--font-body); font-size: 18px; touch-action: manipulation; }
+/* the desk the diary lies on */
+#stage { position: fixed; inset: 0; overflow: hidden; perspective: 1800px; background:
+  radial-gradient(circle at 20% 30%, #0000001a 0 2px, #0000 3px) 0 0/23px 23px,
+  radial-gradient(circle at 70% 70%, #ffffff22 0 2px, #0000 3px) 0 0/31px 31px,
+  linear-gradient(#e8c29a, #d9ac80); }
 #fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
-.scene { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; text-align: center; }
-.icon-btn { position: fixed; top: 12px; right: 12px; z-index: 60; width: 44px; height: 44px; border-radius: 50%; border: 3px solid var(--outline); background: #fff; box-shadow: 0 3px 0 var(--outline); font-size: 20px; cursor: pointer; }
-.btn { position: relative; font: 400 20px var(--font-title); letter-spacing: .5px; color: #fff; text-shadow: 0 2px 0 #8a2760; background: linear-gradient(#ff9fc9, #f0568e 60%, #e0407c); border: 3px solid var(--outline); border-radius: 999px; padding: 10px 28px; min-height: 50px; box-shadow: 0 6px 0 var(--outline), 0 10px 18px #6b235844; cursor: pointer; transition: transform .15s var(--bounce); overflow: hidden; }
-.btn::after { content: ''; position: absolute; left: 12%; right: 12%; top: 4px; height: 38%; border-radius: 999px; background: linear-gradient(#ffffffaa, #fff0); pointer-events: none; }
-.btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--outline); }
-.hand { font-family: var(--font-hand); }
-h1, h2 { margin: 0 0 .3em; color: var(--pink-700); }
-.title { font: 400 clamp(34px, 9.5vw, 58px)/1 var(--font-title); color: #fff; margin: 0; -webkit-text-stroke: 7px var(--outline); paint-order: stroke fill; text-shadow: 0 5px 0 var(--outline); letter-spacing: 1px; }
-.hidden { display: none !important; }
-@media (prefers-reduced-motion: reduce) { * { animation-duration: .01ms !important; } }
-.layer { position: absolute; inset: 0; }
+.layer { position: absolute; inset: 0; backface-visibility: hidden; }
 .busy .layer { pointer-events: none; }
+
+/* every scene is one diary page */
+.page { position: absolute; inset: 10px max(10px, calc(50% - 290px)); overflow: hidden; background-color: var(--paper);
+  background-image: repeating-linear-gradient(#0000 0 27px, var(--rule) 27px 28px); background-position: 0 16px;
+  border-radius: 6px 14px 14px 6px; box-shadow: 3px 5px 0 #0002, 0 14px 28px #0003; text-align: center; }
+.page::before { content: ''; position: absolute; left: 42px; top: 0; bottom: 0; width: 2px; background: #f4a3b8aa; z-index: 1; pointer-events: none; }
+.page::after { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 16px; z-index: 6; pointer-events: none;
+  background: radial-gradient(circle at 8px 14px, #d9ac80 0 6px, #0003 6.5px, #0000 8px) 0 0/16px 40px repeat-y; }
+.scroller { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 18px 14px 28px 52px; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; align-items: center; }
+
+.icon-btn { position: fixed; top: 14px; right: 14px; z-index: 60; width: 44px; height: 44px; border-radius: 50%; border: 2.5px dashed #fff; background: var(--washi); box-shadow: 0 0 0 2px var(--washi), 2px 4px 0 2px #0002; font-size: 20px; cursor: pointer; }
+
+/* handwriting */
+.hand { font-family: var(--font-hand); }
+h1, h2 { margin: 0 0 .3em; }
+.title { margin: 0; font: 700 clamp(34px, 9.5vw, 54px)/.95 var(--font-hand); color: var(--pink); transform: rotate(-2deg); text-shadow: 1.5px 1.5px 0 #ffffffcc; }
+.hidden { display: none !important; }
+
+/* sticker button */
+.btn { position: relative; font: 700 24px var(--font-hand); color: #fff; background: var(--washi); border: 2.5px dashed #fff; border-radius: 999px; padding: 4px 26px 8px; min-height: 46px; box-shadow: 0 0 0 2.5px var(--washi), 3px 5px 0 2.5px #0002; cursor: pointer; transition: transform .15s var(--bounce); text-shadow: 1px 1px 0 #d6457f88; animation: wiggle 3.2s ease-in-out infinite; }
+.btn:active { transform: translateY(3px) scale(.97); }
+.btn:disabled { animation: none; opacity: .75; }
+
+/* washi tape */
+.tape { position: absolute; width: 60px; height: 18px; background: repeating-linear-gradient(45deg, #f7a1bfaa 0 6px, #ffd6e4cc 6px 12px); rotate: var(--r, -4deg); z-index: 4; box-shadow: 0 1px 0 #0001; animation: flutter 4s ease-in-out infinite; transform-origin: 50% 0; }
+
+/* ambient motion (uses individual transform properties so GSAP's `transform` never fights it) */
+@keyframes wiggle { 0%, 88%, 100% { rotate: 0deg; } 91% { rotate: -3deg; } 94% { rotate: 3deg; } 97% { rotate: -2deg; } }
+@keyframes flutter { 0%, 100% { rotate: calc(var(--r, -4deg) - 1.5deg); } 50% { rotate: calc(var(--r, -4deg) + 1.5deg); } }
+@keyframes bob { 50% { translate: 0 -8px; } }
+@keyframes sway { 0%, 100% { rotate: calc(var(--r, 0deg) - 1.6deg); } 50% { rotate: calc(var(--r, 0deg) + 1.6deg); } }
+@keyframes twinkle { 50% { opacity: .35; scale: .7; } }
+@keyframes spin { to { rotate: 360deg; } }
+@keyframes drift { to { translate: 40px 0; } }
+@keyframes floatup { 0% { translate: 0 0; opacity: 0; } 15% { opacity: 1; } 100% { translate: 14px -150px; opacity: 0; } }
+@keyframes write { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes pulse { 50% { scale: 1.12; } }
+@keyframes tick { 0% { translate: 0 -6px; scale: 1.15; } 100% { translate: 0 0; scale: 1; } }
+/* hand-drawn feel: doodles jitter like stop-motion frames (cheap: a stepped rotate, no filters) */
+.doodle { animation: jitter .9s steps(1, end) infinite; }
+@keyframes jitter { 0% { rotate: -.8deg; } 33% { rotate: .6deg; } 66% { rotate: -.2deg; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; } }

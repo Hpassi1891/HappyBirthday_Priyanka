@@ -57,7 +57,7 @@ check('room: drag places letter', (await page.locator('.slot.filled').count()) =
 // tap the rest
 while (await page.locator('.tile:not(.spacer)').count()) {
   const before = await page.locator('.tile:not(.spacer)').count();
-  await page.locator('.tile:not(.spacer)').first().click();
+  await page.locator('.tile:not(.spacer)').first().click({ force: true });
   await page.waitForFunction((n) => document.querySelectorAll('.tile:not(.spacer)').length < n, before, { timeout: 5000 });
 }
 check('room: banner complete', (await page.locator('.slot:not(.filled)').count()) === 0);

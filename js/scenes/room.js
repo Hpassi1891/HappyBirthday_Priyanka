@@ -11,7 +11,7 @@ export default {
   mount(stage, ctx) {
     const letters = shuffle(BANNER.join('').split(''));
     stage.innerHTML = `
-      <section class="room">
+      <section class="page room">
         <div class="wall"></div>
         <div class="floor"></div>
         <div class="rug" aria-hidden="true"></div>
@@ -25,13 +25,13 @@ export default {
         <div class="banner" id="banner">
           ${BANNER.map((w) => `<div class="bunting">${w.split('').map((ch) => `<span class="slot" data-ch="${ch}"></span>`).join('')}</div>`).join('')}
         </div>
-        <div class="shelf" aria-hidden="true"><span>🧁</span><span class="baker hand">future master baker 👩‍🍳</span><span>🍰</span></div>
+        <div class="shelf" aria-hidden="true"><i class="tape" style="left:6px;top:-9px;--r:-8deg;width:40px"></i><i class="tape" style="right:6px;top:-9px;--r:7deg;width:40px"></i><span class="c1">🧁</span><span class="baker">future master baker 👩‍🍳</span><span class="c2">🍰</span></div>
         <div id="balloons"></div>
         <div class="dim" id="dim"></div>
         <button class="switch" id="switch" aria-label="Light switch" aria-pressed="false"><span class="knob-sw"></span><small>lights</small></button>
         <button class="popper" id="popper" aria-label="Party popper">🎉<small>pull!</small></button>
-        <p class="hint hand room-hint" id="hint">Flip the switch to turn on the lights 💡</p>
-        <div class="tray" id="tray">${letters.map((ch, i) => `<span class="tile" data-ch="${ch}" data-i="${i}">${ch}</span>`).join('')}</div>
+        <p class="hint hand room-hint" id="hint">Flip the light switch! 💡</p>
+        <div class="tray" id="tray">${letters.map((ch, i) => `<span class="tile" data-ch="${ch}" data-i="${i}" style="--i:${i}">${ch}</span>`).join('')}</div>
         <button class="btn go hidden" id="go">Let's go see the Fav Wall ➜</button>
       </section>`;
 
@@ -49,8 +49,8 @@ export default {
     const sw = $('#switch');
     const refresh = () => {
       const done = state.lit && state.banner;
-      $('#hint').textContent = !state.lit ? 'Flip the switch to turn on the lights 💡'
-        : !state.banner ? 'Now put up the banner — drag or tap the letters 🎀'
+      $('#hint').textContent = !state.lit ? 'Flip the light switch! 💡'
+        : !state.banner ? 'Now hang the banner: drag or tap the letters 🎀'
         : 'Looking perfect! ✨';
       if (done && $('#go').classList.contains('hidden')) {
         $('#go').classList.remove('hidden');
@@ -171,13 +171,8 @@ export default {
       });
     });
 
-    // Clear the furniture first so only the wallpaper crossfades into the fav wall, then push toward the wall.
-    $('#go').onclick = () => {
-      $('#go').disabled = true;
-      gsap.timeline({ onComplete: () => ctx.next() })
-        .to(stage.querySelectorAll('.room > :not(.wall)'), { opacity: 0, duration: .8, ease: 'power1.inOut' }, 0)
-        .to($('.room'), { scale: 1.12, transformOrigin: '50% 35%', duration: 1, ease: 'sine.inOut' }, 0);
-    };
+    // The page turn carries her on to the next page.
+    $('#go').onclick = () => { $('#go').disabled = true; ctx.next(); };
   },
   unmount() { cleanup.forEach((f) => f()); cleanup = []; },
 };

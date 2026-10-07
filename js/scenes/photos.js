@@ -6,7 +6,7 @@ import { el, picture } from '../lib/dom.js';
 function polaroid(photo, i) {
   const wrap = el('div', 'hang');
   wrap.style.setProperty('--tilt', `${i % 2 ? 2.5 : -2.5}deg`);
-  wrap.appendChild(el('span', 'peg'));
+  wrap.appendChild(el('i', 'tape peg'));
 
   const btn = el('button', 'polaroid');
   btn.type = 'button';
@@ -31,15 +31,15 @@ export default {
     const total = data.photos.length;
     const read = new Set();
 
-    const root = el('section', 'scene photo-scene');
-    root.innerHTML = `
+    const root = el('section', 'page photo-scene');
+    root.innerHTML = `<div class="scroller">
       <div class="fav-head">
         <h1 class="title fav-title"></h1>
         <p class="hand fav-sub"></p>
         <p class="fav-count" aria-live="polite"></p>
       </div>
       <div class="photo-wall" id="pwall"></div>
-      <button class="btn fav-go hidden" id="go" type="button">Time for gifts! 🎁</button>`;
+      <button class="btn fav-go hidden" id="go" type="button">time for gifts! 🎁</button></div>`;
     root.querySelector('.fav-title').textContent = data.title;
     root.querySelector('.fav-sub').textContent = data.subtitle;
     const countEl = root.querySelector('.fav-count');
@@ -76,9 +76,6 @@ export default {
 
     stage.appendChild(root);
     gsap.from(root.querySelectorAll('.hang'), { opacity: 0, duration: .8, stagger: .12, delay: .5, ease: 'power1.out', clearProps: 'opacity' });
-    goBtn.onclick = () => {
-      goBtn.disabled = true;
-      gsap.to(root.querySelectorAll('.fav-head, .photo-wall, .fav-go'), { opacity: 0, y: -16, duration: .6, ease: 'power1.inOut', onComplete: () => ctx.next() });
-    };
+    goBtn.onclick = () => { goBtn.disabled = true; ctx.next(); };
   },
 };

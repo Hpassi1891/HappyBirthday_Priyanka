@@ -4,56 +4,67 @@ import { isUnlocked, timeLeft } from '../lib/countdown.js';
 const pick = (arr) => arr[(Math.random() * arr.length) | 0];
 let timer = null;
 
+// Hand-drawn door: an arch frame, a pink panel that swings open, and a heart window.
+const DOOR_SVG = `
+<svg class="doodle door-svg" viewBox="0 0 150 190" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M14 184 V62 Q14 12 75 12 Q136 12 136 62 V184 Z" fill="#fff3b0" stroke="#3c4a85" stroke-width="3.5"/>
+  <g class="inside"><path d="M75 30 L75 14 M75 30 L58 20 M75 30 L92 20 M40 70 L24 66 M110 70 L126 66" stroke="#f0a81a" stroke-width="3"/></g>
+  <g class="dpanel">
+    <path d="M22 184 V64 Q22 22 75 22 Q128 22 128 64 V184 Z" fill="#ffd1df" stroke="#3c4a85" stroke-width="3.5"/>
+    <path d="M34 178 V68 Q34 36 75 36 Q116 36 116 68 V178" stroke="#d6457f" stroke-width="2.5"/>
+    <circle cx="75" cy="76" r="20" fill="#e9f6ff" stroke="#3c4a85" stroke-width="3"/>
+    <path class="heart" d="M75 88 q-14 -9 -10 -18 q4 -7 10 0 q6 -7 10 0 q4 9 -10 18" fill="#e8416f" stroke="#3c4a85" stroke-width="2.5"/>
+    <circle class="knob" cx="110" cy="124" r="6" fill="#ffe98a" stroke="#3c4a85" stroke-width="3"/>
+    <path d="M44 150 q10 6 20 0 M86 150 q10 6 20 0" stroke="#d6457f" stroke-width="2.5"/>
+  </g>
+  <path d="M0 186 L150 186" stroke="#3c4a85" stroke-width="3.5"/>
+</svg>`;
+
+const SUN_SVG = `
+<svg class="doodle sun" viewBox="0 0 80 80" fill="none" stroke-linecap="round" aria-hidden="true">
+  <g class="rays" stroke="#f0a81a" stroke-width="3.5">
+    <path d="M40 4 V16 M40 64 V76 M4 40 H16 M64 40 H76 M14 14 L22 22 M58 58 L66 66 M66 14 L58 22 M22 58 L14 66"/>
+  </g>
+  <circle cx="40" cy="40" r="15" fill="#ffe98a" stroke="#3c4a85" stroke-width="3"/>
+  <path d="M33 38 q2 -3 4 0 M43 38 q2 -3 4 0 M34 46 q6 5 12 0" stroke="#3c4a85" stroke-width="2.5"/>
+</svg>`;
+
+const CLOUD_SVG = `
+<svg class="doodle cloud" viewBox="0 0 110 50" fill="#fff" stroke="#3c4a85" stroke-width="3" stroke-linejoin="round" aria-hidden="true">
+  <path d="M20 44 Q4 44 6 31 Q8 20 22 22 Q26 6 44 8 Q58 2 68 16 Q84 12 90 26 Q106 28 102 40 Q100 46 88 44 Z"/>
+</svg>`;
+
 export default {
   mount(stage, ctx) {
     const c = ctx.copy.door;
     const unlocked = isUnlocked(new Date(), { preview: ctx.preview });
-    const stars = Array.from({ length: 34 }, () =>
-      `<i style="left:${(Math.random() * 100).toFixed(1)}%;top:${(Math.random() * 62).toFixed(1)}%;animation-delay:${(Math.random() * 3).toFixed(2)}s;transform:scale(${(.5 + Math.random()).toFixed(2)})"></i>`).join('');
     stage.innerHTML = `
-      <section class="scene door-scene">
-        <div class="door-world">
+      <section class="page door-scene">
         <div class="sky" aria-hidden="true">
-          <div class="stars">${stars}</div>
-          <span class="moon"></span>
-          <span class="cloud c1"></span><span class="cloud c2"></span>
-          <svg class="castle" viewBox="0 0 240 190" aria-hidden="true">
-            <g stroke="#6b2358" stroke-width="4" stroke-linejoin="round">
-              <rect x="20" y="96" width="34" height="94" fill="#ffe3f1"/><path d="M12 98 L37 40 L62 98 Z" fill="#ff7eb3"/>
-              <rect x="186" y="96" width="34" height="94" fill="#ffe3f1"/><path d="M178 98 L203 40 L228 98 Z" fill="#ff7eb3"/>
-              <rect x="86" y="70" width="68" height="120" fill="#fff3fa"/><path d="M76 72 L120 4 L164 72 Z" fill="#f0568e"/>
-              <rect x="54" y="126" width="132" height="64" fill="#ffe3f1"/>
-              <path d="M104 190 V156 a16 16 0 0 1 32 0 V190 Z" fill="#c9a7ff"/>
-              <circle cx="120" cy="52" r="8" fill="#8fd3ff"/><circle cx="37" cy="76" r="6" fill="#8fd3ff"/><circle cx="203" cy="76" r="6" fill="#8fd3ff"/>
-              <path d="M120 4 V-10 M120 -10 l16 6 l-16 6" fill="#f7c86a" stroke-width="3"/>
-            </g>
-          </svg>
-          <span class="hill h1"></span><span class="hill h2"></span>
-          <b class="spark s1">✦</b><b class="spark s2">✦</b><b class="spark s3">✧</b><b class="spark s4">✦</b>
+          ${SUN_SVG}${CLOUD_SVG}${CLOUD_SVG.replace('class="doodle cloud"', 'class="doodle cloud c2"')}
+          <b class="fl f1">✦</b><b class="fl f2">♡</b><b class="fl f3">✧</b><b class="fl f4">♡</b><b class="fl f5">✦</b>
         </div>
-        <h1 class="title door-title">${c.title}</h1>
-        <div class="arch">
+        <i class="tape" style="left:50%;top:-4px;--r:-3deg"></i>
+        <h1 class="title door-title"><span class="write">${c.title}</span></h1>
+        <p class="dateline">${c.dateLine}</p>
+        <div class="door-wrap">
           <div class="door" id="door">
-            <div class="door-panel">
-              <span class="plank"></span><span class="plank p2"></span>
-              <span class="porthole">💖</span>
-              <span class="hinge hg1"></span><span class="hinge hg2"></span>
-              <span class="knob"></span>
-              <div class="note" id="note"><span class="pin"></span>${c.note.map((l) => `<p>${l}</p>`).join('')}</div>
-            </div>
+            ${DOOR_SVG}
+            <div class="note" id="note"><i class="tape" style="left:50%;margin-left:-22px;top:-9px;width:44px;--r:3deg"></i>${c.note.map((l) => `<p>${l}</p>`).join('')}</div>
           </div>
+          <span class="stk s1">⭐</span><span class="stk s2">💖</span><span class="stk s3">🌷</span><span class="stk s4">✨</span>
         </div>
-        <div id="locked" class="card ${unlocked ? 'hidden' : ''}">
-          <p class="hand hint">${c.lockedHint}</p>
+        <div id="locked" class="${unlocked ? 'hidden' : ''}">
+          <p class="hint">${c.lockedHint}</p>
           <div class="count" id="count"></div>
         </div>
-        <form id="form" class="card ${unlocked ? '' : 'hidden'}" autocomplete="off">
+        <form id="form" class="${unlocked ? '' : 'hidden'}" autocomplete="off">
           <p class="question">${c.question}</p>
+          <svg class="uline" viewBox="0 0 220 10" preserveAspectRatio="none" aria-hidden="true"><path d="M2 6 Q30 0 58 6 T114 6 T170 6 T218 5" fill="none" stroke="#d6457f" stroke-width="3" stroke-linecap="round"/></svg>
           <input id="answer" class="answer" type="text" placeholder="${c.placeholder}" enterkeyhint="go" autocapitalize="off">
           <button class="btn" type="submit">${c.button}</button>
           <p id="msg" class="msg" aria-live="polite"></p>
         </form>
-        </div>
       </section>`;
 
     const door = stage.querySelector('#door');
@@ -63,10 +74,13 @@ export default {
 
     if (!unlocked) {
       const countEl = stage.querySelector('#count');
+      let last = null;
       const tick = () => {
         const t = timeLeft();
         countEl.innerHTML = [['d', 'days'], ['h', 'hrs'], ['m', 'min'], ['s', 'sec']]
-          .map(([k, l]) => `<div class="cd"><b>${t[k]}</b><small>${l}</small></div>`).join('');
+          .map(([k, l]) => `<div class="cd${k === 's' ? ' tk' : ''}"><i class="tape"></i><b>${t[k]}</b><small>${l}</small></div>`).join('');
+        if (last !== null && last !== t.s) countEl.querySelector('.tk b').style.animation = 'tick .4s var(--bounce)';
+        last = t.s;
         if (isUnlocked()) location.reload();
       };
       tick();
@@ -77,25 +91,17 @@ export default {
 
     const input = stage.querySelector('#answer');
 
-    // Open the door, walk into the light, and hand over to the room (which fades up out of the glow).
+    // Open the door, burst into hearts, then the page turns on its own.
     function walkIn() {
-      const section = stage.querySelector('.door-scene');
-      const world = stage.querySelector('.door-world');
       const r = door.getBoundingClientRect();
-      const ox = r.left + r.width / 2, oy = r.top + r.height * 0.6;
-      const glow = document.createElement('div');
-      glow.className = 'door-glow';
-      glow.style.background = `radial-gradient(circle at ${ox}px ${oy}px, #fffef2 0%, #ffeaa6 38%, #ffc7e0 100%)`;
-      section.appendChild(glow);
+      const ox = r.left + r.width / 2, oy = r.top + r.height * 0.55;
       ctx.audio.creak();
       door.classList.add('open');
-      gsap.timeline({ onComplete: () => ctx.next() })
-        .to(world.querySelectorAll('.door-title, #form'), { opacity: 0, duration: .5 }, .15)
-        .call(() => { ctx.audio.cheer(); ctx.fx.burst(ox, oy, 120); }, null, .55)
-        .to(world, { scale: 6, transformOrigin: `${ox}px ${oy}px`, duration: 1.7, ease: 'power2.in' }, .9)
-        .to(glow, { opacity: 1, duration: 1, ease: 'power1.in' }, 1.5)
-        .call(() => ctx.audio.sparkle(), null, 1.8);
+      gsap.to(stage.querySelectorAll('#form, .door-title, .dateline'), { opacity: 0, duration: .6, delay: .4 });
+      gsap.delayedCall(.6, () => { ctx.audio.cheer(); ctx.fx.burst(ox, oy, 110); ctx.fx.hearts(ox, oy, 10); });
+      gsap.delayedCall(2, () => ctx.next());
     }
+
     stage.querySelector('#form').onsubmit = (e) => {
       e.preventDefault();
       const { result } = checkAnswer(input.value);
@@ -106,6 +112,7 @@ export default {
         return;
       }
       msg.textContent = pick(result === 'funny' ? c.himanshu : c.wrong);
+      gsap.fromTo(msg, { opacity: 0, y: 8, rotation: -3 }, { opacity: 1, y: 0, rotation: -1, duration: .4, ease: 'back.out(2)' });
       ctx.audio.wrong();
       gsap.fromTo(door, { x: -12 }, { x: 0, duration: .6, ease: 'elastic.out(3,.25)' });
       ctx.fx.hearts(innerWidth / 2, innerHeight / 2, 4);
