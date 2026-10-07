@@ -10,7 +10,7 @@
 <!-- Open http://localhost:8000/tools/storyboard.html?per=6 to see a few frames from every shot while editing js/lib/story.js -->
 <div id="out"></div>
 <script type="module">
-  import { SHOTS, FRAMES, renderFrame } from '../js/lib/story.js';
+  import { SHOTS, renderShot } from '../js/lib/story.js';
   const per = +(new URLSearchParams(location.search).get('per') || 6);
   const only = new URLSearchParams(location.search).get('shot');
   let html = '';
@@ -20,8 +20,7 @@
     const picks = new Set();
     for (let i = 0; i < Math.min(per, s.n); i++) picks.add(Math.round((i / Math.max(1, Math.min(per, s.n) - 1)) * (s.n - 1)));
     for (const k of picks) {
-      const idx = FRAMES.findIndex((f) => f.shot === si && f.k === k);
-      html += `<div class="f">${renderFrame(idx)}<small>frame ${k}</small></div>`;
+      html += `<div class="f">${renderShot(si, k)}<small>frame ${k}</small></div>`;
     }
     html += '</div>';
   });

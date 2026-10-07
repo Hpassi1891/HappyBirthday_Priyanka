@@ -208,27 +208,25 @@
 .cake-scene .mic[hidden], .cake-scene .knife[hidden] { display: none; }
 .cake-scene .go { position: absolute; left: 50px; right: 12px; bottom: 18px; margin-inline: auto; width: fit-content; z-index: 7; white-space: nowrap; }
 
-/* ============ Finale: the flip book, the envelope, the letter ============ */
+/* ============ Finale: a cartoon on a taped-up screen, the envelope, the letter ============ */
 .finale-scene { display: flex; flex-direction: column; align-items: center; justify-content: center; background-image: repeating-linear-gradient(#0000 0 27px, var(--rule) 27px 28px); overflow: hidden; }
 .finale-scene [hidden] { display: none !important; }
-.fs-book { display: flex; flex-direction: column; align-items: center; gap: 16px; padding-left: 36px; padding-right: 12px; width: 100%; }
-.fb-wrap { perspective: 1300px; }
-.fb-book { position: relative; width: min(calc(100vw - 118px), 330px); aspect-ratio: 1; }
-.fb-book::before { content: ''; position: absolute; inset: 6px -6px -8px 0; background: #d6a97c; border: 2.5px solid var(--ink); border-radius: 4px 12px 12px 4px; box-shadow: 4px 8px 0 #0003; }
-.fb-lstack { position: absolute; left: -2px; top: 4px; bottom: 4px; width: 6px; translate: -100% 0; background: repeating-linear-gradient(#fffdf6 0 3px, #cfc7bd 3px 4px); border: 2px solid var(--ink); border-right: 0; border-radius: 4px 0 0 4px; }
-.fb-redge { position: absolute; right: -4px; top: 6px; bottom: 6px; width: 18px; background: repeating-linear-gradient(#fffdf6 0 3px, #cfc7bd 3px 4px); border: 2px solid var(--ink); border-left: 0; border-radius: 0 5px 5px 0; }
-.fb-pages { position: absolute; inset: 0; }
-.fpage { position: absolute; inset: 0; background: #fff; border: 2.5px solid var(--ink); border-radius: 3px 10px 10px 3px; overflow: hidden; backface-visibility: hidden; transform-origin: 0 50%; box-shadow: inset 8px 0 14px #3c4a8514; }
+.fs-book { display: flex; flex-direction: column; align-items: center; gap: 14px; padding-left: 36px; padding-right: 12px; width: 100%; }
+.scr-wrap { position: relative; width: min(calc(100vw - 100px), 380px); rotate: -1.2deg; }
+.scr { position: relative; width: 100%; aspect-ratio: 1; background: #fff; border: 3px solid var(--ink); border-radius: 6px; overflow: hidden; box-shadow: 4px 8px 0 #0003; cursor: pointer; }
+.scr-view { position: absolute; inset: 0; }
 .fsvg { display: block; width: 100%; height: 100%; }
-.fb-cover { position: absolute; inset: 0; z-index: 3000; padding: 0; background: linear-gradient(135deg, #ffb3d1, #f7a1bf); border: 3px solid var(--ink); border-radius: 4px 12px 12px 4px; cursor: pointer; transform-origin: 0 50%; backface-visibility: hidden; box-shadow: 4px 8px 0 #0003; animation: hop 3.4s ease-in-out infinite; }
-.fb-cover::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 14px; background: #d6457f; border-right: 2.5px solid var(--ink); }
-.cv-inner { position: absolute; inset: 0; padding: 14px 10px 8px 26px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; text-align: center; color: var(--ink); }
+.scr-play { position: absolute; inset: 0; z-index: 3; padding: 0; background: linear-gradient(135deg, #ffd1e2, #ffb3d1); border: 0; cursor: pointer; }
+.cv-inner { position: absolute; inset: 0; padding: 12px 10px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; text-align: center; color: var(--ink); }
 .cv-kicker { margin: 0; font: 700 20px var(--font-hand); color: #fff; text-shadow: 1px 1px 0 #d6457f; letter-spacing: .06em; }
-.cv-title { margin: 0; font: 700 clamp(28px, 8.4vw, 38px)/.95 var(--font-hand); color: #fff; -webkit-text-stroke: 5px var(--ink); paint-order: stroke fill; rotate: -2deg; }
-.cv-art { width: 36%; }
-.cv-by { margin: 0; font: 700 22px var(--font-hand); }
-.cv-tap { font: 700 18px var(--font-hand); color: #fff; -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; animation: pulse 1.4s ease-in-out infinite; }
-.fb-cap { min-height: 2.2em; margin: 6px 0 0; font: 700 28px/1 var(--font-hand); color: var(--pink); text-align: center; }
+.cv-title { margin: 0; font: 700 clamp(28px, 8.4vw, 40px)/.95 var(--font-hand); color: #fff; -webkit-text-stroke: 5px var(--ink); paint-order: stroke fill; rotate: -2deg; }
+.cv-art { width: 26%; }
+.cv-by { margin: 0; font: 700 20px var(--font-hand); }
+.cv-playbtn { width: 56px; height: 56px; border-radius: 50%; background: var(--red); border: 3px solid var(--ink); color: #fff; font-size: 24px; line-height: 50px; padding-left: 4px; box-shadow: 2px 4px 0 #0003; animation: pulse 1.3s ease-in-out infinite; }
+.scr-paused { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; background: #3c4a8588; color: #fff; font: 700 34px var(--font-hand); -webkit-text-stroke: 5px var(--ink); paint-order: stroke fill; }
+.scr-prog { margin-top: 10px; height: 8px; border: 2px solid var(--ink); border-radius: 6px; background: #fff; overflow: hidden; }
+.scr-prog i { display: block; height: 100%; width: 0; background: repeating-linear-gradient(45deg, var(--washi) 0 6px, var(--washi-2) 6px 12px); }
+.fb-cap { min-height: 2.2em; margin: 4px 0 0; font: 700 28px/1 var(--font-hand); color: var(--pink); text-align: center; }
 .fs-env, .fs-letter { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 14px 12px 14px 50px; }
 .env-hint { margin: 0; font: 700 26px/1 var(--font-hand); color: var(--ink); animation: bob 1.6s ease-in-out infinite; }
 .env { position: relative; width: min(calc(100vw - 110px), 300px); aspect-ratio: 300 / 190; padding: 0; background: none; border: 0; cursor: pointer; perspective: 800px; animation: hop 3s ease-in-out infinite; }

@@ -1,13 +1,12 @@
-import { FRAMES, SHOTS, TOTAL, renderFrame } from '../lib/story.js';
+import { SHOTS, TOTAL_SECONDS, locate, renderShot } from '../lib/story.js';
 
-// Finale: a doodle flip book appears, she taps it open and the pages flip fast enough that the
-// drawings move. Rakshas delivers the letter, then a real envelope opens and the letter writes itself.
+// Finale: a little cartoon plays on a taped-up paper screen. Rakshas delivers the birthday letter,
+// then a real envelope opens and the letter writes itself.
 let cleanup = [];
 
-const COVER = `
+const TITLE_CARD = `
 <div class="cv-inner">
-  <i class="tape" style="left:50%;top:-8px;margin-left:-30px;--r:-3deg"></i>
-  <p class="cv-kicker">a flip book</p>
+  <p class="cv-kicker">a little cartoon</p>
   <h2 class="cv-title">Priyanka's<br>Birthday Story</h2>
   <svg class="doodle cv-art" viewBox="0 0 120 100" fill="none" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
     <path d="M30 40 L22 14 L44 30Z M90 40 L98 14 L76 30Z" fill="#ff6b8b" stroke="#3c4a85" stroke-width="3.5"/>
@@ -17,8 +16,8 @@ const COVER = `
     <path d="M42 72 Q60 92 78 72Z" fill="#7a2d5a" stroke="#3c4a85" stroke-width="3"/>
     <ellipse cx="38" cy="68" rx="6" ry="3.6" fill="#ff8fb8" opacity=".7"/><ellipse cx="82" cy="68" rx="6" ry="3.6" fill="#ff8fb8" opacity=".7"/>
   </svg>
-  <p class="cv-by">by Rakshas</p>
-  <span class="cv-tap">tap to open ✋</span>
+  <p class="cv-by">starring Rakshas &amp; Chudail</p>
+  <span class="cv-playbtn" aria-hidden="true">▶</span>
 </div>`;
 
 export default {
@@ -28,14 +27,16 @@ export default {
     stage.innerHTML = `
       <section class="page finale-scene">
         <div class="fs-book" id="bookArea">
-          <div class="fb-wrap" id="wrap">
-            <div class="fb-book" id="book">
-              <div class="fb-redge"></div><div class="fb-lstack"></div>
-              <div class="fb-pages" id="pages"></div>
-              <button class="fb-cover" id="cover" type="button" aria-label="Open the flip book">${COVER}</button>
+          <div class="scr-wrap" id="wrap">
+            <i class="tape" style="left:16px;top:-9px;--r:-8deg"></i><i class="tape" style="right:16px;top:-9px;--r:7deg"></i>
+            <div class="scr" id="screen">
+              <div class="scr-view" id="view"></div>
+              <button class="scr-play" id="play" type="button" aria-label="Play the story">${TITLE_CARD}</button>
+              <div class="scr-paused" id="paused" hidden>▶ tap to continue</div>
             </div>
+            <div class="scr-prog" aria-hidden="true"><i id="prog"></i></div>
           </div>
-          <p class="fb-cap hand" id="cap">tap the book to open it</p>
+          <p class="fb-cap hand" id="cap">tap play to watch</p>
           <button class="btn" id="openLetter" type="button" hidden>open the letter 💌</button>
         </div>
         <div class="fs-env" id="envArea" hidden>
@@ -55,65 +56,64 @@ export default {
       </section>`;
 
     const $ = (s) => stage.querySelector(s);
-    const book = $('#book'), pagesEl = $('#pages'), cover = $('#cover'), cap = $('#cap');
-    const lstack = $('.fb-lstack'), redge = $('.fb-redge');
+    const view = $('#view'), cap = $('#cap'), screen = $('#screen'), prog = $('#prog');
     let alive = true;
     cleanup.push(() => { alive = false; });
     const wait = (ms) => new Promise((r) => { const t = setTimeout(r, ms); cleanup.push(() => clearTimeout(t)); });
     const later = (s, fn) => { const t = gsap.delayedCall(s, fn); cleanup.push(() => t.kill()); return t; };
     const setCap = (t) => { cap.textContent = t; gsap.fromTo(cap, { scale: .8, opacity: 0, y: 8 }, { scale: 1, opacity: 1, y: 0, duration: .35, ease: 'back.out(2)' }); };
 
-    // ---- the pages: made a few frames ahead and thrown away once flipped, so the DOM stays small
-    const pages = new Map();
-    const ensure = (i) => {
-      if (i >= TOTAL || pages.has(i)) return pages.get(i);
-      const el = document.createElement('div');
-      el.className = 'fpage';
-      el.style.zIndex = String(2000 - i);
-      el.innerHTML = renderFrame(i);
-      pagesEl.appendChild(el);
-      pages.set(i, el);
-      return el;
-    };
-    for (let i = 0; i < 5; i++) ensure(i);
+    view.innerHTML = renderShot(0, 0);
 
-    // ---- the book arrives on the desk
-    gsap.from($('#wrap'), { y: 420, rotation: -14, scale: .5, opacity: 0, duration: 1.2, delay: .4, ease: 'back.out(1.5)', clearProps: 'opacity' });
+    // ---- the screen is taped up onto the page
+    gsap.from($('#wrap'), { y: -520, rotation: 6, duration: 1.3, delay: .4, ease: 'bounce.out' });
     ctx.audio.flip();
 
-    // ---- open the cover, then flip
-    let started = false;
-    cover.onclick = () => {
-      if (started) return;
-      started = true;
-      ctx.audio.flip();
-      gsap.killTweensOf(cover);
-      gsap.to(cover, { rotationY: -110, transformPerspective: 2200, transformOrigin: '0% 50%', duration: 1, ease: 'power2.inOut', onComplete: () => { cover.style.display = 'none'; } });
-      gsap.to(lstack, { width: 6, duration: 1 });
-      setCap('ready…');
-      later(1.3 / Math.min(SPEED, 3), () => play());
+    // ---- the player
+    let t = 0, running = false, started = false, lastShot = -1, lastNow = 0, lastDraw = 0, raf = 0;
+    const fired = new Set();
+    cleanup.push(() => cancelAnimationFrame(raf));
+
+    const draw = () => {
+      const { si, k } = locate(t);
+      if (si !== lastShot) {
+        lastShot = si;
+        setCap(SHOTS[si].caption);
+        gsap.fromTo(view, { opacity: 0.15 }, { opacity: 1, duration: .25 });   // a quick cut between scenes
+      }
+      // sound effects fire once as each cue frame is reached
+      const sfx = SHOTS[si].sfx;
+      for (const key of Object.keys(sfx)) {
+        const id = `${si}:${key}`;
+        if (k >= +key && !fired.has(id)) { fired.add(id); ctx.audio.sfx(sfx[key]); }
+      }
+      view.innerHTML = renderShot(si, k);
+      prog.style.width = `${Math.min(100, (t / TOTAL_SECONDS) * 100)}%`;
     };
 
-    function play() {
-      const step = (i) => {
-        if (!alive) return;
-        const f = FRAMES[i], shot = SHOTS[f.shot];
-        for (let a = 1; a <= 4; a++) ensure(i + a);
-        if (f.k === 0) setCap(shot.caption);
-        const fx = shot.sfx[f.k];
-        if (fx) ctx.audio.sfx(fx);
-        ctx.audio.sfx('thwip');
-        const d = 1 / (shot.fps * SPEED);
-        const prog = i / (TOTAL - 1);
-        gsap.set(lstack, { width: 6 + prog * 16 });
-        gsap.set(redge, { width: 18 - prog * 14 });
-        if (f.last) { later(1.3 / Math.min(SPEED, 3), finish); return; }
-        const el = pages.get(i);
-        gsap.to(el, { rotationY: -104, transformPerspective: 2800, transformOrigin: '0% 50%', duration: d * 1.5, ease: 'power1.in', onComplete: () => { el.remove(); pages.delete(i); } });
-        later(d, () => step(i + 1));
-      };
-      step(0);
-    }
+    const loop = (now) => {
+      if (!running || !alive) return;
+      const dt = Math.min(0.1, (now - lastNow) / 1000);
+      lastNow = now;
+      t += dt * SPEED;
+      if (t >= TOTAL_SECONDS) { running = false; t = TOTAL_SECONDS; draw(); finish(); return; }
+      if (now - lastDraw >= 32) { lastDraw = now; draw(); }   // about 30 frames a second
+      raf = requestAnimationFrame(loop);
+    };
+    const resume = () => { running = true; lastNow = performance.now(); $('#paused').hidden = true; raf = requestAnimationFrame(loop); };
+
+    $('#play').onclick = () => {
+      if (started) return;
+      started = true;
+      ctx.audio.click();
+      gsap.to($('#play'), { opacity: 0, scale: 1.08, duration: .4, onComplete: () => { $('#play').hidden = true; } });
+      later(.5, resume);
+    };
+    // tap the picture to pause or carry on
+    screen.addEventListener('click', (e) => {
+      if (!started || e.target.closest('#play') || t >= TOTAL_SECONDS) return;
+      if (running) { running = false; cancelAnimationFrame(raf); $('#paused').hidden = false; } else resume();
+    });
 
     function finish() {
       ctx.audio.cheer();

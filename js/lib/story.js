@@ -157,7 +157,7 @@ export const SHOTS = [
         s += person({ x, bob: Math.abs(Math.sin(k * 1.1)) * -3, legL: w.legL, legR: w.legR, armL: -10, armR: 152, expr: 'think', hold: null, j });
         s += `<text x="${x + 14}" y="${GROUND - 118}" font-family="Caveat, cursive" font-weight="700" font-size="20" fill="${INK}">shh…</text>`;
       } else {
-        const kn = k % 2;
+        const kn = Math.floor(k) % 2;
         s += person({ x, armR: 96 + kn * 36, armL: -10, legL: -4, legR: 4, expr: 'sweat', j });
         s += `<text x="${x + 38}" y="${GROUND - 98 - kn * 6}" font-family="Caveat, cursive" font-weight="700" font-size="${22 + kn * 4}" fill="#e8416f">tok tok!</text>`;
       }
@@ -172,10 +172,10 @@ export const SHOTS = [
       let s = ground(j) + tree(30, GROUND) + house(170, 150);
       s += `<rect x="208" y="222" width="38" height="74" fill="#5a3a5e" stroke="${INK}" stroke-width="3"/><path d="M208 222 L196 228 L196 296 L208 296Z" fill="#c9a7ff" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>`;
       s += lettersOnSign(184, 150, 74, 66, ['SSHH!!', 'SBI PO', 'MOCK TEST', 'CHAL RAHA', 'HAI'], j).replace('<g ', '<g opacity="0" ');
-      const shake = () => j(2.2);
+      const shake = () => Math.sin(k * 52) * 2.2;
       s += person({ who: 'her', x: 236 + shake(), s: 0.92, armR: 62, armL: -24 + shake() * 3, legL: -3, legR: 3, expr: 'angry', hold: 'books', j });
       s += steam(236, GROUND - 124, k) + `<text x="224" y="${GROUND - 148}" font-family="Caveat, cursive" font-weight="700" font-size="22" fill="#e8416f">#@!$</text>`;
-      s += bubble(40 + j(2), 52 + j(2), 148, 58, ['HURRR!!'], 'right', j, 34, '#fff5f8');
+      s += bubble(40 + Math.sin(k * 47) * 2, 52 + Math.cos(k * 41) * 2, 148, 58, ['HURRR!!'], 'right', () => 0, 34, '#fff5f8');
       const knock = k % 2 ? 7 : -7;
       s += person({ x: 96, legL: knock, legR: -knock, armL: 12, armR: -12, expr: 'sweat', j }) + sweatDrops(96, GROUND - 128, k);
       s += `<text x="46" y="${GROUND - 118}" font-family="Caveat, cursive" font-weight="700" font-size="20" fill="${INK}">glp…</text>`;
@@ -243,14 +243,28 @@ export const SHOTS = [
   },
 ];
 
-// every page of the flip book, in order
-export const FRAMES = SHOTS.flatMap((shot, si) => Array.from({ length: shot.n }, (_, k) => ({ shot: si, k, p: shot.n > 1 ? k / (shot.n - 1) : 0, last: false })));
-FRAMES[FRAMES.length - 1].last = true;
-export const TOTAL = FRAMES.length;
+// ---- playback: the story as one continuous cartoon ----
+// Shot lengths come from frame count / fps, stretched a little so each scene is easy to follow.
+export const TIME_SCALE = 1.35;
+export const DURATIONS = SHOTS.map((sh) => (sh.n / sh.fps) * TIME_SCALE);
+export const TOTAL_SECONDS = DURATIONS.reduce((a, b) => a + b, 0);
+const STARTS = DURATIONS.map((_, i) => DURATIONS.slice(0, i).reduce((a, b) => a + b, 0));
+const noJitter = () => 0;
 
-export function renderFrame(i) {
-  const f = FRAMES[i];
-  const shot = SHOTS[f.shot];
-  const j = jitter(i);
-  return `<svg class="fsvg" viewBox="0 10 300 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${shot.draw(f.k, f.p, j)}</svg>`;
+// Which shot is playing at time t (seconds), and how far into it (k is in "frames", but fractional).
+export function locate(t) {
+  const tt = Math.max(0, Math.min(TOTAL_SECONDS - 1e-6, t));
+  let si = STARTS.length - 1;
+  while (si > 0 && tt < STARTS[si]) si--;
+  const shot = SHOTS[si];
+  const k = Math.min(shot.n - 1, ((tt - STARTS[si]) / DURATIONS[si]) * shot.n);
+  return { si, k, p: shot.n > 1 ? k / (shot.n - 1) : 0 };
 }
+
+export function renderShot(si, k) {
+  const shot = SHOTS[si];
+  const p = shot.n > 1 ? k / (shot.n - 1) : 0;
+  return `<svg class="fsvg" viewBox="0 10 300 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${shot.draw(k, p, noJitter)}</svg>`;
+}
+
+export const renderAt = (t) => { const { si, k } = locate(t); return renderShot(si, k); };
