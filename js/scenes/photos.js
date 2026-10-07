@@ -75,6 +75,10 @@ export default {
     });
 
     stage.appendChild(root);
-    goBtn.onclick = () => ctx.next();
+    gsap.from(root.querySelectorAll('.hang'), { opacity: 0, duration: .8, stagger: .12, delay: .5, ease: 'power1.out', clearProps: 'opacity' });
+    goBtn.onclick = () => {
+      goBtn.disabled = true;
+      gsap.to(root.querySelectorAll('.fav-head, .photo-wall, .fav-go'), { opacity: 0, y: -16, duration: .6, ease: 'power1.inOut', onComplete: () => ctx.next() });
+    };
   },
 };

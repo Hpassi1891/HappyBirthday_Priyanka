@@ -151,3 +151,7 @@
 .back { transform: rotateY(180deg); background: repeating-linear-gradient(#fffdf0 0 21px, #8fd3ff55 21px 22px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 10px; text-align: center; overflow: hidden; }
 .note-text { margin: 0; font-size: clamp(15px, 4.4vw, 19px); line-height: 1.12; color: var(--ink); font-weight: 600; }
 .back-heart { font-size: 20px; }
+
+/* Door: zoomable world + light that floods the screen on the way in */
+.door-world { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 10px; padding: 14px 16px 16px; }
+.door-glow { position: absolute; inset: 0; opacity: 0; pointer-events: none; z-index: 5; }

@@ -12,6 +12,7 @@ export default {
       `<i style="left:${(Math.random() * 100).toFixed(1)}%;top:${(Math.random() * 62).toFixed(1)}%;animation-delay:${(Math.random() * 3).toFixed(2)}s;transform:scale(${(.5 + Math.random()).toFixed(2)})"></i>`).join('');
     stage.innerHTML = `
       <section class="scene door-scene">
+        <div class="door-world">
         <div class="sky" aria-hidden="true">
           <div class="stars">${stars}</div>
           <span class="moon"></span>
@@ -52,6 +53,7 @@ export default {
           <button class="btn" type="submit">${c.button}</button>
           <p id="msg" class="msg" aria-live="polite"></p>
         </form>
+        </div>
       </section>`;
 
     const door = stage.querySelector('#door');
@@ -74,16 +76,33 @@ export default {
     }
 
     const input = stage.querySelector('#answer');
+
+    // Open the door, walk into the light, and hand over to the room (which fades up out of the glow).
+    function walkIn() {
+      const section = stage.querySelector('.door-scene');
+      const world = stage.querySelector('.door-world');
+      const r = door.getBoundingClientRect();
+      const ox = r.left + r.width / 2, oy = r.top + r.height * 0.6;
+      const glow = document.createElement('div');
+      glow.className = 'door-glow';
+      glow.style.background = `radial-gradient(circle at ${ox}px ${oy}px, #fffef2 0%, #ffeaa6 38%, #ffc7e0 100%)`;
+      section.appendChild(glow);
+      ctx.audio.creak();
+      door.classList.add('open');
+      gsap.timeline({ onComplete: () => ctx.next() })
+        .to(world.querySelectorAll('.door-title, #form'), { opacity: 0, duration: .5 }, .15)
+        .call(() => { ctx.audio.cheer(); ctx.fx.burst(ox, oy, 120); }, null, .55)
+        .to(world, { scale: 6, transformOrigin: `${ox}px ${oy}px`, duration: 1.7, ease: 'power2.in' }, .9)
+        .to(glow, { opacity: 1, duration: 1, ease: 'power1.in' }, 1.5)
+        .call(() => ctx.audio.sparkle(), null, 1.8);
+    }
     stage.querySelector('#form').onsubmit = (e) => {
       e.preventDefault();
       const { result } = checkAnswer(input.value);
       if (result === 'open') {
         msg.textContent = '';
-        ctx.audio.creak();
-        door.classList.add('open');
-        setTimeout(() => { ctx.audio.cheer(); ctx.fx.burst(innerWidth / 2, innerHeight / 2, 140); }, 500);
-        setTimeout(() => ctx.next(), 1700);
         input.disabled = true;
+        walkIn();
         return;
       }
       msg.textContent = pick(result === 'funny' ? c.himanshu : c.wrong);

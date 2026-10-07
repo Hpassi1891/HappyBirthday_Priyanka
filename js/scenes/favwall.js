@@ -53,6 +53,8 @@ export default {
       wall.appendChild(sec);
     }
     stage.appendChild(root);
+    // Frames settle in gently once the scene has faded up.
+    gsap.from(root.querySelectorAll('.ribbon, .frame-box'), { opacity: 0, y: 26, duration: .7, stagger: .045, delay: .5, ease: 'power2.out', clearProps: 'opacity,transform' });
 
     function openZoom(item, from) {
       ctx.audio.sparkle();
@@ -89,6 +91,10 @@ export default {
       overlay.onclick = (e) => { if (e.target === overlay) done(); };
     }
 
-    goBtn.onclick = () => ctx.next();
+    // Frames clear away first so only the wallpaper carries over to the next scene.
+    goBtn.onclick = () => {
+      goBtn.disabled = true;
+      gsap.to(root.querySelectorAll('.fav-head, .fav-wall, .fav-go'), { opacity: 0, y: -16, duration: .6, ease: 'power1.inOut', onComplete: () => ctx.next() });
+    };
   },
 };

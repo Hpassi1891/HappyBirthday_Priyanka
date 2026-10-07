@@ -13,18 +13,55 @@ export const ORDER = ['door', 'room', 'favwall', 'photos', 'gifts', 'cake', 'blo
 const stage = document.getElementById('stage');
 const params = new URLSearchParams(location.search);
 const ctx = { stage, audio, fx, params, preview: !!window.__PREVIEW__ || params.has('preview') || params.has('scene'), copy: null, favs: null, photos: null, name: null };
-let current = null;
+let current = null; // { scene, layer, name }
 
 async function loadJson(path) {
   try { return await (await fetch(path)).json(); } catch { return {}; }
 }
 
+// ---- Scene transitions -------------------------------------------------
+// Each scene lives in its own full-screen "layer". The incoming layer is mounted on top of the
+// outgoing one and the two are animated together, so there is never a hard cut.
+// Key is "from>to"; anything not listed uses the default soft crossfade.
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const DEFAULT = { dur: 1, ease: 'sine.inOut', out: {}, in: { opacity: 0, scale: 1.03 } };
+const TRANSITIONS = {
+  // The door scene zooms into the open door and floods with light itself; the room fades up out of it.
+  'door>room': { dur: 1.4, ease: 'sine.inOut', out: {}, in: { opacity: 0, scale: 1.08 } },
+  // Walk toward the wall: the room pushes in while the fav wall appears over the same wallpaper.
+  'room>favwall': { dur: 1.2, ease: 'sine.inOut', out: { scale: 1.2, transformOrigin: '50% 35%' }, in: { opacity: 0, scale: .96 } },
+  // Slide along the wall to the next one.
+  'favwall>photos': { dur: 1.3, ease: 'power2.inOut', out: { xPercent: -14 }, in: { opacity: 0, xPercent: 14 } },
+};
+
+let busy = false;
+
 async function go(name) {
-  if (current?.unmount) current.unmount();
-  stage.replaceChildren();
+  if (busy) return;
+  busy = true;
+  const from = current;
+  const layer = document.createElement('div');
+  layer.className = 'layer';
+  stage.appendChild(layer);
   ctx.name = name;
-  current = SCENES[name] ?? placeholder(name);
-  current.mount(stage, ctx);
+  const scene = SCENES[name] ?? placeholder(name);
+  scene.mount(layer, ctx);
+
+  const t = TRANSITIONS[`${from?.name}>${name}`] ?? DEFAULT;
+  const dur = reduceMotion ? .2 : (from ? t.dur : .9);
+  stage.classList.add('busy');
+  if (from) gsap.to(from.layer, { ...t.out, duration: dur, ease: t.ease });
+  await new Promise((done) => {
+    gsap.fromTo(layer, t.in, { opacity: 1, scale: 1, xPercent: 0, duration: dur, ease: t.ease, onComplete: done });
+  });
+  gsap.set(layer, { clearProps: 'all' });
+  if (from) {
+    from.scene.unmount?.();
+    from.layer.remove();
+  }
+  current = { scene, layer, name };
+  stage.classList.remove('busy');
+  busy = false;
 }
 
 ctx.go = go;

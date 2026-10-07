@@ -36,6 +36,8 @@ export default {
       </section>`;
 
     const $ = (s) => stage.querySelector(s);
+    // Warm up the room: furniture and controls fade in just after the scene itself.
+    gsap.from(stage.querySelectorAll('.balloon, .tile, .switch, .popper, .shelf'), { opacity: 0, duration: .8, stagger: .025, delay: .5, ease: 'power1.out', clearProps: 'opacity' });
     const state = { lit: false, banner: false };
 
     // --- fairy lights bulbs
@@ -169,7 +171,13 @@ export default {
       });
     });
 
-    $('#go').onclick = () => ctx.next();
+    // Clear the furniture first so only the wallpaper crossfades into the fav wall, then push toward the wall.
+    $('#go').onclick = () => {
+      $('#go').disabled = true;
+      gsap.timeline({ onComplete: () => ctx.next() })
+        .to(stage.querySelectorAll('.room > :not(.wall)'), { opacity: 0, duration: .8, ease: 'power1.inOut' }, 0)
+        .to($('.room'), { scale: 1.12, transformOrigin: '50% 35%', duration: 1, ease: 'sine.inOut' }, 0);
+    };
   },
   unmount() { cleanup.forEach((f) => f()); cleanup = []; },
 };

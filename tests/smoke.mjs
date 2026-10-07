@@ -22,6 +22,7 @@ check('locked: no input', !(await page.locator('#answer').isVisible()));
 
 // Preview mode
 await page.goto(BASE + '/?preview=1');
+await page.waitForSelector('#stage:not(.busy)');
 await page.fill('#answer', 'Himanshu');
 await page.click('button[type=submit]');
 check('himanshu: funny message', (await page.textContent('#msg')).includes('Himanshu'));
@@ -31,13 +32,14 @@ await page.click('button[type=submit]');
 check('wrong: sassy message', (await page.textContent('#msg')).length > 5);
 await page.fill('#answer', 'rakshas');
 await page.click('button[type=submit]');
-await page.waitForSelector('.door-scene', { state: 'detached', timeout: 5000 }).catch(() => {});
-await page.waitForTimeout(300);
+await page.waitForSelector('.room', { timeout: 9000 });
+await page.waitForSelector('.door-scene', { state: 'detached', timeout: 9000 });
 check('rakshas: moves past the door', !(await page.locator('.door-scene').count()));
 
 // Room: lights + banner
 await page.goto(BASE + '/?scene=room');
 await page.waitForSelector('#switch');
+await page.waitForSelector('#stage:not(.busy)');
 await page.click('#switch');
 check('room: lights on', await page.locator('.room.lit').count() === 1);
 // drag the first tile onto the banner
@@ -61,12 +63,13 @@ while (await page.locator('.tile:not(.spacer)').count()) {
 check('room: banner complete', (await page.locator('.slot:not(.filled)').count()) === 0);
 check('room: continue appears', await page.locator('#go').isVisible());
 await page.click('#go');
-await page.waitForTimeout(400);
+await page.waitForSelector('.room', { state: 'detached', timeout: 9000 });
 check('room: advances to next scene', !(await page.locator('.room').count()));
 
 // Fav wall
 await page.goto(BASE + '/?scene=favwall');
 await page.waitForSelector('.frame');
+await page.waitForSelector('#stage:not(.busy)');
 check('favwall: 12 frames', (await page.locator('.frame').count()) === 12);
 check('favwall: continue hidden at start', !(await page.locator('#go').isVisible()));
 for (let i = 0; i < 4; i++) {
@@ -79,12 +82,13 @@ for (let i = 0; i < 4; i++) {
 check('favwall: counter 4/12', (await page.textContent('.fav-count')).includes('4 / 12'));
 check('favwall: continue appears after 4', await page.locator('#go').isVisible());
 await page.click('#go');
-await page.waitForTimeout(300);
+await page.waitForSelector('.fav-scene', { state: 'detached', timeout: 9000 });
 check('favwall: advances', !(await page.locator('.fav-scene').count()));
 
 // Photo wall
 await page.goto(BASE + '/?scene=photos');
 await page.waitForSelector('.polaroid');
+await page.waitForSelector('#stage:not(.busy)');
 check('photos: 6 polaroids', (await page.locator('.polaroid').count()) === 6);
 check('photos: continue hidden at start', !(await page.locator('#go').isVisible()));
 for (let i = 0; i < 3; i++) {
@@ -97,7 +101,7 @@ check('photos: continue appears after 3', await page.locator('#go').isVisible())
 await page.locator('.polaroid').first().click({ force: true }); // flip back
 check('photos: flips back', (await page.locator('.polaroid.flipped').count()) === 2);
 await page.click('#go');
-await page.waitForTimeout(300);
+await page.waitForSelector('.photo-scene', { state: 'detached', timeout: 9000 });
 check('photos: advances', !(await page.locator('.photo-scene').count()));
 
 check('no JS errors', errors.length === 0);

@@ -28,3 +28,5 @@ h1, h2 { margin: 0 0 .3em; color: var(--pink-700); }
 .title { font: 400 clamp(34px, 9.5vw, 58px)/1 var(--font-title); color: #fff; margin: 0; -webkit-text-stroke: 7px var(--outline); paint-order: stroke fill; text-shadow: 0 5px 0 var(--outline); letter-spacing: 1px; }
 .hidden { display: none !important; }
 @media (prefers-reduced-motion: reduce) { * { animation-duration: .01ms !important; } }
+.layer { position: absolute; inset: 0; }
+.busy .layer { pointer-events: none; }
