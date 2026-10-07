@@ -27,6 +27,102 @@
       "placeholder": "whisper the secret answer…",
       "button": "step through ✦",
       "lockedHint": "The stars open this door on 11 November… sabr karo, chudail! ⏳"
+    },
+    "cinema": {
+      "title": "A Surprise for Priyanka",
+      "dateLine": "opens on 11 november",
+      "placeholder": "whisper the secret answer…",
+      "button": "Open the door",
+      "lockedHint": "Good things take time… sabr karo, chudail! ⏳"
     }
+  },
+  "intro": {
+    "kicker": "A SURPRISE FOR",
+    "name": "Priyanka",
+    "by": "Rakshas made this — just for you.",
+    "button": "Unwrap it",
+    "sound": "Sound on for the full magic",
+    "pullTitle": "a little something, for you",
+    "pullHint": "PULL & RELEASE",
+    "pullTap": "or just tap the bow",
+    "beats": [
+      {
+        "small": "make a wish…",
+        "big": [
+          "Happy",
+          "Birthday"
+        ],
+        "sub": "to someone worth celebrating"
+      },
+      {
+        "small": "this year, may you get",
+        "big": [
+          "everything",
+          "you aim for"
+        ],
+        "sub": "yes, even that PO posting ✦"
+      },
+      {
+        "small": "and never forget",
+        "big": [
+          "you are",
+          "loved"
+        ],
+        "sub": "— Rakshas"
+      }
+    ]
+  },
+  "interludes": {
+    "favwall": {
+      "lines": [
+        "a few of her",
+        "favourite things"
+      ],
+      "theme": "cream"
+    },
+    "photos": {
+      "lines": [
+        "and some moments",
+        "we'll keep forever"
+      ],
+      "theme": "cream"
+    },
+    "gifts": {
+      "lines": [
+        "one little thing,",
+        "just for you"
+      ],
+      "theme": "red"
+    },
+    "cake": {
+      "lines": [
+        "now…",
+        "make a wish"
+      ],
+      "theme": "dark"
+    },
+    "finale": {
+      "lines": [
+        "a tiny story,",
+        "starring two friends"
+      ],
+      "theme": "red"
+    },
+    "ending": {
+      "lines": [
+        "and finally…"
+      ],
+      "theme": "cream"
+    }
+  },
+  "ending": {
+    "kicker": "officially your day",
+    "title": "Happy Birthday,",
+    "name": "Priyanka",
+    "sub": "just like that, another year of you",
+    "from": "— Rakshas",
+    "audio": "",
+    "play": "play",
+    "again": "watch it all again ↺"
   }
 }

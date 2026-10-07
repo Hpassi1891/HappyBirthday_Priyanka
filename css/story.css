@@ -1,0 +1,73 @@
+/* ============ Cinematic story pieces: opening, interludes, ending ============
+   Look-independent: these full-screen moments look the same in every theme.
+   Cream paper, deep red, midnight blue, orange glow, big serif type. */
+.intro-scene, .end-scene { position: absolute; inset: 0; overflow: hidden; text-align: center; font-family: 'Cormorant Garamond', Georgia, serif; }
+.intro-scene { background: radial-gradient(ellipse at 50% 45%, #fff6e2, #f6e2bd); color: #7a1020; }
+.in-garden { position: absolute; inset: 0; width: 100%; height: 100%; }
+.in-dust { position: absolute; inset: 0; pointer-events: none; }
+.in-dust i, .in-stars i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #f0a64a; box-shadow: 0 0 6px 1px #f0a64a99; animation: twinkle 3.4s ease-in-out infinite; }
+.in-stars i { background: #fff; box-shadow: 0 0 6px 1px #fff9; width: 2px; height: 2px; }
+
+/* --- 2. the surprise card --- */
+.in-dark, .in-pull, .in-wish { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.in-dark[hidden], .in-pull[hidden], .in-wish[hidden] { display: none; }
+.in-dark { background: radial-gradient(ellipse at 50% 35%, #16264f, #060b1f 75%); color: #ffe9d2; }
+.in-stars { position: absolute; inset: 0; }
+.in-card { position: relative; width: min(86vw, 380px); padding: 34px 24px 30px; border-radius: 26px; border: 1px solid #ffffff3a; background: linear-gradient(#ffffff18, #ffffff08); backdrop-filter: blur(8px); box-shadow: 0 0 60px #f6ac5522, inset 0 1px 0 #ffffff33; }
+.in-gift { margin-bottom: 10px; animation: bob 3s ease-in-out infinite; }
+.in-kicker { margin: 0; font: 600 13px 'Quicksand', sans-serif; letter-spacing: .38em; color: #f6ac55; }
+.in-name { margin: 4px 0 6px; font: italic 700 clamp(52px, 17vw, 76px)/1 'Allura', 'Cormorant Garamond', cursive; background: linear-gradient(#fff3d6, #f6ac55); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 18px #f6ac5566); }
+.in-by { margin: 0; font: italic 500 19px/1.25 'Cormorant Garamond', serif; color: #ffe9d2cc; }
+.in-unwrap { position: relative; margin-top: 34px; font: 700 18px 'Quicksand', sans-serif; letter-spacing: .08em; color: #4a1208; background: linear-gradient(#ffc27a, #f08a2f); border: 0; border-radius: 999px; padding: 14px 36px; min-height: 50px; cursor: pointer; box-shadow: 0 0 30px #f6ac5588, inset 0 2px 0 #fff9; animation: unwrapPulse 2.6s ease-in-out infinite; }
+.in-unwrap:active { filter: brightness(.95); }
+@keyframes unwrapPulse { 50% { box-shadow: 0 0 52px #f6ac55dd, inset 0 2px 0 #fff9; } }
+.in-sound { position: absolute; bottom: calc(28px + env(safe-area-inset-bottom)); margin: 0; font: 500 13px 'Quicksand', sans-serif; letter-spacing: .1em; color: #ffe9d299; }
+
+/* --- 3. pull and release --- */
+.in-pull { background: radial-gradient(ellipse at 50% 40%, #fff8ea, #f9e6c7); color: #7a1020; }
+.in-title { position: absolute; top: calc(9% + env(safe-area-inset-top)); margin: 0; width: 100%; font: italic 600 clamp(26px, 7.4vw, 40px)/1.05 'Cormorant Garamond', serif; letter-spacing: .01em; }
+.in-heart { position: absolute; left: 50%; top: 34%; width: 132px; height: 121px; margin: -60px 0 0 -66px; }
+.in-heart svg { position: relative; display: block; animation: heartbeat 1.3s ease-in-out infinite; filter: drop-shadow(0 8px 14px #b30f2744); }
+@keyframes heartbeat { 0%, 100% { filter: drop-shadow(0 8px 14px #b30f2744); } 14% { filter: drop-shadow(0 0 26px #ff3b55cc); } }
+.in-glow { position: absolute; left: 50%; top: 50%; width: 220px; height: 220px; margin: -110px 0 0 -110px; border-radius: 50%; background: radial-gradient(#ff5a6e88, #ff5a6e00 65%); opacity: .55; animation: glowBeat 1.3s ease-in-out infinite; pointer-events: none; }
+@keyframes glowBeat { 50% { opacity: 1; } }
+.in-bow { position: absolute; left: 50%; bottom: 17%; width: 170px; height: 170px; margin-left: -85px; cursor: grab; touch-action: none; }
+.in-bow svg { display: block; overflow: visible; }
+.in-hint { position: absolute; bottom: calc(7% + env(safe-area-inset-bottom)); width: 100%; margin: 0; font: 700 13px 'Quicksand', sans-serif; letter-spacing: .42em; color: #7a1020; }
+.in-tap { position: absolute; bottom: calc(3.4% + env(safe-area-inset-bottom)); width: 100%; margin: 0; font: italic 500 15px 'Cormorant Garamond', serif; opacity: .7; }
+.fly-arrow { position: absolute; z-index: 5; pointer-events: none; transform-origin: 50% 50%; }
+
+/* --- 4. the red screen --- */
+.in-wish { z-index: 3; background: radial-gradient(ellipse at 50% 42%, #e0202e, #b30f1f 70%, #8c0a18); color: #fde9dc; padding: 0 20px; }
+.wish-small { margin: 0 0 14px; font: italic 500 clamp(20px, 5.6vw, 28px)/1.1 'Cormorant Garamond', serif; letter-spacing: .02em; }
+.wish-big { margin: 0; font: 700 64px/.98 'Bodoni Moda', 'Playfair Display', serif; color: #fff0e4; text-shadow: 0 6px 30px #7a0a1655; }
+.wish-big .wl { display: block; white-space: nowrap; }
+.wish-big .ch { display: inline-block; }
+.wish-flourish { width: 150px; height: 18px; margin: 18px 0 8px; overflow: visible; }
+.wish-sub { margin: 0; font: italic 500 clamp(18px, 5vw, 24px)/1.2 'Cormorant Garamond', serif; opacity: .9; min-height: 1.2em; }
+.in-white { display: none; position: absolute; z-index: 9; left: calc(50% - 80vmax); top: calc(50% - 80vmax); width: 160vmax; height: 160vmax; border-radius: 50%; background: radial-gradient(#fff 55%, #fffbf3); pointer-events: none; }
+
+/* ============ Typographic interludes between scenes (cinema look) ============ */
+#interlude { position: fixed; inset: 0; z-index: 45; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 0 22px; text-align: center; pointer-events: all; }
+#interlude.t-cream { background: radial-gradient(ellipse at 50% 45%, #fff6e2, #f3dcb3); color: #8b1a2b; }
+#interlude.t-red { background: radial-gradient(ellipse at 50% 42%, #e0202e, #a50f1f 75%); color: #fde9dc; }
+#interlude.t-dark { background: radial-gradient(ellipse at 50% 35%, #16264f, #050a1c 80%); color: #ffe9d2; }
+#interlude .il-line { display: block; font: 700 44px/1.02 'Bodoni Moda', 'Playfair Display', serif; white-space: nowrap; }
+#interlude .il-sm { font: italic 500 clamp(24px, 7vw, 38px)/1.1 'Cormorant Garamond', serif; margin-bottom: 10px; }
+#interlude .ch { display: inline-block; }
+#interlude .il-rule { display: block; width: 90px; height: 3px; margin-top: 22px; border-radius: 3px; background: currentColor; opacity: .55; transform-origin: 50% 50%; }
+
+/* ============ Ending: the heart-blossom tree ============ */
+.end-scene { background: radial-gradient(ellipse at 50% 40%, #ffffff, #fdf2e4); color: #8b1a2b; }
+.end-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.end-top { position: absolute; top: calc(62px + env(safe-area-inset-top)); left: 0; right: 0; }
+.end-kicker { margin: 0; font: 600 12px 'Quicksand', sans-serif; letter-spacing: .34em; text-transform: uppercase; color: #e07a2a; }
+.end-title { margin: 8px 0 0; font: italic 600 clamp(28px, 8vw, 44px)/1 'Cormorant Garamond', serif; }
+.end-name { margin: 0; font: 400 clamp(58px, 18vw, 96px)/1 'Allura', cursive; background: linear-gradient(#e0202e, #b30f1f); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.end-foot { position: absolute; left: 0; right: 0; bottom: calc(92px + env(safe-area-inset-bottom)); }
+.end-sub { margin: 0; font: italic 500 clamp(19px, 5.4vw, 25px)/1.2 'Cormorant Garamond', serif; }
+.end-from { margin: 6px 0 0; font: 400 34px 'Allura', cursive; color: #e0202e; }
+.end-btns { position: absolute; left: 0; right: 0; bottom: calc(26px + env(safe-area-inset-bottom)); display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; padding: 0 16px; }
+.end-btn { font: 700 15px 'Quicksand', sans-serif; letter-spacing: .06em; color: #fff; background: linear-gradient(#ee3a48, #b30f1f); border: 0; border-radius: 999px; padding: 11px 22px; min-height: 44px; cursor: pointer; box-shadow: 0 6px 20px #b30f2744, inset 0 2px 0 #ffffff55; }
+.end-btn.ghost { color: #8b1a2b; background: #fff; box-shadow: inset 0 0 0 1.5px #8b1a2b66; }
+.end-btn:active { transform: translateY(2px); }

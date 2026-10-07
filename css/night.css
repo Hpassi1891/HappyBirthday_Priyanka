@@ -14,10 +14,6 @@
   --font-title: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Quicksand', system-ui, sans-serif;
 }
-/* light cards inside the night keep dark, readable text */
-[data-look="night"] :is(.gift-card, .lcard, .note, .front, .back, .frame-box, .coupon, .stamp, .env, .room .switch, .room .popper, .gtag, .zoom-card .frame-box) {
-  --ink: #2a2f6b; --pink: #a8446a; --red: #c2335f;
-}
 
 /* ---- the sky itself ---- */
 [data-look="night"] body, body[data-look="night"] { background: var(--kraft); }
@@ -46,7 +42,6 @@
 /* ---- type and buttons ---- */
 [data-look="night"] .title { font: italic 600 clamp(36px, 10.4vw, 58px)/1 var(--font-title); color: #ffd9c9; text-shadow: 0 0 22px #f2b5a788, 0 2px 0 #0004; transform: none; letter-spacing: .01em; }
 [data-look="night"] .btn { font: 700 19px var(--font-body); letter-spacing: .06em; color: #3b2450; background: linear-gradient(#ffe0d4, #f2b5a7); border: 0; border-radius: 999px; padding: 10px 28px; min-height: 46px; text-shadow: none; box-shadow: 0 0 22px #f2b5a788, inset 0 2px 0 #fff9; animation: glowpulse 3.2s ease-in-out infinite; }
-[data-look="night"] .btn.alt { background: linear-gradient(#e4dcff, #b9a6ff); box-shadow: 0 0 22px #b9a6ff88, inset 0 2px 0 #fff9; font-size: 17px; }
 [data-look="night"] .btn:disabled { opacity: .7; }
 @keyframes glowpulse { 50% { box-shadow: 0 0 34px #f2b5a7cc, inset 0 2px 0 #fff9; } }
 
@@ -144,14 +139,3 @@
 [data-look="night"] .scr-prog { border: 1px solid #ffffff55; background: #ffffff14; }
 [data-look="night"] .scr-prog i { background: linear-gradient(90deg, #b9a6ff, #f2b5a7); }
 [data-look="night"] .fb-cap { font: italic 600 28px/1.05 var(--font-title); color: #ffd9c9; }
-[data-look="night"] .fs-env, [data-look="night"] .fs-letter { padding: 14px 16px; }
-[data-look="night"] .env-hint { font: italic 600 26px/1.1 var(--font-title); color: #ffd9c9; }
-[data-look="night"] .env { filter: drop-shadow(0 0 26px #f2b5a788); }
-[data-look="night"] .env-back { background: #f2b5a7; border-color: #fff3d6; box-shadow: none; }
-[data-look="night"] .env-front { background: linear-gradient(#ffe0d4, #f2b5a7); border-color: #fff3d6; }
-[data-look="night"] .env-flap { background: #ffd0c0; border-color: #fff3d6; }
-[data-look="night"] .env-paper { border-color: #fff3d6; }
-[data-look="night"] .env-seal { background: #ff8fa8; border-color: #fff3d6; }
-[data-look="night"] .env-to { color: #3b2450; font: italic 700 24px var(--font-title); }
-[data-look="night"] .lcard { background: #fff3d6 repeating-linear-gradient(#0000 0 29px, #b9a6ff44 29px 30px); background-position: 0 22px; box-shadow: 0 0 50px #f2b5a788; }
-[data-look="night"] .lbody .lto, [data-look="night"] .lbody .lfrom { color: #a8446a; }

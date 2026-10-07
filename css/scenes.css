@@ -227,24 +227,20 @@
 .scr-prog { margin-top: 10px; height: 8px; border: 2px solid var(--ink); border-radius: 6px; background: #fff; overflow: hidden; }
 .scr-prog i { display: block; height: 100%; width: 0; background: repeating-linear-gradient(45deg, var(--washi) 0 6px, var(--washi-2) 6px 12px); }
 .fb-cap { min-height: 2.2em; margin: 4px 0 0; font: 700 28px/1 var(--font-hand); color: var(--pink); text-align: center; }
-.fs-env, .fs-letter { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 14px 12px 14px 50px; }
-.env-hint { margin: 0; font: 700 26px/1 var(--font-hand); color: var(--ink); animation: bob 1.6s ease-in-out infinite; }
-.env { position: relative; width: min(calc(100vw - 110px), 300px); aspect-ratio: 300 / 190; padding: 0; background: none; border: 0; cursor: pointer; perspective: 800px; animation: hop 3s ease-in-out infinite; }
-.env i { position: absolute; display: block; }
-.env-back { inset: 0; background: #ffd1df; border: 3px solid var(--ink); border-radius: 6px; box-shadow: 3px 6px 0 #0003; }
-.env-paper { left: 8%; right: 8%; top: 8%; bottom: 14%; background: #fff repeating-linear-gradient(#0000 0 15px, #9fc3e6 15px 16px); border: 2.5px solid var(--ink); transition: translate .8s var(--bounce); }
-.env-front { inset: 0; background: linear-gradient(#ffe3ec, #ffc2d6); border: 3px solid var(--ink); border-radius: 6px; clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%); }
-.env-flap { left: 0; right: 0; top: 0; height: 56%; background: #ffb3cc; border: 3px solid var(--ink); clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: 50% 0; transition: transform .8s var(--bounce); backface-visibility: visible; }
-.env.open .env-flap { transform: rotateX(180deg); }
-.env.rise .env-paper { translate: 0 -64%; z-index: 2; }
-.env-seal { position: absolute; left: 50%; top: 46%; translate: -50% -50%; width: 38px; height: 38px; border-radius: 50%; background: var(--red); border: 3px solid var(--ink); color: #fff; font-size: 20px; line-height: 32px; z-index: 3; transition: opacity .3s; }
-.env.open .env-seal { opacity: 0; }
-.env-to { position: absolute; left: 0; right: 0; bottom: 8%; font: 700 24px var(--font-hand); color: var(--ink); z-index: 3; }
-.lcard { position: relative; width: min(calc(100vw - 80px), 400px); max-height: min(72%, 560px); overflow-y: auto; padding: 24px 18px 18px 22px; text-align: left; background: #fffaf2 repeating-linear-gradient(#0000 0 29px, var(--rule) 29px 30px); background-position: 0 22px; box-shadow: 3px 7px 0 #0003; rotate: -1deg; }
-.lbody { font: 700 22px/30px var(--font-hand); color: var(--ink); }
-.lbody p { margin: 0; }
-.lbody .lto { font-size: 32px; color: var(--pink); }
-.lbody .gap { height: 14px; }
-.lbody .lfrom { margin-top: 8px; font-size: 30px; color: var(--pink); text-align: right; }
-.fs-actions { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.btn.alt { background: #a9c7ff; box-shadow: 0 0 0 2.5px #a9c7ff, 3px 5px 0 2.5px #0002; font-size: 20px; }
+
+/* ---- one single gift: the lunch ticket ---- */
+.gift-scene.solo .cloth { width: min(100%, 320px); }
+.gift-scene.solo .gifts { grid-template-columns: 1fr; }
+.gift-scene.solo .gift { max-width: 240px; padding-top: 24px; }
+.gift-scene.solo .gtag { font-size: 24px; }
+.ticket { position: relative; display: grid; grid-template-columns: 1fr 62px; text-align: left; background: #fff4c4; border: 3px solid var(--ink); border-radius: 8px; box-shadow: 0 0 0 3px #fff4c4, 3px 5px 0 3px #0002;
+  -webkit-mask: radial-gradient(circle at calc(100% - 62px) 0, #0000 9px, #000 10px) top / 100% 51% no-repeat, radial-gradient(circle at calc(100% - 62px) 100%, #0000 9px, #000 10px) bottom / 100% 51% no-repeat;
+  mask: radial-gradient(circle at calc(100% - 62px) 0, #0000 9px, #000 10px) top / 100% 51% no-repeat, radial-gradient(circle at calc(100% - 62px) 100%, #0000 9px, #000 10px) bottom / 100% 51% no-repeat; }
+.t-main { padding: 12px 8px 12px 14px; }
+.t-kicker { font: 700 12px var(--font-body); letter-spacing: .3em; color: var(--pink); }
+.t-title { margin: 2px 0 4px; font: 700 34px/.95 var(--font-hand); color: var(--ink); }
+.t-line { margin: 0 0 6px; font: 700 20px/1.05 var(--font-hand); color: var(--ink); }
+.t-fine { margin: 0; font: 400 12px/1.2 var(--font-body); opacity: .75; }
+.t-stub { display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 3px dashed var(--ink); font: 700 12px var(--font-body); letter-spacing: .15em; color: var(--ink); }
+.t-stub b { font: 700 28px var(--font-hand); color: var(--pink); letter-spacing: 0; }
+.ticket .stamp { right: 52px; bottom: -16px; }

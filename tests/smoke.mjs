@@ -36,9 +36,31 @@ await page.click('button[type=submit]');
 check('wrong: sassy message', (await page.textContent('#msg')).length > 5);
 await page.fill('#answer', 'rakshas');
 await page.click('button[type=submit]');
-await page.waitForSelector('.room', { timeout: 9000 });
+await page.waitForSelector('.intro-scene', { timeout: 9000 });
 await page.waitForSelector('.door-scene', { state: 'detached', timeout: 9000 });
-check('rakshas: moves past the door', !(await page.locator('.door-scene').count()));
+check('rakshas: moves past the door into the opening', !(await page.locator('.door-scene').count()));
+
+// Opening: flowers bloom -> surprise card -> pull the bow -> red wishes -> white-out -> the room
+await page.close();
+page = await mk({ viewport: { width: 375, height: 700 }, hasTouch: true });
+page.on('pageerror', (e) => errors.push(e.message));
+await page.goto(BASE + '/?scene=intro');
+await page.waitForSelector('#garden');
+check('intro: flowers canvas', await page.locator('#garden').isVisible());
+await page.waitForSelector('#unwrap', { state: 'visible', timeout: 20000 });
+check('intro: surprise card names her', (await page.textContent('.in-name')) === 'Priyanka');
+await page.waitForTimeout(2000);
+await page.click('#unwrap');
+await page.waitForSelector('#heart', { state: 'visible', timeout: 6000 });
+check('intro: glowing heart and bow appear', await page.locator('#bow').isVisible());
+await page.waitForTimeout(1800);
+await page.click('#bow'); // a tap on the bow draws and fires it
+await page.waitForSelector('#wBig .ch', { timeout: 8000 });
+check('intro: red wish screen starts with Happy Birthday', (await page.textContent('#wBig')).replace(/\s/g, '').startsWith('HappyBirthday'));
+await page.waitForFunction(() => document.querySelector('#wBig')?.textContent.includes('everything'), null, { timeout: 15000 });
+check('intro: next wish follows on its own', true);
+await page.waitForSelector('.room', { timeout: 25000 });
+check('intro: white-out melts into the room', true);
 
 // Room: dark mural, torch, light switch
 await page.close();
@@ -81,6 +103,10 @@ for (let i = 0; i < 4; i++) {
 check('favwall: counter 4/12', (await page.textContent('.fav-count')).includes('4 / 12'));
 check('favwall: continue appears after 4', await page.locator('#go').isVisible());
 await page.click('#go');
+if ((await page.evaluate(() => document.body.dataset.look)) === 'cinema') {
+  await page.waitForFunction(() => getComputedStyle(document.getElementById('interlude') ?? document.body).display === 'flex', null, { timeout: 4000 });
+  check('favwall: a typographic interlude plays before the photos', (await page.textContent('#interlude')).includes('moments'));
+}
 await page.waitForSelector('.fav-scene', { state: 'detached', timeout: 9000 });
 check('favwall: advances', !(await page.locator('.fav-scene').count()));
 
@@ -103,24 +129,21 @@ await page.click('#go');
 await page.waitForSelector('.photo-scene', { state: 'detached', timeout: 9000 });
 check('photos: advances', !(await page.locator('.photo-scene').count()));
 
-// Gift table
+// Gift table: a single present, the lunch ticket
 await page.goto(BASE + '/?scene=gifts');
 await page.waitForSelector('.gift');
 await page.waitForSelector('#stage:not(.busy)');
-await page.waitForTimeout(1600); // let the gifts drop in
-check('gifts: 4 presents', (await page.locator('.gift').count()) === 4);
+await page.waitForTimeout(1600); // let the gift drop in
+check('gifts: only one present', (await page.locator('.gift').count()) === 1);
 check('gifts: continue hidden at start', !(await page.locator('#go').isVisible()));
-for (let i = 0; i < 3; i++) {
-  await page.locator('.gift').nth(i).click({ force: true });
-  await page.waitForSelector('.gift-card', { timeout: 5000 });
-  if (i === 2) { await page.click('.reveal'); check('gifts: joke punchline reveals', await page.locator('.punch').isVisible()); }
-  if (i === 0) check('gifts: poem card shows its title', (await page.textContent('.gift-title')) === 'A little poem');
-  await page.click('.zoom .btn:last-child');
-  await page.waitForSelector('.zoom', { state: 'detached', timeout: 3000 });
-}
-check('gifts: counter 3/4', (await page.textContent('.fav-count')).includes('3 / 4'));
-check('gifts: continue appears after 3', await page.locator('#go').isVisible());
-check('gifts: opened presents are ticked', (await page.locator('.gift.seen').count()) === 3);
+await page.locator('.gift').first().click({ force: true });
+await page.waitForSelector('.gift-card', { timeout: 5000 });
+check('gifts: it is a lunch ticket', (await page.textContent('.t-title')).includes('LUNCH TICKET'));
+check('gifts: ticket card shows the stub and fine print', (await page.locator('.t-stub').count()) === 1 && (await page.locator('.t-fine').count()) === 1);
+await page.click('.zoom .btn:last-child');
+await page.waitForSelector('.zoom', { state: 'detached', timeout: 3000 });
+check('gifts: continue appears after opening it', await page.locator('#go').isVisible());
+check('gifts: opened present is ticked', (await page.locator('.gift.seen').count()) === 1);
 await page.click('#go');
 await page.waitForSelector('.gift-scene', { state: 'detached', timeout: 9000 });
 check('gifts: advances', !(await page.locator('.gift-scene').count()));

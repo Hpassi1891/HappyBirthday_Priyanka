@@ -1,7 +1,6 @@
 import { SHOTS, TOTAL_SECONDS, locate, renderShot } from '../lib/story.js';
 
-// Finale: a little cartoon plays on a taped-up paper screen. Rakshas delivers the birthday letter,
-// then a real envelope opens and the letter writes itself.
+// Finale: a little cartoon plays on a screen. When it ends, a button leads on to the closing scene.
 let cleanup = [];
 
 const TITLE_CARD = `
@@ -22,7 +21,6 @@ const TITLE_CARD = `
 
 export default {
   mount(stage, ctx) {
-    const letter = ctx.letter;
     const SPEED = ctx.params.has('fast') ? 8 : 1;   // ?fast=1 plays the story quickly (used by tests)
     stage.innerHTML = `
       <section class="page finale-scene">
@@ -37,21 +35,7 @@ export default {
             <div class="scr-prog" aria-hidden="true"><i id="prog"></i></div>
           </div>
           <p class="fb-cap hand" id="cap">tap play to watch</p>
-          <button class="btn" id="openLetter" type="button" hidden>open the letter 💌</button>
-        </div>
-        <div class="fs-env" id="envArea" hidden>
-          <p class="env-hint hand" id="envHint">a letter just for you… tap to open</p>
-          <button class="env" id="env" type="button" aria-label="Open the envelope">
-            <i class="env-back"></i><i class="env-paper"></i><i class="env-front"></i><i class="env-flap"></i>
-            <span class="env-seal">♥</span><span class="env-to hand">To: Chudail</span>
-          </button>
-        </div>
-        <div class="fs-letter" id="letterArea" hidden>
-          <div class="lcard" id="lcard"><i class="tape" style="left:50%;top:-9px;margin-left:-30px;--r:2deg"></i><div class="lbody" id="lbody"></div></div>
-          <div class="fs-actions" id="actions" hidden>
-            <button class="btn" id="save" type="button">save this card 💾</button>
-            <button class="btn alt" id="replay" type="button">watch the story again ↺</button>
-          </div>
+          <button class="btn" id="toEnd" type="button" hidden>one last thing ➜</button>
         </div>
       </section>`;
 
@@ -118,125 +102,13 @@ export default {
     function finish() {
       ctx.audio.cheer();
       ctx.fx.burst(innerWidth / 2, innerHeight * 0.35, 100);
-      setCap('and the letter is for you… 💌');
-      const b = $('#openLetter');
+      setCap('and that is the story ✨');
+      const b = $('#toEnd');
       b.hidden = false;
       gsap.from(b, { scale: 0, duration: .6, ease: 'back.out(2)' });
     }
 
-    // ---- the envelope
-    $('#openLetter').onclick = () => {
-      $('#openLetter').disabled = true;
-      ctx.audio.flip();
-      gsap.to($('#bookArea'), { y: 520, rotation: 8, opacity: 0, duration: .9, ease: 'power2.in', onComplete: () => { $('#bookArea').hidden = true; } });
-      const area = $('#envArea');
-      area.hidden = false;
-      gsap.from(area, { y: -300, opacity: 0, rotation: -8, duration: 1.1, delay: .5, ease: 'bounce.out' });
-    };
-    $('#env').onclick = async () => {
-      const env = $('#env');
-      if (env.dataset.open) return;
-      env.dataset.open = '1';
-      env.classList.add('open');
-      ctx.audio.sparkle();
-      ctx.fx.hearts(innerWidth / 2, innerHeight * 0.45, 10);
-      gsap.to($('#envHint'), { opacity: 0, duration: .3 });
-      await wait(900 / Math.min(SPEED, 3));
-      env.classList.add('rise');
-      await wait(900 / Math.min(SPEED, 3));
-      showLetter();
-    };
-
-    // ---- the letter writes itself
-    async function showLetter() {
-      gsap.to($('#envArea'), { opacity: 0, y: 40, duration: .5, onComplete: () => { $('#envArea').hidden = true; } });
-      const area = $('#letterArea');
-      area.hidden = false;
-      gsap.from(area, { scale: .4, y: 120, rotation: -6, opacity: 0, duration: .8, delay: .3, ease: 'back.out(1.5)' });
-      ctx.audio.sparkle();
-      const body = $('#lbody');
-      body.innerHTML = '';
-      const addP = (cls, text = '') => { const p = document.createElement('p'); if (cls) p.className = cls; p.textContent = text; body.appendChild(p); return p; };
-      let skip = SPEED > 1;
-      $('#lcard').onclick = () => { skip = true; };
-      const typeInto = async (p, text) => {
-        if (skip) { p.textContent = text; return; }
-        for (const ch of text) {
-          if (!alive) return;
-          p.textContent += ch;
-          if (skip) { p.textContent = text; return; }
-          $('#lcard').scrollTop = $('#lcard').scrollHeight;
-          await wait(/[.,!?]/.test(ch) ? 160 : 34);
-        }
-      };
-      await wait(1100 / Math.min(SPEED, 3));
-      await typeInto(addP('lto hand'), letter.to);
-      for (const line of letter.lines) {
-        if (!alive) return;
-        const p = addP('lline');
-        if (line === '') { p.innerHTML = '&nbsp;'; p.classList.add('gap'); continue; }
-        await typeInto(p, line);
-        $('#lcard').scrollTop = $('#lcard').scrollHeight;
-      }
-      await typeInto(addP('lfrom hand'), letter.from);
-      $('#lcard').scrollTop = $('#lcard').scrollHeight;
-      if (!alive) return;
-      celebrate();
-      later(2.2, () => $('#lcard').scrollTo({ top: 0, behavior: 'smooth' }));
-    }
-
-    function celebrate() {
-      ctx.audio.cheer();
-      ctx.fx.rain(2600);
-      const fw = setInterval(() => ctx.fx.firework(), 1000);
-      cleanup.push(() => clearInterval(fw));
-      for (let i = 0; i < 4; i++) later(i * 0.35, () => ctx.fx.firework());
-      const act = $('#actions');
-      act.hidden = false;
-      gsap.from(act.children, { y: 30, opacity: 0, stagger: .15, duration: .6, ease: 'back.out(2)' });
-    }
-
-    $('#replay').onclick = () => { ctx.go('finale'); };
-    $('#save').onclick = () => saveCard(letter);
+    $('#toEnd').onclick = () => { $('#toEnd').disabled = true; ctx.next(); };
   },
   unmount() { cleanup.forEach((f) => f()); cleanup = []; },
 };
-
-// ---- keepsake: draw the letter onto a canvas and download it as a picture
-async function saveCard(letter) {
-  try { await document.fonts.load('700 54px Caveat'); } catch { /* fall back to the default cursive */ }
-  const W = 1080, H = 1500;
-  const c = document.createElement('canvas');
-  c.width = W; c.height = H;
-  const g = c.getContext('2d');
-  g.fillStyle = '#fffaf2'; g.fillRect(0, 0, W, H);
-  g.strokeStyle = '#9fc3e688'; g.lineWidth = 2;
-  for (let y = 200; y < H - 60; y += 56) { g.beginPath(); g.moveTo(60, y); g.lineTo(W - 60, y); g.stroke(); }
-  g.strokeStyle = '#f4a3b8'; g.lineWidth = 3; g.beginPath(); g.moveTo(130, 0); g.lineTo(130, H); g.stroke();
-  g.setLineDash([18, 14]); g.strokeStyle = '#f7a1bf'; g.lineWidth = 8; g.strokeRect(24, 24, W - 48, H - 48); g.setLineDash([]);
-  g.fillStyle = '#d6457f'; g.font = '700 84px Caveat, "Comic Sans MS", cursive'; g.textAlign = 'center';
-  g.fillText("Priyanka's Birthday Letter", W / 2, 130);
-  g.textAlign = 'left'; g.fillStyle = '#3c4a85'; g.font = '700 54px Caveat, "Comic Sans MS", cursive';
-  const wrap = (text, x, y, maxW) => {
-    if (!text) return y + 56;
-    let line = '';
-    for (const word of text.split(' ')) {
-      const test = line ? line + ' ' + word : word;
-      if (g.measureText(test).width > maxW && line) { g.fillText(line, x, y); y += 56; line = word; } else line = test;
-    }
-    g.fillText(line, x, y);
-    return y + 56;
-  };
-  let y = 250;
-  g.fillStyle = '#d6457f'; y = wrap(letter.to, 160, y, W - 260); g.fillStyle = '#3c4a85';
-  for (const l of letter.lines) y = wrap(l, 160, y, W - 260);
-  g.fillStyle = '#d6457f'; wrap(letter.from, 160, y + 10, W - 260);
-  c.toBlob((blob) => {
-    if (!blob) return;
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'priyanka-birthday-letter.png';
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-  });
-}

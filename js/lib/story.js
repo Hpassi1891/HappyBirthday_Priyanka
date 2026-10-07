@@ -228,7 +228,7 @@ export const SHOTS = [
   },
   {
     id: 'end', n: 8, fps: 6,
-    caption: 'The End… letter tere haath mein 💌',
+    caption: 'The End… Happy Birthday, Chudail 💖',
     sfx: { 0: 'cheer', 4: 'sparkle' },
     draw(k, p, j) {
       let s = ground(j);

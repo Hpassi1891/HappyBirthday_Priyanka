@@ -34,7 +34,23 @@ function buildCard(g, ctx) {
   card.appendChild(body);
   const onShow = [];
 
-  if (g.kind === 'poem') {
+  if (g.kind === 'ticket') {
+    body.classList.add('ticket-body');
+    const t = el('div', 'ticket');
+    t.innerHTML = '<div class="t-main"><small class="t-kicker"></small><p class="t-title hand"></p><p class="t-line"></p><p class="t-fine"></p></div><div class="t-stub"><span>NO.</span><b>001</b></div>';
+    t.querySelector('.t-kicker').textContent = g.kicker || 'ADMIT ONE';
+    t.querySelector('.t-title').textContent = g.headline;
+    t.querySelector('.t-line').textContent = g.line || '';
+    t.querySelector('.t-fine').textContent = g.fine || '';
+    const stamp = el('span', 'stamp hand');
+    stamp.textContent = g.stamp || 'VALID FOREVER';
+    t.appendChild(stamp);
+    body.appendChild(t);
+    onShow.push(() => {
+      gsap.from(t.querySelector('.t-main'), { opacity: 0, x: -20, duration: .5 });
+      gsap.from(stamp, { scale: 3.2, rotation: -40, opacity: 0, duration: .45, delay: .9, ease: 'power3.in', onComplete: () => { ctx.audio.pop(); ctx.fx.burst(innerWidth / 2, innerHeight / 2, 50); } });
+    });
+  } else if (g.kind === 'poem') {
     body.classList.add('poem');
     g.lines.forEach((l) => body.appendChild(el('p', 'pl', l)));
     onShow.push(() => gsap.from(body.querySelectorAll('.pl'), { opacity: 0, x: -14, duration: .5, stagger: .45, delay: .4, ease: 'power2.out' }));
@@ -92,7 +108,7 @@ export default {
     const total = data.gifts.length;
     const opened = new Set();
 
-    const root = el('section', 'page gift-scene');
+    const root = el('section', total === 1 ? 'page gift-scene solo' : 'page gift-scene');
     root.innerHTML = `<div class="scroller">
       <div class="fav-head">
         <h1 class="title fav-title"></h1>
@@ -105,7 +121,7 @@ export default {
     root.querySelector('.fav-sub').textContent = data.subtitle;
     const countEl = root.querySelector('.fav-count');
     const goBtn = root.querySelector('#go');
-    const updateCount = () => { countEl.textContent = `🎁 ${opened.size} / ${total} opened`; };
+    const updateCount = () => { countEl.textContent = total === 1 ? '' : `🎁 ${opened.size} / ${total} opened`; countEl.hidden = total === 1; };
     updateCount();
 
     const grid = root.querySelector('#gifts');

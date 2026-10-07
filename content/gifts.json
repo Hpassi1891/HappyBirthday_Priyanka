@@ -1,48 +1,19 @@
 {
-  "title": "Presents for Chudail",
-  "subtitle": "Tap a gift to unwrap it 🎁",
-  "unlockAfter": 3,
+  "title": "One little gift",
+  "subtitle": "Tap the gift to unwrap it 🎁",
+  "unlockAfter": 1,
   "gifts": [
     {
-      "kind": "poem",
-      "title": "A little poem",
-      "emoji": "📜",
-      "color": "#ffc2dd",
+      "kind": "ticket",
+      "title": "A lunch ticket",
+      "emoji": "🍽️",
+      "color": "#ffd9a8",
       "ribbon": "#d6457f",
-      "lines": [
-        "Chudail ki tarah tu mujhe daraati hai,",
-        "Phir bhi dil mein bas jaati hai,",
-        "Rakshas ki bas ek hi wish hai aaj,",
-        "Tera har din ho khushiyon ka raaj 💖",
-        "(replace me with your own poem)"
-      ]
-    },
-    {
-      "kind": "coupon",
-      "title": "A coupon",
-      "emoji": "🎟️",
-      "color": "#ffe98a",
-      "ribbon": "#f0568e",
-      "headline": "One dinner on me 🍽️",
-      "fine": "valid forever · no returns, nasharam (replace me)"
-    },
-    {
-      "kind": "joke",
-      "title": "A banker's joke",
-      "emoji": "😂",
-      "color": "#bfe3ff",
-      "ribbon": "#3c4a85",
-      "setup": "Why did Priyanka bring a ladder to the bank?",
-      "punchline": "Because she heard the interest rates were going up! 📈 (replace me)"
-    },
-    {
-      "kind": "voice",
-      "title": "A voice note",
-      "emoji": "🎙️",
-      "color": "#d9c8ff",
-      "ribbon": "#e8416f",
-      "audio": "",
-      "note": "A voice note from your Rakshas is coming soon… he is still practising his best 'happy birthday' voice 🎤 (replace me)"
+      "kicker": "ADMIT ONE",
+      "headline": "LUNCH TICKET",
+      "line": "One lunch with Rakshas. You pick the place, I pay. 🍽️",
+      "fine": "valid forever · no returns, nasharam (replace me)",
+      "stamp": "VALID FOREVER"
     }
   ]
 }

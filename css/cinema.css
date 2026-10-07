@@ -1,0 +1,130 @@
+/* ============ Cinema: cream, deep red and orange glow, big serif type ============
+   The look from the video: warm paper-and-wine colours, tall editorial lettering, glowing orange buttons.
+   Scoped to [data-look="cinema"]; shares its layout with the night look (see night.css). */
+[data-look="cinema"] {
+  --ink: #fff0e2;
+  --pink: #f4a259;
+  --washi: #f4a259;
+  --washi-2: #ffd2a5;
+  --sticky: #fff1d8;
+  --rule: #ffffff10;
+  --red: #ff9a6a;
+  --kraft: #3a0710;
+  --glow: #f4a259;
+  --font-title: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Quicksand', system-ui, sans-serif;
+  --font-hand: 'Cormorant Garamond', Georgia, serif;
+}
+[data-look="cinema"] body, body[data-look="cinema"] { background: var(--kraft); }
+[data-look="cinema"] #stage { background: radial-gradient(ellipse at 50% 30%, #b3222f 0%, #7a1020 55%, #3a0710 100%); }
+[data-look="cinema"] #sky { display: block; }
+[data-look="cinema"] #sky .moon, [data-look="cinema"] #sky .aurora, [data-look="cinema"] #sky u { display: none; }
+[data-look="cinema"] #sky i { background: #ffd9a8; box-shadow: 0 0 6px 1px #ffb86b99; opacity: .8; }
+
+/* ---- every scene is open sky, not a paper page ---- */
+[data-look="cinema"] .page { inset: 0 max(0px, calc(50% - 290px)); background: none; box-shadow: none; border-radius: 0; }
+[data-look="cinema"] .page::before, [data-look="cinema"] .page::after { display: none; }
+[data-look="cinema"] .scroller { padding: 62px 16px 28px; }
+[data-look="cinema"] .tape { width: 12px !important; height: 12px !important; margin-left: -6px !important; border-radius: 50%; rotate: none !important; background: radial-gradient(circle at 35% 30%, #fff, #f4a259 60%); box-shadow: 0 0 10px 3px #f4a259aa; animation: twinkle 2.4s ease-in-out infinite; }
+[data-look="cinema"] .icon-btn { border: 1.5px solid #ffffff55; background: #ffffff1c; box-shadow: 0 0 16px #f4a25955; backdrop-filter: blur(4px); }
+
+/* ---- type and buttons ---- */
+[data-look="cinema"] .title { font: italic 600 clamp(36px, 10.4vw, 58px)/1 var(--font-title); color: #ffe9d2; text-shadow: 0 0 22px #f4a25988, 0 2px 0 #0004; transform: none; letter-spacing: .01em; }
+[data-look="cinema"] .btn { font: 700 19px var(--font-body); letter-spacing: .06em; color: #5a1220; background: linear-gradient(#ffd2a5, #f4a259); border: 0; border-radius: 999px; padding: 10px 28px; min-height: 46px; text-shadow: none; box-shadow: 0 0 22px #f4a25988, inset 0 2px 0 #fff9; animation: glowpulse 3.2s ease-in-out infinite; }
+[data-look="cinema"] .btn:disabled { opacity: .7; }
+@keyframes glowpulse { 50% { box-shadow: 0 0 34px #f4a259cc, inset 0 2px 0 #fff9; } }
+
+/* ============ Door: a portal in the sky ============ */
+[data-look="cinema"] .door-scene { padding: 22px 16px 14px; }
+[data-look="cinema"] .door-title { font-size: clamp(34px, 9.6vw, 54px); }
+[data-look="cinema"] .dateline { font: 600 13px var(--font-body); letter-spacing: .3em; text-transform: uppercase; color: #ffc58f; }
+[data-look="cinema"] .sky .fl { font-size: 20px; color: #fff1d8; text-shadow: 0 0 10px #f4a259; }
+[data-look="cinema"] .sky .fly { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: #ffe9a8; box-shadow: 0 0 10px 4px #ffe9a8aa; animation: drift2 6s ease-in-out infinite alternate; }
+[data-look="cinema"] .door-wrap::before { content: ''; position: absolute; left: 50%; bottom: -26px; width: 130%; height: 60px; translate: -50% 0; background: radial-gradient(ellipse, #ffffff44, #0000 70%); }
+[data-look="cinema"] .door-svg { filter: drop-shadow(0 0 22px #f4a25988) drop-shadow(0 0 60px #ffc58f55); }
+[data-look="cinema"] .note { background: #fff1d8; color: #6b1220; box-shadow: 0 0 22px #f4a25966, 0 4px 0 #0003; border-radius: 4px; }
+[data-look="cinema"] .note p:first-of-type { color: #c2392f; }
+[data-look="cinema"] .stk { color: #fff1d8; text-shadow: 0 0 12px #f4a259; font-size: 24px; }
+[data-look="cinema"] .hint { font: italic 600 24px/1.1 var(--font-title); color: #ffe9d2; }
+[data-look="cinema"] .cd { background: #ffffff16; border: 1px solid #ffffff44; border-radius: 14px; box-shadow: 0 0 18px #ffc58f44; rotate: 0deg; }
+[data-look="cinema"] .cd b { font: italic 600 32px var(--font-title); color: #ffe9d2; }
+[data-look="cinema"] .cd small { color: #ffc58f; font: 600 12px var(--font-body); letter-spacing: .12em; text-transform: uppercase; }
+[data-look="cinema"] .question { font: italic 600 25px/1.05 var(--font-title); color: #ffe9d2; }
+[data-look="cinema"] .uline path { stroke: #f4a259; }
+[data-look="cinema"] .answer { font: 500 18px var(--font-body); border: 1px solid #ffffff55; border-radius: 999px; background: #ffffff18; padding: 9px 14px; color: #fff0e2; }
+[data-look="cinema"] .answer::placeholder { color: #f3c9ae; }
+[data-look="cinema"] .answer:focus { background: #ffffff26; box-shadow: 0 0 0 3px #f4a25966; }
+[data-look="cinema"] .msg { font: italic 600 21px/1.1 var(--font-title); color: #ffb3a7; rotate: 0deg; }
+
+/* ============ Room: the mural on a moonlit wall ============ */
+[data-look="cinema"] .room { background: none; }
+[data-look="cinema"] .room .wallbg { background: radial-gradient(#ffffff22 1px, #0000 1.6px) 0 0/15px 15px, radial-gradient(circle at 40% 15%, #a3202f, #5e0d1b 80%); }
+[data-look="cinema"] .room .wallbg::after { background: #6b1220; border-top: 2px solid #f4a25988; }
+[data-look="cinema"] .room .floor { background: repeating-linear-gradient(90deg, #6a0f1d 0 54px, #5a0b18 54px 57px); border-top: 2px solid #f4a25988; }
+[data-look="cinema"] .room .rug { border: 2px dashed #f4a259aa; background: repeating-radial-gradient(circle at 50% 50%, #8c1a2a 0 14px, #a02335 14px 28px); }
+[data-look="cinema"] .room .fairy path { stroke: #f4a259; }
+[data-look="cinema"] .room .bulbs i { border-color: #f4a259aa; }
+[data-look="cinema"] .room .disco::before { background: #f4a259; }
+[data-look="cinema"] .room .disco i { border-color: #f4a259; }
+[data-look="cinema"] .room .mural { filter: brightness(.7) saturate(.55); }
+[data-look="cinema"] .room .room-hint, [data-look="cinema"] .cake-hint { font: italic 600 25px/1.05 var(--font-title); -webkit-text-stroke: 4px #3a0710; color: #fff0e2; }
+[data-look="cinema"] .room .room-hint { left: 16px; }
+[data-look="cinema"] .room .switch { left: 16px; box-shadow: 0 0 22px 4px #ffd36a88; }
+[data-look="cinema"] .room .flipme { left: 70px; font-family: var(--font-title); font-style: italic; }
+[data-look="cinema"] .room .go, [data-look="cinema"] .cake-scene .go, [data-look="cinema"] .cake-scene .mic { left: 16px; }
+
+/* ============ Fav wall + photo wall: glowing keepsakes ============ */
+[data-look="cinema"] .fav-sub { font: italic 600 21px var(--font-title); color: #ffe9d2; }
+[data-look="cinema"] .fav-count { background: #ffffff18; border: 1px solid #ffffff44; border-radius: 999px; box-shadow: 0 0 16px #f4a25955; color: #fff0e2; font: 600 14px var(--font-body); letter-spacing: .06em; rotate: 0deg; }
+[data-look="cinema"] .ribbon { font: italic 600 28px/1.1 var(--font-title); color: #fff0e2; rotate: 0deg; background: linear-gradient(transparent 70%, #f4a25955 70% 90%, transparent 90%) 0 0 / 0% 100% no-repeat; }
+[data-look="cinema"] .frame-box { background: #ffffff18; border: 1px solid #ffffff55; border-radius: 14px; box-shadow: 0 0 20px #ffc58f55, 0 0 0 1px #0002; padding: 6px 6px 14px; }
+[data-look="cinema"] .frame-box .pic { border-radius: 10px; }
+[data-look="cinema"] .frame:hover .frame-box { box-shadow: 0 0 28px #f4a259aa; }
+[data-look="cinema"] .plaque { color: #fff0e2; font: 600 15px var(--font-body); letter-spacing: .04em; }
+[data-look="cinema"] .frame-box.big { background: #ffffff1c; box-shadow: 0 0 40px #f4a25988; }
+[data-look="cinema"] .zoom { background: #3a0710e6; }
+[data-look="cinema"] .zoom-title { font: italic 600 38px var(--font-title); color: #ffe9d2; }
+[data-look="cinema"] .zoom-cap { color: #fff0e2; font: 700 26px/1 var(--font-hand); }
+/* photos hang from a string of fairy lights */
+[data-look="cinema"] .line::before { border-top: 2px dotted #f4a259; box-shadow: 0 0 10px #f4a25966; }
+[data-look="cinema"] .polaroid .face { box-shadow: 0 0 22px #f4a25966, 0 4px 0 #0003; border-radius: 4px; }
+[data-look="cinema"] .front { background: #fff7ee; }
+[data-look="cinema"] .cap { color: #6b1220; }
+[data-look="cinema"] .back { background: repeating-linear-gradient(#fff1d8 0 21px, #ffc58f55 21px 22px); }
+
+/* ============ Gifts: presents on a moonlit cloud ============ */
+[data-look="cinema"] .gift-scene { background-image: none; }
+[data-look="cinema"] .cloth { border: 0; border-radius: 60px 70px 50px 80px; rotate: 0deg; padding: 26px 16px 18px;
+  background: radial-gradient(ellipse at 30% 25%, #ffffff55, #0000 55%), linear-gradient(#fff0d8, #f6c98f); box-shadow: 0 0 50px #ffc58f88, inset 0 -10px 20px #7a1a2a44; }
+[data-look="cinema"] .cloth::before, [data-look="cinema"] .cloth::after { content: ''; position: absolute; border-radius: 50%; background: inherit; z-index: -1; }
+[data-look="cinema"] .cloth::before { width: 90px; height: 70px; left: -22px; top: 18%; background: #fff0d8; box-shadow: 0 0 30px #ffc58f66; }
+[data-look="cinema"] .cloth::after { width: 110px; height: 80px; right: -26px; bottom: 12%; background: #f9d9aa; box-shadow: 0 0 30px #ffc58f66; }
+[data-look="cinema"] .gift .box { filter: drop-shadow(0 0 14px #f4a25966); }
+[data-look="cinema"] .gtag { background: #fff1d8; border: 0; font: 700 18px var(--font-hand); box-shadow: 0 0 14px #f4a25966; }
+[data-look="cinema"] .gift .done { background: #fff1d8; border-color: #f4a259; color: #c2392f; }
+[data-look="cinema"] .gift-card { background: #fff1d8 repeating-linear-gradient(#0000 0 27px, #ffc58f44 27px 28px); box-shadow: 0 0 40px #f4a25988; }
+[data-look="cinema"] .coupon { background: #fff0c9; }
+[data-look="cinema"] .voice .play { background: linear-gradient(#ffd2a5, #f4a259); border: 0; box-shadow: 0 0 20px #f4a25988; color: #5a1220; }
+
+/* ============ Cake ============ */
+[data-look="cinema"] .cake-scene { background-image: none; }
+[data-look="cinema"] .cake-dim { background: radial-gradient(circle at 50% 50%, #0000 calc(30px + var(--g) * 36px), rgba(8, 10, 38, .8) calc(110px + var(--g) * 56px)); }
+[data-look="cinema"] .cake-scene:not(.night) .cake-hint { color: #ffe9d2; -webkit-text-stroke: 4px #3a0710; }
+[data-look="cinema"] .cs { color: #fff1d8; text-shadow: 0 0 10px #f4a259; }
+[data-look="cinema"] .cake-svg .plate ellipse:first-child { fill: #fff1d8; }
+[data-look="cinema"] .cake-svg { filter: drop-shadow(0 0 26px #f4a25955); }
+
+/* ============ Finale: a little cinema in the sky ============ */
+[data-look="cinema"] .finale-scene { background-image: none; }
+[data-look="cinema"] .fs-book { padding: 0 16px; }
+[data-look="cinema"] .scr-wrap { rotate: 0deg; }
+[data-look="cinema"] .scr { border: 2px solid #f4a259; border-radius: 14px; background: linear-gradient(#fffaf2, #f4ecff); box-shadow: 0 0 40px #f4a25966, 0 0 90px #ffc58f44; }
+[data-look="cinema"] .scr-play { background: linear-gradient(135deg, #9c1c2c, #8c1a2a); }
+[data-look="cinema"] .cv-kicker { font: 600 13px var(--font-body); letter-spacing: .3em; text-transform: uppercase; color: #ffc58f; text-shadow: none; }
+[data-look="cinema"] .cv-title { font: italic 600 clamp(32px, 9vw, 44px)/1 var(--font-title); color: #ffe9d2; -webkit-text-stroke: 0; text-shadow: 0 0 20px #f4a25988; rotate: 0deg; }
+[data-look="cinema"] .cv-by { color: #fff0e2; font: italic 600 18px var(--font-title); }
+[data-look="cinema"] .cv-playbtn { background: linear-gradient(#ffd2a5, #f4a259); border: 0; color: #5a1220; box-shadow: 0 0 24px #f4a259aa; }
+[data-look="cinema"] .scr-paused { background: #3a0710cc; color: #ffe9d2; font: italic 600 32px var(--font-title); -webkit-text-stroke: 0; }
+[data-look="cinema"] .scr-prog { border: 1px solid #ffffff55; background: #ffffff14; }
+[data-look="cinema"] .scr-prog i { background: linear-gradient(90deg, #ffc58f, #f4a259); }
+[data-look="cinema"] .fb-cap { font: italic 600 28px/1.05 var(--font-title); color: #ffe9d2; }

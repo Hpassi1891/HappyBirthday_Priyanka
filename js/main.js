@@ -1,28 +1,32 @@
 import { audio } from './lib/audio.js';
 import * as fx from './lib/confetti.js';
 import door from './scenes/door.js';
+import intro from './scenes/intro.js';
 import room from './scenes/room.js';
 import favwall from './scenes/favwall.js';
 import photos from './scenes/photos.js';
 import gifts from './scenes/gifts.js';
 import cake from './scenes/cake.js';
 import finale from './scenes/finale.js';
+import ending from './scenes/ending.js';
 
 // Register new scenes here as they are built.
-const SCENES = { door, room, favwall, photos, gifts, cake, finale };
+const SCENES = { door, intro, room, favwall, photos, gifts, cake, finale, ending };
 
 // The cake scene covers lighting, blowing out and cutting in one continuous page.
-export const ORDER = ['door', 'room', 'favwall', 'photos', 'gifts', 'cake', 'finale'];
+export const ORDER = ['door', 'intro', 'room', 'favwall', 'photos', 'gifts', 'cake', 'finale', 'ending'];
 
 const stage = document.getElementById('stage');
 const params = new URLSearchParams(location.search);
-const ctx = { stage, audio, fx, params, preview: !!window.__PREVIEW__ || params.has('preview') || params.has('scene'), copy: null, favs: null, photos: null, gifts: null, letter: null, name: null };
+const ctx = { stage, audio, fx, params, preview: !!window.__PREVIEW__ || params.has('preview') || params.has('scene'), copy: null, favs: null, photos: null, gifts: null, name: null };
 let current = null; // { scene, layer, name }
 
-// ---- Looks: 'scrapbook' (diary pages) or 'night' (dreamy night sky). Chosen by ?look=, then the saved choice, then the default.
-const DEFAULT_LOOK = 'night';
+// ---- Looks: 'cinema' (cream, red and big serif type), 'night' (dreamy night sky) or 'scrapbook' (diary pages).
+// Chosen by ?look=, then the saved choice, then the default.
+const LOOKS = ['cinema', 'night', 'scrapbook'];
+const DEFAULT_LOOK = 'cinema';
 const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* private mode */ } } };
-const pickLook = () => { const l = params.get('look') || store.get('look'); return l === 'scrapbook' || l === 'night' ? l : DEFAULT_LOOK; };
+const pickLook = () => { const l = params.get('look') || store.get('look'); return LOOKS.includes(l) ? l : DEFAULT_LOOK; };
 ctx.look = pickLook();
 document.body.dataset.look = ctx.look;
 
@@ -45,7 +49,10 @@ function buildSky() {
 buildSky();
 
 const lookBtn = document.getElementById('look');
-const syncLookBtn = () => { lookBtn.textContent = ctx.look === 'night' ? '📓' : '🌙'; lookBtn.title = ctx.look === 'night' ? 'Switch to the scrapbook diary' : 'Switch to the dreamy night sky'; };
+const NEXT_LOOK = (l) => LOOKS[(LOOKS.indexOf(l) + 1) % LOOKS.length];
+const LOOK_ICON = { cinema: '🎬', night: '🌙', scrapbook: '📓' };
+const LOOK_NAME = { cinema: 'the cinematic look', night: 'the dreamy night sky', scrapbook: 'the scrapbook diary' };
+const syncLookBtn = () => { const n = NEXT_LOOK(ctx.look); lookBtn.textContent = LOOK_ICON[n]; lookBtn.title = 'Switch to ' + LOOK_NAME[n]; };
 syncLookBtn();
 ctx.setLook = (look) => {
   if (look === ctx.look) return;
@@ -57,18 +64,45 @@ ctx.setLook = (look) => {
   // the door is drawn differently in each look, so draw it again; every other scene just restyles
   if (current?.name === 'door' && !busy) { const n = current.name; current = { ...current }; go(n); }
 };
-lookBtn.onclick = () => ctx.setLook(ctx.look === 'night' ? 'scrapbook' : 'night');
+lookBtn.onclick = () => ctx.setLook(NEXT_LOOK(ctx.look));
 
 async function loadJson(path) {
   try { return await (await fetch(path)).json(); } catch { return {}; }
 }
 
 // ---- Scene changes ------------------------------------------------------
-// Scrapbook: each scene is a diary page; the next page is mounted underneath and the
-// current page turns over. Night: scenes drift through the sky. Each scene is one layer. The next page is mounted underneath and the
-// current page turns over, hinged on its left edge, so there is never a hard cut.
+// Cinema: a full-screen typographic card ("a few of her favourite things") wipes over the old scene,
+// the new scene is swapped in behind it and the card closes like an iris. Intro and the white-out that
+// follows it cross-fade instead. Night: scenes drift through the sky. Scrapbook: the diary page turns over.
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let busy = false;
+
+const letters = (t) => [...t].map((ch) => `<span class="ch">${ch === ' ' ? '&nbsp;' : ch}</span>`).join('');
+
+// Plays the interlude for `name` and calls `swap` once the screen is fully covered. Resolves when it has closed again.
+function interlude(name, swap) {
+  const spec = ctx.copy.interludes?.[name];
+  const el = document.getElementById('interlude') ?? Object.assign(document.body.appendChild(document.createElement('div')), { id: 'interlude' });
+  if (!spec) { swap(); return Promise.resolve(); }
+  el.className = 't-' + (spec.theme || 'cream');
+  el.innerHTML = spec.lines.map((l, i) => `<span class="il-line ${i < spec.lines.length - 1 ? 'il-sm' : 'il-big'}">${letters(l)}</span>`).join('') + '<i class="il-rule"></i>';
+  const big = el.querySelector('.il-big');
+  big.style.fontSize = Math.max(34, Math.min(76, (innerWidth - 44) / (spec.lines.at(-1).length * 0.6))) + 'px';
+  el.style.display = 'flex';
+  const dur = reduceMotion ? .2 : 1;
+  const chars = el.querySelectorAll('.ch');
+  audio.swell();
+  return new Promise((done) => {
+    const tl = gsap.timeline({ onComplete: done });
+    tl.fromTo(el, { clipPath: 'circle(0% at 50% 55%)' }, { clipPath: 'circle(80% at 50% 55%)', duration: dur * .8, ease: 'power2.inOut' })
+      .fromTo(chars, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: .5, stagger: reduceMotion ? 0 : .035, ease: 'power3.out' }, '-=.25')
+      .fromTo('.il-rule', { scaleX: 0 }, { scaleX: 1, duration: .6, ease: 'power2.out' }, '-=.4')
+      .to({}, { duration: reduceMotion ? .1 : 1.1 })
+      .call(swap)
+      .to(el, { clipPath: 'circle(0% at 50% 50%)', duration: dur * .8, ease: 'power2.inOut', delay: .1 })
+      .set(el, { display: 'none', clearProps: 'clipPath' });
+  });
+}
 
 async function go(name) {
   if (busy) return;
@@ -76,22 +110,26 @@ async function go(name) {
   const from = current;
   const layer = document.createElement('div');
   layer.className = 'layer';
-  if (from) stage.insertBefore(layer, from.layer); else stage.appendChild(layer);
   ctx.name = name;
   const scene = SCENES[name] ?? placeholder(name);
-  scene.mount(layer, ctx);
+  const mountIt = () => { if (from) stage.insertBefore(layer, from.layer); else stage.appendChild(layer); scene.mount(layer, ctx); };
   stage.classList.add('busy');
 
   if (!from) {
+    mountIt();
     await new Promise((done) => gsap.fromTo(layer, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: reduceMotion ? .2 : .9, ease: 'power1.out', onComplete: done }));
-  } else if (ctx.look === 'night') {
+  } else if (ctx.look === 'cinema' && name !== 'intro' && from.name !== 'intro') {
+    await interlude(name, () => { mountIt(); from.layer.style.display = 'none'; });
+  } else if (ctx.look === 'night' && name !== 'intro' && from.name !== 'intro') {
+    mountIt();
     // drift forward through the sky: the old scene floats up and fades while the next one rises into view
     audio.flip();
     const dur = reduceMotion ? .2 : 1.5;
     gsap.fromTo('#sky', { scale: 1 }, { scale: 1.12, duration: dur * .5, yoyo: true, repeat: 1, ease: 'sine.inOut' });
     gsap.to(from.layer, { scale: 1.18, opacity: 0, y: -40, duration: dur * .8, ease: 'power2.in' });
     await new Promise((done) => gsap.fromTo(layer, { scale: .88, opacity: 0, y: 50 }, { scale: 1, opacity: 1, y: 0, duration: dur, delay: dur * .25, ease: 'power2.out', onComplete: done }));
-  } else {
+  } else if (ctx.look === 'scrapbook' && name !== 'intro' && from.name !== 'intro') {
+    mountIt();
     audio.flip();
     const spine = from.layer.querySelector('.page')?.offsetLeft ?? 10;
     const shade = document.createElement('div');
@@ -103,6 +141,10 @@ async function go(name) {
       gsap.fromTo(from.layer, { rotationY: 0 }, { rotationY: -120, transformOrigin: `${spine}px 50%`, duration: dur, ease: 'power2.inOut', onComplete: done });
     });
     shade.remove();
+  } else {
+    // into and out of the opening: the old layer simply melts away, revealing the new one underneath
+    mountIt();
+    await new Promise((done) => gsap.to(from.layer, { opacity: 0, duration: reduceMotion ? .2 : 1.1, ease: 'power1.inOut', onComplete: done }));
   }
   gsap.set(layer, { clearProps: 'all' });
   if (from) {
@@ -142,7 +184,6 @@ async function boot() {
   ctx.favs = window.__FAVS__ ?? await loadJson('content/favs.json');
   ctx.photos = window.__PHOTOS__ ?? await loadJson('content/photos.json');
   ctx.gifts = window.__GIFTS__ ?? await loadJson('content/gifts.json');
-  ctx.letter = window.__LETTER__ ?? await loadJson('content/letter.json');
   const start = params.get('scene');
   go(ORDER.includes(start) ? start : 'door');
 }
