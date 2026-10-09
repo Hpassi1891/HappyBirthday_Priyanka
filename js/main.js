@@ -87,7 +87,7 @@ function interlude(name, swap) {
   el.className = 't-' + (spec.theme || 'cream');
   el.innerHTML = spec.lines.map((l, i) => `<span class="il-line ${i < spec.lines.length - 1 ? 'il-sm' : 'il-big'}">${letters(l)}</span>`).join('') + '<i class="il-rule"></i>';
   const big = el.querySelector('.il-big');
-  big.style.fontSize = Math.max(34, Math.min(76, (innerWidth - 44) / (spec.lines.at(-1).length * 0.6))) + 'px';
+  big.style.fontSize = Math.max(34, Math.min(140, (innerWidth - 120) / (spec.lines.at(-1).length * 0.6), innerHeight * 0.2)) + 'px';
   el.style.display = 'flex';
   const dur = reduceMotion ? .2 : 1;
   const chars = el.querySelectorAll('.ch');
@@ -179,6 +179,24 @@ muteBtn.onclick = () => {
 };
 addEventListener('pointerdown', () => audio.unlock(), { once: true });
 
+// ---- Laptop only: phones and tiny windows get a friendly message instead of the party ----
+const isPhoneLike = () => matchMedia('(hover: none) and (pointer: coarse)').matches || Math.min(screen.width, screen.height) < 500;
+const tooSmall = () => innerWidth < 900 || innerHeight < 480;
+let booted = false;
+function checkGate() {
+  const phone = isPhoneLike();
+  const gated = phone || tooSmall();
+  document.documentElement.classList.toggle('gated', gated);
+  if (gated) {
+    document.getElementById('gateTitle').textContent = phone ? 'Please open this on a laptop' : 'Please make this window bigger';
+    document.getElementById('gateText').textContent = phone
+      ? 'This little surprise is made for a big screen. Open the same link on a laptop or desktop computer, with the sound on.'
+      : 'This surprise needs a bigger window. Maximise your browser window (or use a laptop screen) and it will start.';
+  } else if (!booted) { booted = true; boot(); }
+  return gated;
+}
+addEventListener('resize', checkGate);
+
 async function boot() {
   ctx.copy = window.__COPY__ ?? await loadJson('content/copy.json');
   ctx.favs = window.__FAVS__ ?? await loadJson('content/favs.json');
@@ -187,4 +205,4 @@ async function boot() {
   const start = params.get('scene');
   go(ORDER.includes(start) ? start : 'door');
 }
-boot();
+checkGate();

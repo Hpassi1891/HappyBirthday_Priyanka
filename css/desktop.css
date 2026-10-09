@@ -1,0 +1,152 @@
+/* ============ Laptop layout ============
+   This site is made for a laptop or desktop screen (a phone gets a "please use a laptop" message instead).
+   Loaded last. Everything is sized from the screen, so it fills a 1280, 1536 or 1920 wide window.
+   `body[data-look]` keeps these rules ahead of the per-look styles. */
+
+/* ---- the page fills the screen ---- */
+body[data-look="cinema"] .page, body[data-look="night"] .page { inset: 0; }
+body[data-look="scrapbook"] .page { inset: 16px 4vw; }
+body[data-look="scrapbook"] .scroller { padding-left: 80px; }
+body[data-look="cinema"] .scroller, body[data-look="night"] .scroller { padding: 76px 5vw 30px; }
+body .look-btn { right: 76px; }
+body[data-look] .btn { font-size: 22px; padding: 12px 36px; min-height: 52px; }
+.icon-btn { width: 48px; height: 48px; font-size: 22px; }
+
+/* ---- door: the doorway on the right, the question on the left ---- */
+.door-scene { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); grid-template-areas: "title door" "date door" "form door"; grid-template-rows: auto auto auto; align-content: center; justify-items: center; column-gap: 4vw; row-gap: 10px; padding: 40px 6vw !important; }
+.door-scene > .tape { display: none; }
+body[data-look] .door-scene .door-title { grid-area: title; align-self: end; font-size: clamp(46px, 5.4vw, 92px); text-align: center; line-height: 1.02; }
+body[data-look] .dateline { grid-area: date; font-size: 18px; margin-bottom: 14px; }
+.door-wrap { grid-area: door; justify-self: center; align-self: center; }
+.door { width: min(360px, 44vh); }
+.door .note { font-size: clamp(15px, 1.5vw, 22px); }
+.stk { font-size: 34px; }
+#locked, #form { grid-area: form; align-self: start; width: min(560px, 100%); }
+body[data-look] .hint { font-size: clamp(26px, 2.4vw, 38px); }
+body[data-look] .cd { min-width: 96px; padding: 14px 12px 8px; }
+body[data-look] .cd b { font-size: clamp(38px, 3.4vw, 56px); }
+body[data-look] .cd small { font-size: 14px; }
+body[data-look] .question { font-size: clamp(32px, 3vw, 48px); }
+.uline { width: 280px; }
+body[data-look] .answer { font-size: 26px; padding: 12px 24px; margin-bottom: 16px; }
+body[data-look] .msg { font-size: clamp(24px, 2vw, 32px); }
+
+/* ---- opening ---- */
+.in-card { width: min(620px, 46vw); padding: 50px 40px 44px; border-radius: 34px; }
+.in-gift svg { width: 66px; height: 66px; }
+.in-kicker { font-size: 17px; }
+.in-name { font-size: clamp(92px, 10vw, 156px); }
+.in-by { font-size: clamp(22px, 2vw, 30px); }
+.in-unwrap { font-size: 22px; padding: 18px 50px; margin-top: 46px; }
+.in-sound { font-size: 15px; }
+.in-title { font-size: clamp(34px, 3.6vw, 58px); top: 8%; }
+.in-heart { --hw: min(250px, 30vh); --hh: calc(var(--hw) * .917); width: var(--hw); height: var(--hh); top: 50%; margin: calc(var(--hh) / -2) 0 0 calc(var(--hw) / -2); }
+.in-heart svg { width: 100%; height: 100%; }
+.in-glow { width: calc(var(--hw) * 1.9); height: calc(var(--hw) * 1.9); margin: calc(var(--hw) * -.95) 0 0 calc(var(--hw) * -.95); }
+.in-bow { --bw: min(320px, 40vh); width: var(--bw); height: var(--bw); left: calc(50% - min(32vw, 460px)); top: 50%; bottom: auto; margin: calc(var(--bw) / -2) 0 0 calc(var(--bw) / -2); }
+.in-bow svg { width: 100%; height: 100%; }
+.in-hint { font-size: 17px; bottom: 11%; }
+.in-tap { font-size: 21px; bottom: 6%; }
+.wish-small { font-size: clamp(26px, 2.4vw, 40px); margin-bottom: 22px; }
+.wish-sub { font-size: clamp(24px, 2.2vw, 36px); }
+.wish-flourish { width: 260px; height: 24px; margin: 26px 0 12px; }
+#interlude .il-sm { font-size: clamp(28px, 3vw, 54px); margin-bottom: 14px; }
+#interlude .il-rule { width: 130px; height: 4px; }
+
+/* ---- fav wall: all four categories on one wall ---- */
+.fav-head { padding-right: 0; }
+body[data-look] .fav-title { font-size: clamp(44px, 4.4vw, 68px); }
+body[data-look] .fav-sub { font-size: clamp(22px, 1.8vw, 30px); }
+body[data-look] .fav-count { font-size: 17px; margin: 8px 0 4px; }
+.fav-wall { width: min(100%, 1180px); display: grid; grid-template-columns: 1fr 1fr; gap: 14px 64px; margin-inline: auto; }
+.fav-grid { gap: 10px 24px; }
+.frame { max-width: min(200px, 24vh); }
+.pic-emoji { font-size: clamp(40px, 4.2vw, 72px); }
+.plaque { font-size: 24px; }
+body[data-look] .ribbon { font-size: clamp(28px, 2.4vw, 38px); }
+.zoom-card { max-width: 560px; gap: 10px; }
+.frame-box.big { width: min(30vw, 420px, 50vh); }
+.frame-box.big .pic-emoji { font-size: clamp(90px, 10vw, 150px); }
+body[data-look] .zoom-title { font-size: clamp(40px, 3.6vw, 60px); }
+body[data-look] .zoom-cap { font-size: clamp(26px, 2.2vw, 36px); }
+
+/* ---- photo wall: one long clothesline ---- */
+.photo-scene .scroller { justify-content: center; }
+.photo-wall { width: min(100%, 1320px); margin-inline: auto; gap: 26px; }
+.line { gap: 20px; padding-top: 24px; }
+.hang { max-width: 230px; }
+.peg { width: 56px; height: 20px; margin-left: -28px; }
+.front .pic-emoji { font-size: clamp(40px, 4.6vw, 78px); }
+.cap { font-size: 26px; }
+.note-text { font-size: clamp(17px, 1.4vw, 24px); }
+
+/* ---- gifts ---- */
+.gift-scene.solo .cloth { width: min(46vw, 560px, 74vh); padding: 40px 28px 30px; }
+.gift-scene.solo .gift { max-width: 320px; }
+.gift-scene.solo .gtag { font-size: 34px; }
+.gift-card { width: min(62vw, 760px); padding: 38px 34px 30px; }
+.gift-title { font-size: 48px; }
+.gift-body { font-size: 28px; }
+.ticket { grid-template-columns: 1fr 130px;
+  -webkit-mask: radial-gradient(circle at calc(100% - 130px) 0, #0000 15px, #000 16px) top / 100% 51% no-repeat, radial-gradient(circle at calc(100% - 130px) 100%, #0000 15px, #000 16px) bottom / 100% 51% no-repeat;
+  mask: radial-gradient(circle at calc(100% - 130px) 0, #0000 15px, #000 16px) top / 100% 51% no-repeat, radial-gradient(circle at calc(100% - 130px) 100%, #0000 15px, #000 16px) bottom / 100% 51% no-repeat; }
+.t-main { padding: 30px 22px 30px 34px; }
+.t-kicker { font-size: 15px; }
+.t-title { font-size: 68px; margin: 6px 0 10px; }
+.t-line { font-size: 34px; margin-bottom: 14px; }
+.t-fine { font-size: 17px; }
+.t-stub { font-size: 15px; }
+.t-stub b { font-size: 52px; }
+.ticket .stamp { right: 140px; bottom: -22px; font-size: 28px; }
+
+/* ---- room: a wide painted wall ---- */
+body[data-look] .room .switch { left: 40px; top: 84px; width: 58px; height: 88px; }
+body[data-look] .room .flipme { left: 112px; top: 110px; font-size: 36px; }
+body[data-look] .room .popper { right: 40px; top: 96px; }
+body[data-look] .room .room-hint { left: 8%; right: 8%; bottom: 5%; font-size: clamp(28px, 2.6vw, 42px); }
+body[data-look] .room.lit .room-hint { bottom: 118px; }
+body[data-look] .room .go, body[data-look] .cake-scene .go, body[data-look] .cake-scene .mic { left: 0; right: 0; bottom: 5%; }
+.room .disco { width: 70px; }
+.room .disco i { width: 60px; height: 60px; }
+
+/* ---- cake ---- */
+.cake-wrap { width: min(42vw, 66vh, 640px); }
+body[data-look] .cake-dim { background: radial-gradient(circle at 50% 50%, #0000 calc(8vh + var(--g) * 9vh), rgba(8, 10, 38, .84) calc(26vh + var(--g) * 14vh)); }
+body[data-look] .cake-hint { left: 6%; right: 6%; top: 14%; font-size: clamp(28px, 2.8vw, 44px); }
+.cs { font-size: 32px; }
+
+/* ---- finale: the cartoon screen on the left, the caption beside it ---- */
+body[data-look] .fs-book { flex-direction: row; gap: 4vw; padding: 0 5vw; justify-content: center; align-items: center; height: 100%; }
+body[data-look="scrapbook"] .fs-book { padding-left: calc(5vw + 40px); }
+body[data-look] .scr-wrap { width: min(62vw, calc((100vh - 130px) * 1.3333), 980px); rotate: -1deg; }
+.scr { aspect-ratio: 4 / 3; border-radius: 12px; }
+.fs-side { flex: 1; max-width: 440px; display: flex; flex-direction: column; align-items: flex-start; gap: 28px; }
+body[data-look] .fb-cap { font-size: clamp(30px, 2.9vw, 48px); text-align: left; min-height: 3.4em; margin: 0; }
+.cv-inner { padding: 22px 20px; }
+body[data-look] .cv-kicker { font-size: clamp(16px, 1.5vw, 24px); }
+body[data-look] .cv-title { font-size: clamp(40px, 4.4vw, 72px); }
+body[data-look] .cv-by { font-size: clamp(20px, 1.8vw, 30px); }
+.cv-art { width: 18%; }
+.cv-playbtn { width: 86px; height: 86px; font-size: 34px; line-height: 78px; }
+body[data-look] .scr-paused { font-size: 48px; }
+
+/* ---- ending: words on the left, the tree on the right ---- */
+.end-text { position: absolute; left: 7vw; top: 0; bottom: 0; width: min(44vw, 660px); display: flex; flex-direction: column; justify-content: center; text-align: left; gap: 22px; }
+.end-text .end-top, .end-text .end-foot, .end-text .end-btns { position: static; }
+.end-text .end-btns { justify-content: flex-start; padding: 0; margin-top: 10px; }
+.end-kicker { font-size: 15px; }
+.end-title { font-size: clamp(40px, 4.2vw, 70px); margin-top: 12px; }
+.end-name { font-size: clamp(100px, 11vw, 196px); }
+.end-sub { font-size: clamp(24px, 2.2vw, 36px); }
+.end-from { font-size: clamp(44px, 4vw, 64px); }
+.end-btn { font-size: 18px; padding: 16px 34px; min-height: 54px; }
+
+/* ---- "use a laptop" message for phones and tiny windows ---- */
+#gate { display: none; position: fixed; inset: 0; z-index: 200; align-items: center; justify-content: center; padding: 28px; text-align: center; color: #fff0e2; background: radial-gradient(ellipse at 50% 30%, #b3222f, #7a1020 60%, #3a0710); font-family: 'Cormorant Garamond', Georgia, serif; }
+html.gated #gate { display: flex; }
+html.gated #stage, html.gated #fx, html.gated #look, html.gated #mute { display: none !important; }
+.gate-card { max-width: 440px; }
+.gate-icon { font-size: 76px; line-height: 1; margin-bottom: 14px; }
+.gate-card h1 { margin: 0 0 12px; font: italic 600 clamp(32px, 9vw, 46px)/1.05 'Playfair Display', Georgia, serif; }
+.gate-card p { margin: 0 0 10px; font: italic 500 clamp(20px, 5.4vw, 25px)/1.3 'Cormorant Garamond', Georgia, serif; opacity: .92; }
+.gate-card small { display: block; margin-top: 18px; font: 600 12px 'Quicksand', sans-serif; letter-spacing: .3em; text-transform: uppercase; color: #ffc58f; }

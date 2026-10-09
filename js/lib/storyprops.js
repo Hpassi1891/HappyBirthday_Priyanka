@@ -6,8 +6,8 @@ const f = (v) => n(v);
 const rad = (d) => (d * Math.PI) / 180;
 
 let gid = 0;
-export const backdrop = (top, bottom) => { const id = 'bg' + (++gid % 1000); return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${top}"/><stop offset="1" stop-color="${bottom}"/></linearGradient></defs><rect x="-10" y="0" width="320" height="330" fill="url(#${id})"/>`; };
-export const floor = (y, color = '#e9c9a0') => `<rect x="-10" y="${f(y)}" width="320" height="${f(330 - y)}" fill="${color}"/><path d="M-10 ${f(y)} H310" stroke="${INK}" stroke-width="${SW}"/>`;
+export const backdrop = (top, bottom) => { const id = 'bg' + (++gid % 1000); return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${top}"/><stop offset="1" stop-color="${bottom}"/></linearGradient></defs><rect x="-80" y="0" width="460" height="330" fill="url(#${id})"/>`; };
+export const floor = (y, color = '#e9c9a0') => `<rect x="-80" y="${f(y)}" width="460" height="${f(330 - y)}" fill="${color}"/><path d="M-80 ${f(y)} H380" stroke="${INK}" stroke-width="${SW}"/>`;
 
 // ---------- chat bubbles and phone bits ----------
 export function chatBubble(x, y, w, text, side = 'left', a = 1, sc = 1, fill = '#fff') {
@@ -29,7 +29,7 @@ export const windowNight = (x, y, w, h, t = 0) => `<g transform="translate(${f(x
 export const mug = (x, y, t) => `<g transform="translate(${f(x)} ${f(y)})"><rect x="-10" y="-16" width="20" height="16" rx="3" fill="#fff" stroke="${INK}" stroke-width="2.6"/><path d="M10 -12 q8 2 0 9" fill="none" stroke="${INK}" stroke-width="2.6"/>${[0, 1].map((i) => `<path d="M${-4 + i * 8} -20 q-4 -6 0 -12 q4 -6 0 -12" fill="none" stroke="#c3cbe6" stroke-width="2.4" stroke-linecap="round" opacity="${f(0.8 - ((t * 0.5 + i * 0.4) % 1) * 0.6)}" transform="translate(0 ${f(-((t * 8 + i * 6) % 10))})"/>`).join('')}</g>`;
 // the back of a laptop lid, seen from across the desk, with a glowing logo
 export const laptopBack = (x, y, glow = 1) => `<g transform="translate(${f(x)} ${f(y)})"><ellipse cx="0" cy="-8" rx="56" ry="38" fill="#8fd3ff" opacity="${f(0.28 * glow)}"/><rect x="-33" y="-46" width="66" height="44" rx="4" fill="#cfd6e8" stroke="${INK}" stroke-width="3"/><path transform="translate(0 -24) scale(.8)" d="M0 8 C-14 -2 -9 -14 0 -6 C9 -14 14 -2 0 8Z" fill="#fff" opacity="${f(0.55 + glow * 0.4)}"/><rect x="-40" y="-4" width="80" height="6" rx="3" fill="#aab4d2" stroke="${INK}" stroke-width="2.6"/></g>`;
-export const desk = (y) => `<rect x="30" y="${f(y)}" width="270" height="11" fill="#e0a77a" stroke="${INK}" stroke-width="3"/><rect x="34" y="${f(y + 11)}" width="262" height="${f(330 - y)}" fill="#cf8f62" stroke="${INK}" stroke-width="3"/><rect x="60" y="${f(y + 24)}" width="70" height="30" rx="4" fill="#e0a77a" stroke="${INK}" stroke-width="2.6"/><circle cx="95" cy="${f(y + 39)}" r="3.4" fill="#ffe27a" stroke="${INK}" stroke-width="2"/>`;
+export const desk = (y) => `<rect x="-20" y="${f(y)}" width="370" height="11" fill="#e0a77a" stroke="${INK}" stroke-width="3"/><rect x="-16" y="${f(y + 11)}" width="362" height="${f(330 - y)}" fill="#cf8f62" stroke="${INK}" stroke-width="3"/><rect x="60" y="${f(y + 24)}" width="70" height="30" rx="4" fill="#e0a77a" stroke="${INK}" stroke-width="2.6"/><circle cx="95" cy="${f(y + 39)}" r="3.4" fill="#ffe27a" stroke="${INK}" stroke-width="2"/>`;
 
 // ---------- the bike: black Meteor 350, side view facing right. Origin: where the tyres touch the road ----------
 export function bike(wheel = 0, o = {}) {
@@ -67,7 +67,7 @@ export function riders(x, y, s, t, o = {}) {
 
 // ---------- the road and the town ----------
 export function road(y, scroll) {
-  let s = `<rect x="-10" y="${f(y)}" width="320" height="${f(330 - y)}" fill="#8a8fa8"/><path d="M-10 ${f(y)} H310" stroke="${INK}" stroke-width="${SW}"/>`;
+  let s = `<rect x="-80" y="${f(y)}" width="460" height="${f(330 - y)}" fill="#8a8fa8"/><path d="M-80 ${f(y)} H380" stroke="${INK}" stroke-width="${SW}"/>`;
   for (let i = -1; i < 6; i++) s += `<rect x="${f(((i * 70 - scroll) % 420 + 420) % 420 - 60)}" y="${f(y + 26)}" width="36" height="5" rx="2" fill="#fff3d6"/>`;
   return s;
 }
@@ -84,9 +84,9 @@ export const treeSm = (x, y) => `<g transform="translate(${f(x)} ${f(y)})"><rect
 
 // ---------- restaurants ----------
 export const stringLights = (t, y = 34) => {
-  let s = `<path d="M-6 ${y} Q75 ${y + 22} 150 ${y} T306 ${y}" fill="none" stroke="${INK}" stroke-width="2"/>`;
+  let s = `<path d="M-60 ${y} Q45 ${y + 22} 150 ${y} T360 ${y}" fill="none" stroke="${INK}" stroke-width="2"/>`;
   const cols = ['#ff7aa6', '#ffd166', '#7fd6c2', '#a9c7ff'];
-  for (let i = 0; i < 9; i++) { const x = 6 + i * 36, yy = y + Math.sin((x / 300) * Math.PI * 2) * -4 + (i % 2 ? 11 : 8); s += `<circle cx="${x}" cy="${f(yy + 4)}" r="4.4" fill="${cols[i % 4]}" opacity="${f(0.65 + 0.35 * Math.sin(t * 3 + i))}" stroke="${INK}" stroke-width="1.4"/>`; }
+  for (let i = 0; i < 12; i++) { const x = -48 + i * 36, yy = y + Math.sin((x / 300) * Math.PI * 2) * -4 + (i % 2 ? 11 : 8); s += `<circle cx="${x}" cy="${f(yy + 4)}" r="4.4" fill="${cols[i % 4]}" opacity="${f(0.65 + 0.35 * Math.sin(t * 3 + i))}" stroke="${INK}" stroke-width="1.4"/>`; }
   return s;
 };
 export const neonSign = (x, y, w, h, text, color, t = 9, size = 26) => {

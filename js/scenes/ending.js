@@ -31,13 +31,15 @@ function growTree(canvas, onProgress) {
   const g = canvas.getContext('2d');
   g.scale(dpr, dpr);
 
-  const R = Math.min((w * 0.8) / 2.3, h * 0.165);
-  const cx = w / 2, cy = Math.max(h * 0.3, 205) + R * 1.25; // centre of the crown (x=0,y=0 in heart space), under the title
+  // On a wide screen the words sit on the left and the tree stands on the right.
+  const wide = w > h * 1.15;
+  const R = wide ? Math.min(h * 0.27, w * 0.26) : Math.min((w * 0.8) / 2.3, h * 0.165);
+  const cx = wide ? w * 0.7 : w / 2;
+  const cy = wide ? h * 0.1 + R * 1.3 : Math.max(h * 0.3, 205) + R * 1.25; // centre of the crown (x=0,y=0 in heart space)
   const tip = [cx, cy + R * 1.02];          // bottom point of the heart
   const base = [cx, tip[1] + R * 0.6];      // where the trunk meets the ground
 
-  const foot = canvas.parentElement.querySelector('.end-foot');
-  foot.style.bottom = 'auto'; foot.style.top = Math.min(base[1] + 12, h - 150) + 'px';
+  if (!wide) { const foot = canvas.parentElement.querySelector('.end-foot'); foot.style.bottom = 'auto'; foot.style.top = Math.min(base[1] + 12, h - 150) + 'px'; }
 
   // branches: [start, control, end, width]
   const trunkTop = [cx, tip[1] - R * 0.35];
@@ -139,18 +141,20 @@ export default {
     stage.innerHTML = `
       <section class="end-scene">
         <canvas class="end-canvas" id="tree"></canvas>
-        <div class="end-top">
-          <p class="end-kicker"></p>
-          <p class="end-title"></p>
-          <p class="end-name"></p>
-        </div>
-        <div class="end-foot">
-          <p class="end-sub"></p>
-          <p class="end-from"></p>
-        </div>
-        <div class="end-btns">
-          <button class="end-btn" id="play" type="button"></button>
-          <button class="end-btn ghost" id="again" type="button"></button>
+        <div class="end-text">
+          <div class="end-top">
+            <p class="end-kicker"></p>
+            <p class="end-title"></p>
+            <p class="end-name"></p>
+          </div>
+          <div class="end-foot">
+            <p class="end-sub"></p>
+            <p class="end-from"></p>
+          </div>
+          <div class="end-btns">
+            <button class="end-btn" id="play" type="button"></button>
+            <button class="end-btn ghost" id="again" type="button"></button>
+          </div>
         </div>
       </section>`;
     const $ = (s) => stage.querySelector(s);

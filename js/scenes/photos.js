@@ -48,7 +48,7 @@ export default {
     const updateCount = () => { countEl.textContent = `💌 ${read.size} / ${total} notes read`; };
     updateCount();
 
-    const perLine = innerWidth >= 700 ? 3 : 2;
+    const perLine = innerWidth >= 1000 ? 6 : 3;
     const handles = data.photos.map((p, i) => polaroid(p, i));
     for (let i = 0; i < handles.length; i += perLine) {
       const line = el('div', 'line');

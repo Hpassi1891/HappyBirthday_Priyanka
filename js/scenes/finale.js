@@ -34,8 +34,10 @@ export default {
             </div>
             <div class="scr-prog" aria-hidden="true"><i id="prog"></i></div>
           </div>
-          <p class="fb-cap hand" id="cap">tap play to watch</p>
-          <button class="btn" id="toEnd" type="button" hidden>one last thing ➜</button>
+          <div class="fs-side">
+            <p class="fb-cap hand" id="cap">tap play to watch</p>
+            <button class="btn" id="toEnd" type="button" hidden>one last thing ➜</button>
+          </div>
         </div>
       </section>`;
 

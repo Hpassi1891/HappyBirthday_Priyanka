@@ -43,7 +43,7 @@ export default {
     const place = () => { dim.style.setProperty('--x', pos.x + 'px'); dim.style.setProperty('--y', pos.y + 'px'); };
     const w = () => room.clientWidth, h = () => room.clientHeight;
     pos.x = w() * 0.6; pos.y = h() * 0.25; place();
-    dim.style.setProperty('--r', '120px');
+    dim.style.setProperty('--r', Math.round(Math.min(w(), h()) * 0.24) + 'px');
     const wander = gsap.timeline({ repeat: -1, yoyo: true, onUpdate: place });
     wander.to(pos, { x: () => w() * 0.25, y: () => h() * 0.5, duration: 3.2, ease: 'sine.inOut' })
       .to(pos, { x: () => w() * 0.75, y: () => h() * 0.38, duration: 3.4, ease: 'sine.inOut' })
@@ -82,7 +82,7 @@ export default {
       tl.to(room, { filter: 'brightness(1.5)', duration: .07 }).to(room, { filter: 'brightness(1)', duration: .12 })
         .to(room, { filter: 'brightness(1.8)', duration: .06 }).to(room, { filter: 'brightness(1)', duration: .25 })
         .call(() => room.classList.add('lit'))
-        .fromTo(dim, { '--r': 30 }, { '--r': 1400, duration: 3.6 * slow, ease: 'power2.inOut', modifiers: { '--r': (v) => parseFloat(v) + 'px' } }, '>')
+        .fromTo(dim, { '--r': 30 }, { '--r': Math.round(Math.hypot(w(), h()) * 1.1), duration: 3.6 * slow, ease: 'power2.inOut', modifiers: { '--r': (v) => parseFloat(v) + 'px' } }, '>')
         .to($('.mural'), { filter: 'brightness(1) saturate(1)', duration: 3.2 * slow, ease: 'power1.inOut' }, '<')
         .to($('.warm'), { opacity: 1, duration: 3 * slow }, '<');
 
@@ -93,8 +93,8 @@ export default {
       const at = (sel, vars, delay) => gsap.from(stage.querySelectorAll(sel), { ...vars, delay: delay * slow, clearProps: 'all' });
       at('.g-garland .flag', { scale: .2, opacity: 0, duration: .7, stagger: .05, ease: 'back.out(2)' }, 1.0);
       at('.g-letters .flag', { scale: .1, opacity: 0, duration: .8, stagger: .09, ease: 'back.out(2.2)' }, 1.5);
-      at('.g-ribbon', { opacity: 0, scale: .6, transformOrigin: '150px 243px', duration: 1, ease: 'back.out(1.6)' }, 2.3);
-      at('.g-plaque', { opacity: 0, scale: .4, transformOrigin: '150px 352px', duration: 1.1, ease: 'back.out(1.5)' }, 2.6);
+      at('.g-ribbon', { opacity: 0, scale: .6, transformOrigin: '500px 216px', duration: 1, ease: 'back.out(1.6)' }, 2.3);
+      at('.g-plaque', { opacity: 0, scale: .4, transformOrigin: '500px 322px', duration: 1.1, ease: 'back.out(1.5)' }, 2.6);
       at('.fw', { scale: 0, duration: .6, stagger: .04, ease: 'back.out(3)' }, 2.9);
       at('.bal', { y: 40, opacity: 0, duration: 1.1, stagger: .12, ease: 'back.out(1.5)' }, 1.9);
       stage.querySelectorAll('.streamer').forEach((p, i) => gsap.fromTo(p, { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.8 * slow, delay: (0.9 + i * 0.1) * slow, ease: 'power2.out', clearProps: 'strokeDasharray,strokeDashoffset' }));

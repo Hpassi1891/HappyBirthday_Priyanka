@@ -9,7 +9,7 @@ const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromi
 // LOOK=scrapbook|night picks the theme under test (default: whatever the site defaults to)
 const LOOK = process.env.LOOK;
 const mk = async (opts) => { const c = await browser.newContext(opts); if (LOOK) await c.addInitScript((l) => localStorage.setItem('look', l), LOOK); return c.newPage(); };
-let page = await mk({ viewport: { width: 375, height: 700 }, hasTouch: true });
+let page = await mk({ viewport: { width: 1366, height: 768 } });
 const errors = [];
 page.on('pageerror', (e) => errors.push(e.message));
 page.on('console', (m) => m.type() === 'error' && !/fonts|ERR_|Failed to load resource/.test(m.text()) && errors.push(m.text()));
@@ -42,7 +42,7 @@ check('rakshas: moves past the door into the opening', !(await page.locator('.do
 
 // Opening: flowers bloom -> surprise card -> pull the bow -> red wishes -> white-out -> the room
 await page.close();
-page = await mk({ viewport: { width: 375, height: 700 }, hasTouch: true });
+page = await mk({ viewport: { width: 1366, height: 768 } });
 page.on('pageerror', (e) => errors.push(e.message));
 await page.goto(BASE + '/?scene=intro');
 await page.waitForSelector('#garden');
@@ -64,7 +64,7 @@ check('intro: white-out melts into the room', true);
 
 // Room: dark mural, torch, light switch
 await page.close();
-page = await mk({ viewport: { width: 375, height: 700 }, hasTouch: true });
+page = await mk({ viewport: { width: 1366, height: 768 } });
 page.on('pageerror', (e) => errors.push(e.message));
 await page.goto(BASE + '/?scene=room');
 await page.waitForSelector('#switch');
@@ -74,14 +74,15 @@ check('room: mural painted on the wall', (await page.locator('.mural .flag').cou
 await page.mouse.move(120, 300);
 await page.waitForTimeout(500);
 const tx = await page.$eval('#dim', (e) => parseFloat(e.style.getPropertyValue('--x')));
-check('room: torch follows the pointer', tx > 90 && tx < 130);
+const roomLeft = await page.$eval('#room', (e) => e.getBoundingClientRect().left);
+check('room: torch follows the pointer', Math.abs(tx - (120 - roomLeft)) < 20);
 await page.click('#switch');
 await page.waitForSelector('.room.lit', { timeout: 3000 });
 check('room: lights on', true);
 check('room: continue is not shown straight away', !(await page.locator('#go').isVisible()));
 await page.waitForSelector('#go', { state: 'visible', timeout: 9000 });
 check('room: continue appears once the wall is lit', true);
-await page.locator('.bal').first().click({ force: true });
+await page.locator('.bal ellipse').first().click({ force: true });
 check('room: balloon pops', (await page.locator('.bal[data-popped]').count()) === 1);
 await page.click('#go');
 await page.waitForSelector('.room', { state: 'detached', timeout: 9000 });

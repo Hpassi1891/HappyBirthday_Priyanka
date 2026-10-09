@@ -71,9 +71,9 @@ function startGarden(canvas, ctx, onDone) {
   let seed = 11;
   const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const cx = w / 2, cy = h / 2, maxD = Math.hypot(cx, cy);
-  const scale = Math.min(1, Math.max(0.7, w / 480));
+  const scale = Math.max(0.7, Math.min(2.4, w / 620));
   const flowers = [{ x: cx, y: cy, r: Math.min(w, h) * 0.17, birth: 0.35, spr: 0, rot: 0.2, spin: 0.12, a: 1 }];
-  const target = Math.min(70, Math.round((w * h) / 6500));
+  const target = Math.min(90, Math.round((w * h) / (6500 * scale * scale)));
   for (let tries = 0; flowers.length < target && tries < 5000; tries++) {
     const r = (30 + rnd() * 62) * scale;
     const x = -10 + rnd() * (w + 20), y = -10 + rnd() * (h + 20);
@@ -217,6 +217,7 @@ export default {
     const state = { p: 0 };
     let angle = 0, geo = null, fired = false;
     const bow = $('#bow');
+    const unit = () => bow.getBoundingClientRect().width / 170;   // how much bigger the bow is than its drawing
     const setPull = (p) => {
       state.p = p;
       bow.querySelector('.string').setAttribute('d', `M80 30 L${80 - p} 100 L80 170`);
@@ -251,7 +252,7 @@ export default {
         if (!start || fired) return;
         const dx = e.clientX - start.x, dy = e.clientY - start.y;
         moved = Math.max(moved, Math.hypot(dx, dy));
-        const pull = Math.max(0, Math.min(72, -(dx * Math.cos(angle) + dy * Math.sin(angle))));
+        const pull = Math.max(0, Math.min(72, -(dx * Math.cos(angle) + dy * Math.sin(angle)) / unit()));
         setPull(pull);
       });
       const end = () => {
@@ -277,15 +278,16 @@ export default {
       ctx.audio.twang();
       ctx.audio.arrow();
       const pull = $('#pull');
-      const tailX = geo.bx + Math.cos(angle) * -40, tailY = geo.by + Math.sin(angle) * -40;
+      const k = unit();
+      const tailX = geo.bx + Math.cos(angle) * -40 * k, tailY = geo.by + Math.sin(angle) * -40 * k;
       const fly = document.createElement('div');
       fly.className = 'fly-arrow';
-      fly.innerHTML = `<svg viewBox="0 0 130 24" width="130" height="24" aria-hidden="true"><line x1="6" y1="12" x2="122" y2="12" stroke="#3b2a2a" stroke-width="3.6" stroke-linecap="round"/><path d="M124 12 l-12 -7 l4 7 l-4 7z" fill="#e0a43c" stroke="#8a5d17" stroke-width="1.4" stroke-linejoin="round"/><path d="M6 12 l-8 -8 l16 4 z M6 12 l-8 8 l16 -4 z" fill="#d12b3a" stroke="#7a0f1c" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
-      fly.style.cssText = `left:${tailX - 65}px;top:${tailY - 12}px;rotate:${angle}rad`;
+      fly.innerHTML = `<svg viewBox="0 0 130 24" width="${130 * k}" height="${24 * k}" aria-hidden="true"><line x1="6" y1="12" x2="122" y2="12" stroke="#3b2a2a" stroke-width="3.6" stroke-linecap="round"/><path d="M124 12 l-12 -7 l4 7 l-4 7z" fill="#e0a43c" stroke="#8a5d17" stroke-width="1.4" stroke-linejoin="round"/><path d="M6 12 l-8 -8 l16 4 z M6 12 l-8 8 l16 -4 z" fill="#d12b3a" stroke="#7a0f1c" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
+      fly.style.cssText = `left:${tailX - 65 * k}px;top:${tailY - 12 * k}px;rotate:${angle}rad`;
       pull.appendChild(fly);
       bow.querySelector('.arrow').style.display = 'none';
       gsap.to(state, { p: 0, duration: .5, ease: 'elastic.out(1,.3)', onUpdate: () => setPull(state.p) });
-      const dist = Math.hypot(geo.hx - tailX, geo.hy - tailY) - 40;
+      const dist = Math.hypot(geo.hx - tailX, geo.hy - tailY) - 40 * k;
       gsap.to(fly, { x: Math.cos(angle) * dist, y: Math.sin(angle) * dist, duration: .55, ease: 'power2.in', onComplete: () => { fly.remove(); impact(); } });
       gsap.to(['.in-hint', '.in-tap'], { opacity: 0, duration: .3 });
     }
@@ -306,9 +308,10 @@ export default {
 
     // ===== 4. the red screen and the wishes =====
     function fit(lines) {
-      const avail = Math.min(innerWidth - 40, 560);
+      const avail = Math.min(innerWidth - 80, 1100);
       const longest = Math.max(...lines.map((l) => l.length));
-      return Math.max(38, Math.min(112, avail / (longest * 0.56)));
+      const byHeight = (innerHeight * 0.5) / (lines.length * 1.0);
+      return Math.max(38, Math.min(190, byHeight, avail / (longest * 0.56)));
     }
     function floodRed(x, y) {
       const wish = $('#wish');

@@ -387,7 +387,7 @@ export function locate(time) {
 
 export function renderShot(si, t) {
   const shot = SHOTS[si];
-  return `<svg class="fsvg" viewBox="0 10 300 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${shot.draw(t, t / shot.dur)}</svg>`;
+  return `<svg class="fsvg" viewBox="-50 10 400 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${shot.draw(t, t / shot.dur)}</svg>`;
 }
 
 export const renderAt = (time) => { const { si, t } = locate(time); return renderShot(si, t); };

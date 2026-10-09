@@ -10,7 +10,7 @@ const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromi
 // LOOK=scrapbook|night picks the theme under test (default: whatever the site defaults to)
 const LOOK = process.env.LOOK;
 const mk = async (opts) => { const c = await browser.newContext(opts); if (LOOK) await c.addInitScript((l) => localStorage.setItem('look', l), LOOK); return c.newPage(); };
-const page = await mk({ viewport: { width: 375, height: 700 }, hasTouch: true });
+const page = await mk({ viewport: { width: 1366, height: 768 } });
 const errors = [];
 page.on('pageerror', (e) => errors.push(e.message));
 page.on('console', (m) => m.type() === 'error' && !/fonts|ERR_|Failed to load resource/.test(m.text()) && errors.push(m.text()));
